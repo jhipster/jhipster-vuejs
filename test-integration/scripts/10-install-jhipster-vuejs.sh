@@ -70,7 +70,7 @@ else
     git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
     npm install
-    npm install -g "$HOME"/generator-jhipster
+    npm link
 fi
 
 #-------------------------------------------------------------------------------
