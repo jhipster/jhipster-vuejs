@@ -59,6 +59,7 @@ install:
   - $TRAVIS_BUILD_DIR/test-integration/scripts/10-install-jhipster-vuejs.sh
   # copy samples
   - cp -R $TRAVIS_BUILD_DIR/test-integration/samples-vuejs/* /home/travis/generator-jhipster/test-integration/samples/
+  - ls -al /home/travis/generator-jhipster/test-integration/samples/
   # copy init-env
   - cp $TRAVIS_BUILD_DIR/test-integration/scripts/00-init-env.sh /home/travis/generator-jhipster/test-integration/scripts/
   # generate project and entities
