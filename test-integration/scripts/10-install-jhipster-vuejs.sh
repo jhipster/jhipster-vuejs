@@ -76,7 +76,7 @@ fi
 #-------------------------------------------------------------------------------
 # Install JHipster Vuejs
 #-------------------------------------------------------------------------------
-cd "$JHI_HOME"/
+cd "$TRAVIS_BUILD_DIR"/
 npm install
 npm link
 npm link generator-jhipster
