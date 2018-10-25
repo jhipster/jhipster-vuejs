@@ -63,6 +63,7 @@ install:
   # copy init-env
   - cp $TRAVIS_BUILD_DIR/test-integration/scripts/00-init-env.sh /home/travis/generator-jhipster/test-integration/scripts/
   # generate project and entities
+  - $JHI_SCRIPTS/11-generate-entities.sh
   - $TRAVIS_BUILD_DIR/test-integration/scripts/12-generate-project-vuejs.sh
 
 #----------------------------------------------------------------------
