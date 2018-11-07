@@ -25,11 +25,12 @@ const CLIENT_WEBPACK_DIR = constants.CLIENT_WEBPACK_DIR;
 
 module.exports = {
     addLanguagesToApplication,
-    addLanguagesToWebPackConfiguration
+    addLanguagesToWebPackConfiguration,
+    replaceTranslation
 };
 
 function addLanguagesToApplication(generator) {
-    const fullPath = `${CLIENT_MAIN_SRC_DIR}/app/locale/LanguageService.vue`;
+    const fullPath = `${CLIENT_MAIN_SRC_DIR}app/locale/LanguageService.vue`;
     try {
         let content = '{\n';
         if (generator.enableTranslation) {
@@ -52,11 +53,11 @@ function addLanguagesToApplication(generator) {
         );
     } catch (e) {
         generator.log(
-            chalk.yellow('\nUnable to find ') +
-            fullPath +
-            chalk.yellow(' or missing required jhipster-needle. Language pipe not updated with languages: ') +
-            generator.languages +
-            chalk.yellow(' since block was not found. Check if you have enabled translation support.\n')
+            chalk.yellow('\nUnable to find ')
+            + fullPath
+            + chalk.yellow(' or missing required jhipster-needle. Language pipe not updated with languages: ')
+            + generator.languages
+            + chalk.yellow(' since block was not found. Check if you have enabled translation support.\n')
         );
         generator.debug('Error:', e);
     }
@@ -70,10 +71,9 @@ function addLanguagesToWebPackConfiguration(generator) {
             generator.languages.forEach((language, i) => {
                 content += `                    { pattern: "./src/main/webapp/i18n/${language}/*.json", fileName: "./i18n/${language}.json" }${
                     i !== generator.languages.length - 1 ? ',' : ''
-                    }\n`;
+                }\n`;
             });
 
-            console.log(content);
             jhipsterUtils.rewriteFile(
                 {
                     file: fullPath,
@@ -88,12 +88,26 @@ function addLanguagesToWebPackConfiguration(generator) {
         }
     } catch (e) {
         generator.log(
-            chalk.yellow('\nUnable to find ') +
-            fullPath +
-            chalk.yellow(' or missing required jhipster-needle. Webpack language task not updated with languages: ') +
-            generator.languages +
-            chalk.yellow(' since block was not found. Check if you have enabled translation support.\n')
+            chalk.yellow('\nUnable to find ')
+            + fullPath
+            + chalk.yellow(' or missing required jhipster-needle. Webpack language task not updated with languages: ')
+            + generator.languages
+            + chalk.yellow(' since block was not found. Check if you have enabled translation support.\n')
         );
         generator.debug('Error:', e);
+    }
+}
+
+function replaceTranslation(generator, files) {
+    for (let i = 0; i < files.length; i++) {
+        const filePath = `${CLIENT_MAIN_SRC_DIR}${files[i]}`;
+        jhipsterUtils.replaceContent(
+            {
+                file: filePath,
+                pattern: /(v-text=".*?")|(v-bind:placeholder=".*?")|(v-html=".*?")|(v-bind:title=".*?")|(v-bind:value=".*?")|(v-bind:html=".*?")/g,
+                content: ''
+            },
+            generator
+        );
     }
 }

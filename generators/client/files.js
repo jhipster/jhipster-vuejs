@@ -22,7 +22,6 @@ module.exports = {
     writeFiles
 };
 
-
 function writeFiles() {
     // Dependency management files
     this.template('package.json.ejs', 'package.json');
@@ -79,4 +78,19 @@ function writeFiles() {
 
     utils.addLanguagesToApplication(this);
     utils.addLanguagesToWebPackConfiguration(this);
+
+    if (!this.enableTranslation) {
+        utils.replaceTranslation(this, ['app/App.vue',
+            'app/components/Home.vue',
+            'app/components/JhiFooter.vue',
+            'app/components/JhiNavBar.vue',
+            'app/components/Ribbon.vue',
+            'app/components/account/ChangePassword.vue',
+            'app/components/account/LoginForm.vue',
+            'app/components/account/register/Register.vue',
+            'app/components/account/ResetPassword.vue',
+            'app/components/account/Sessions.vue',
+            'app/components/account/Settings.vue',
+        ]);
+    }
 }
