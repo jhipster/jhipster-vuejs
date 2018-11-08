@@ -6,6 +6,7 @@ import ResetPassword from '../components/account/reset-password/ResetPassword.vu
 import ChangePassword from '../components/account/change-password/ChangePassword.vue';
 import Sessions from '../components/account/sessions/Sessions.vue';
 import Settings from '../components/account/settings/Settings.vue';
+import <%= jhiPrefixCapitalized %>ConfigurationComponent from '../components/admin/configuration/Configuration.vue';
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 Vue.use(Router);
@@ -41,6 +42,11 @@ export default new Router({
             path: '/settings',
             name: 'Settings',
             component: Settings
+        },
+        {
+            path: '/admin/<%= jhiPrefixDashed %>-configuration',
+            name: '<%= jhiPrefixCapitalized %>ConfigurationComponent',
+            component: <%= jhiPrefixCapitalized %>ConfigurationComponent
         }
         // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
 

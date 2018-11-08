@@ -52,7 +52,7 @@ function writeFiles() {
     this.copy('webapp/app/constants.ts', 'src/main/webapp/app/constants.ts');
     this.template('webapp/app/main.ts.ejs', 'src/main/webapp/app/main.ts');
     this.copy('webapp/app/shared/config.ts', 'src/main/webapp/app/shared/config.ts');
-    this.copy('webapp/app/router/index.ts', 'src/main/webapp/app/router/index.ts');
+    this.template('webapp/app/router/index.ts.ejs', 'src/main/webapp/app/router/index.ts');
     this.copy('webapp/app/locale/LanguageService.vue', 'src/main/webapp/app/locale/LanguageService.vue');
     this.copy('webapp/app/locale/TranslationService.vue', 'src/main/webapp/app/locale/TranslationService.vue');
     this.copy('webapp/app/components/home/Home.vue', 'src/main/webapp/app/components/home/Home.vue');
@@ -80,6 +80,9 @@ function writeFiles() {
     this.copy('webapp/app/components/account/settings/Settings.component.ts', 'src/main/webapp/app/components/account/settings/Settings.component.ts');
     this.copy('webapp/app/shared/date/filters.ts', 'src/main/webapp/app/shared/date/filters.ts');
     this.template('webapp/app/config/axios-interceptor.ts.ejs', 'src/main/webapp/app/config/axios-interceptor.ts');
+    this.template('webapp/app/components/admin/configuration/Configuration.vue.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.vue');
+    this.template('webapp/app/components/admin/configuration/ConfigurationService.vue.ejs', 'src/main/webapp/app/components/admin/configuration/ConfigurationService.vue');
+    this.template('webapp/app/components/admin/configuration/configuration.component.test.js', 'src/main/webapp/app/components/admin/configuration/configuration.component.test.js');
 
     // Specs tests
     this.copy('webapp/app/components/account/specs/settings.component.test.ts', 'src/main/webapp/app/components/account/specs/settings.component.test.ts');
