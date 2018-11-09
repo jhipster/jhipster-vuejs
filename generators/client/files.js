@@ -88,6 +88,9 @@ function writeFiles() {
     this.template('webapp/app/components/admin/health/HealthModal.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthModal.vue');
     this.template('webapp/app/components/admin/health/HealthService.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthService.vue');
     this.template('webapp/app/components/admin/health/health.component.test.js', 'src/main/webapp/app/components/admin/health/health.component.test.js');
+    this.template('webapp/app/components/admin/logs/Logs.vue.ejs', 'src/main/webapp/app/components/admin/logs/Logs.vue');
+    this.template('webapp/app/components/admin/logs/LogsService.vue.ejs', 'src/main/webapp/app/components/admin/logs/LogsService.vue');
+    this.template('webapp/app/components/admin/logs/logs.component.test.js', 'src/main/webapp/app/components/admin/logs/logs.component.test.js');
 
 
     // Specs tests
