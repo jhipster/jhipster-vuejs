@@ -1,6 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import * as config from '@/shared/config';
 import LogsComponent from '@/components/admin/logs/Logs.vue';
@@ -21,7 +20,7 @@ jest.mock('@/constants.js', () =>({
     SERVER_API_URL: ''
 }));
 
-describe('Settings Component', () => {
+describe('Logs Component', () => {
     let wrapper;
     let comp;
 

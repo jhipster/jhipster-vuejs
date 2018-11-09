@@ -15,7 +15,7 @@
             </thead>
 
             <tr v-for="logger in orderBy(filterBy(loggers, filtered), orderProp, reverse === true ? 1 : -1)">
-                <td><small>{{logger.name | slice:0:140}}</small></td>
+                <td><small>{{logger.name}}</small></td>
                 <td>
                     <button v-on:click="updateLevel(logger.name, 'TRACE')" :class="(logger.level==='TRACE') ? 'btn-primary' : 'btn-light'" class="btn btn-sm">TRACE</button>
                     <button v-on:click="updateLevel(logger.name, 'DEBUG')" :class="(logger.level==='DEBUG') ? 'btn-success' : 'btn-light'" class="btn btn-sm">DEBUG</button>

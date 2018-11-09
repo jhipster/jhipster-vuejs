@@ -91,6 +91,10 @@ function writeFiles() {
     this.template('webapp/app/components/admin/logs/Logs.vue.ejs', 'src/main/webapp/app/components/admin/logs/Logs.vue');
     this.template('webapp/app/components/admin/logs/LogsService.vue.ejs', 'src/main/webapp/app/components/admin/logs/LogsService.vue');
     this.template('webapp/app/components/admin/logs/logs.component.test.js', 'src/main/webapp/app/components/admin/logs/logs.component.test.js');
+    this.template('webapp/app/components/admin/audits/Audits.vue.ejs', 'src/main/webapp/app/components/admin/audits/Audits.vue');
+    this.template('webapp/app/components/admin/audits/AuditsService.vue.ejs', 'src/main/webapp/app/components/admin/audits/AuditsService.vue');
+    this.template('webapp/app/components/admin/audits/audits.component.test.js', 'src/main/webapp/app/components/admin/audits/audits.component.test.js');
+    this.template('webapp/app/shared/ItemCount.vue.ejs', 'src/main/webapp/app/shared/ItemCount.vue');
 
 
     // Specs tests

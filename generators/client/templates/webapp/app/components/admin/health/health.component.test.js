@@ -23,7 +23,7 @@ jest.mock('@/constants.js', () =>({
     SERVER_API_URL: ''
 }));
 
-describe('Settings Component', () => {
+describe('Health Component', () => {
     let wrapper;
     let comp;
 

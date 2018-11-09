@@ -10,6 +10,7 @@ import <%= jhiPrefixCapitalized %>ConfigurationComponent from '../components/adm
 import <%= jhiPrefixCapitalized %>DocsComponent from '../components/admin/docs/Docs';
 import <%= jhiPrefixCapitalized %>HealthComponent from '../components/admin/health/Health';
 import <%= jhiPrefixCapitalized %>LogsComponent from '../components/admin/logs/Logs';
+import <%= jhiPrefixCapitalized %>AuditsComponent from '../components/admin/audits/Audits';
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 Vue.use(Router);
@@ -52,12 +53,17 @@ export default new Router({
             component: <%= jhiPrefixCapitalized %>DocsComponent
         },
         {
+            path: '/admin/audits',
+            name: '<%= jhiPrefixCapitalized %>AuditsComponent',
+            component: <%= jhiPrefixCapitalized %>AuditsComponent
+        },
+        {
             path: '/admin/<%= jhiPrefixDashed %>-health',
             name: '<%= jhiPrefixCapitalized %>HealthComponent',
             component: <%= jhiPrefixCapitalized %>HealthComponent
         },
         {
-            path: '/admin/<%= jhiPrefixDashed %>-logs',
+            path: '/admin/logs',
             name: '<%= jhiPrefixCapitalized %>LogsComponent',
             component: <%= jhiPrefixCapitalized %>LogsComponent
         },
