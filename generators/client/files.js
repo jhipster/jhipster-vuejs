@@ -83,6 +83,12 @@ function writeFiles() {
     this.template('webapp/app/components/admin/configuration/Configuration.vue.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.vue');
     this.template('webapp/app/components/admin/configuration/ConfigurationService.vue.ejs', 'src/main/webapp/app/components/admin/configuration/ConfigurationService.vue');
     this.template('webapp/app/components/admin/configuration/configuration.component.test.js', 'src/main/webapp/app/components/admin/configuration/configuration.component.test.js');
+    this.template('webapp/app/components/admin/docs/Docs.vue.ejs', 'src/main/webapp/app/components/admin/docs/Docs.vue');
+    this.template('webapp/app/components/admin/health/Health.vue.ejs', 'src/main/webapp/app/components/admin/health/Health.vue');
+    this.template('webapp/app/components/admin/health/HealthModal.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthModal.vue');
+    this.template('webapp/app/components/admin/health/HealthService.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthService.vue');
+    this.template('webapp/app/components/admin/health/health.component.test.js', 'src/main/webapp/app/components/admin/health/health.component.test.js');
+
 
     // Specs tests
     this.copy('webapp/app/components/account/specs/settings.component.test.ts', 'src/main/webapp/app/components/account/specs/settings.component.test.ts');
