@@ -107,6 +107,11 @@ function writeFiles() {
         this.template('webapp/app/components/admin/gateway/GatewayService.vue.ejs', 'src/main/webapp/app/components/admin/gateway/GatewayService.vue');
         this.template('webapp/app/components/admin/gateway/gateway.component.test.ts', 'src/main/webapp/app/components/admin/gateway/gateway.component.test.ts');
     }
+    if (this.websocket === 'spring-websocket') {
+        this.template('webapp/app/components/admin/tracker/Tracker.vue.ejs', 'src/main/webapp/app/components/admin/tracker/Tracker.vue');
+        this.template('webapp/app/components/admin/tracker/Tracker.component.ts.ejs', 'src/main/webapp/app/components/admin/tracker/Tracker.component.ts');
+        this.template('webapp/app/components/admin/tracker/TrackerService.vue.ejs', 'src/main/webapp/app/components/admin/tracker/TrackerService.vue');
+    }
     this.template('webapp/app/shared/ItemCount.vue.ejs', 'src/main/webapp/app/shared/ItemCount.vue');
 
     utils.addLanguagesToApplication(this);
@@ -131,6 +136,9 @@ function writeFiles() {
         ]);
         if (this.applicationType === 'gateway' && this.serviceDiscoveryType) {
             utils.replaceTranslation(this, ['app/components/admin/gateway/Gateway.vue']);
+        }
+        if (this.websocket === 'spring-websocket') {
+            utils.replaceTranslation(this, ['app/components/admin/tracker/Tracker.vue']);
         }
     }
 }
