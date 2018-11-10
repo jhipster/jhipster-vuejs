@@ -65,6 +65,7 @@ function writeFiles() {
     this.copy('webapp/app/components/ribbon/Ribbon.component.ts', 'src/main/webapp/app/components/ribbon/Ribbon.component.ts');
     this.copy('webapp/app/components/account/change-password/ChangePassword.vue', 'src/main/webapp/app/components/account/change-password/ChangePassword.vue');
     this.copy('webapp/app/components/account/change-password/ChangePassword.component.ts', 'src/main/webapp/app/components/account/change-password/ChangePassword.component.ts');
+    this.copy('webapp/app/components/account/change-password/change-password.component.test.ts', 'src/main/webapp/app/components/account/change-password/change-password.component.test.ts');
     this.copy('webapp/app/components/account/login-form/LoginForm.vue', 'src/main/webapp/app/components/account/login-form/LoginForm.vue');
     this.template('webapp/app/components/account/login-form/LoginForm.component.ts.ejs', 'src/main/webapp/app/components/account/login-form/LoginForm.component.ts');
     this.copy('webapp/app/components/account/LoginModalService.vue', 'src/main/webapp/app/components/account/LoginModalService.vue');
@@ -78,28 +79,34 @@ function writeFiles() {
     this.copy('webapp/app/components/account/sessions/Sessions.component.ts', 'src/main/webapp/app/components/account/sessions/Sessions.component.ts');
     this.copy('webapp/app/components/account/settings/Settings.vue', 'src/main/webapp/app/components/account/settings/Settings.vue');
     this.copy('webapp/app/components/account/settings/Settings.component.ts', 'src/main/webapp/app/components/account/settings/Settings.component.ts');
+    this.copy('webapp/app/components/account/settings/settings.component.test.ts', 'src/main/webapp/app/components/account/settings/settings.component.test.ts');
     this.copy('webapp/app/shared/date/filters.ts', 'src/main/webapp/app/shared/date/filters.ts');
     this.template('webapp/app/config/axios-interceptor.ts.ejs', 'src/main/webapp/app/config/axios-interceptor.ts');
     this.template('webapp/app/components/admin/configuration/Configuration.vue.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.vue');
+    this.template('webapp/app/components/admin/configuration/Configuration.component.ts.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.component.ts');
     this.template('webapp/app/components/admin/configuration/ConfigurationService.vue.ejs', 'src/main/webapp/app/components/admin/configuration/ConfigurationService.vue');
-    this.template('webapp/app/components/admin/configuration/configuration.component.test.js', 'src/main/webapp/app/components/admin/configuration/configuration.component.test.js');
+    this.template('webapp/app/components/admin/configuration/configuration.component.test.ts', 'src/main/webapp/app/components/admin/configuration/configuration.component.test.ts');
     this.template('webapp/app/components/admin/docs/Docs.vue.ejs', 'src/main/webapp/app/components/admin/docs/Docs.vue');
     this.template('webapp/app/components/admin/health/Health.vue.ejs', 'src/main/webapp/app/components/admin/health/Health.vue');
+    this.template('webapp/app/components/admin/health/Health.component.ts.ejs', 'src/main/webapp/app/components/admin/health/Health.component.ts');
     this.template('webapp/app/components/admin/health/HealthModal.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthModal.vue');
     this.template('webapp/app/components/admin/health/HealthService.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthService.vue');
-    this.template('webapp/app/components/admin/health/health.component.test.js', 'src/main/webapp/app/components/admin/health/health.component.test.js');
+    this.template('webapp/app/components/admin/health/health.component.test.ts', 'src/main/webapp/app/components/admin/health/health.component.test.ts');
     this.template('webapp/app/components/admin/logs/Logs.vue.ejs', 'src/main/webapp/app/components/admin/logs/Logs.vue');
+    this.template('webapp/app/components/admin/logs/Logs.component.ts.ejs', 'src/main/webapp/app/components/admin/logs/Logs.component.ts');
     this.template('webapp/app/components/admin/logs/LogsService.vue.ejs', 'src/main/webapp/app/components/admin/logs/LogsService.vue');
-    this.template('webapp/app/components/admin/logs/logs.component.test.js', 'src/main/webapp/app/components/admin/logs/logs.component.test.js');
+    this.template('webapp/app/components/admin/logs/logs.component.test.ts', 'src/main/webapp/app/components/admin/logs/logs.component.test.ts');
     this.template('webapp/app/components/admin/audits/Audits.vue.ejs', 'src/main/webapp/app/components/admin/audits/Audits.vue');
+    this.template('webapp/app/components/admin/audits/Audits.component.ts.ejs', 'src/main/webapp/app/components/admin/audits/Audits.component.ts');
     this.template('webapp/app/components/admin/audits/AuditsService.vue.ejs', 'src/main/webapp/app/components/admin/audits/AuditsService.vue');
-    this.template('webapp/app/components/admin/audits/audits.component.test.js', 'src/main/webapp/app/components/admin/audits/audits.component.test.js');
+    this.template('webapp/app/components/admin/audits/audits.component.test.ts', 'src/main/webapp/app/components/admin/audits/audits.component.test.ts');
+    if (this.applicationType === 'gateway' && this.serviceDiscoveryType) {
+        this.template('webapp/app/components/admin/gateway/Gateway.vue.ejs', 'src/main/webapp/app/components/admin/gateway/Gateway.vue');
+        this.template('webapp/app/components/admin/gateway/Gateway.component.ts.ejs', 'src/main/webapp/app/components/admin/gateway/Gateway.component.ts');
+        this.template('webapp/app/components/admin/gateway/GatewayService.vue.ejs', 'src/main/webapp/app/components/admin/gateway/GatewayService.vue');
+        this.template('webapp/app/components/admin/gateway/gateway.component.test.ts', 'src/main/webapp/app/components/admin/gateway/gateway.component.test.ts');
+    }
     this.template('webapp/app/shared/ItemCount.vue.ejs', 'src/main/webapp/app/shared/ItemCount.vue');
-
-
-    // Specs tests
-    this.copy('webapp/app/components/account/specs/settings.component.test.ts', 'src/main/webapp/app/components/account/specs/settings.component.test.ts');
-    this.copy('webapp/app/components/account/specs/change-password.component.test.ts', 'src/main/webapp/app/components/account/specs/change-password.component.test.ts');
 
     utils.addLanguagesToApplication(this);
     utils.addLanguagesToWebPackConfiguration(this);
@@ -116,6 +123,13 @@ function writeFiles() {
             'app/components/account/reset-password/ResetPassword.vue',
             'app/components/account/sessions/Sessions.vue',
             'app/components/account/settings/Settings.vue',
+            'app/components/admin/configuration/Configuration.vue',
+            'app/components/admin/health/Health.vue',
+            'app/components/admin/logs/Logs.vue',
+            'app/components/admin/audits/Audits.vue'
         ]);
+        if (this.applicationType === 'gateway' && this.serviceDiscoveryType) {
+            utils.replaceTranslation(this, ['app/components/admin/gateway/Gateway.vue']);
+        }
     }
 }

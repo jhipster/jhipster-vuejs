@@ -1,11 +1,12 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import axios from 'axios';
 
-import * as config from '@/shared/config';
+import * as config from '../../../shared/config';
 import ConfigurationComponent from '@/components/admin/configuration/Configuration.vue';
 import ConfigurationService from '@/components/admin/configuration/ConfigurationService.vue';
 
 const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -15,7 +16,7 @@ localVue.mixin(ConfigurationService);
 jest.mock('axios', () => ({
     get: jest.fn()
 }));
-jest.mock('@/constants.js', () =>({
+jest.mock('@/constants.ts', () =>({
     SERVER_API_URL: ''
 }));
 
@@ -45,8 +46,8 @@ describe('Configuration Component', () => {
             await comp.$nextTick();
 
             // THEN
-            expect(axios.get).toHaveBeenCalledWith('management/env');
-            expect(axios.get).toHaveBeenCalledWith('management/configprops');
+            expect(mockedAxios.get).toHaveBeenCalledWith('management/env');
+            expect(mockedAxios.get).toHaveBeenCalledWith('management/configprops');
         });
     });
     describe('keys method', () => {

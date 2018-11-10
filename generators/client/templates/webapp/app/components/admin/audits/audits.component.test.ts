@@ -2,11 +2,12 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import * as config from '@/shared/config';
+import * as config from '../../../shared/config';
 import AuditsComponent from '@/components/admin/audits/Audits.vue';
 import AuditsService from '@/components/admin/audits/AuditsService.vue';
 
 const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -18,7 +19,7 @@ jest.mock('axios', () => ({
     get: jest.fn(),
     put: jest.fn()
 }));
-jest.mock('@/constants.js', () =>({
+jest.mock('@/constants.ts', () =>({
     SERVER_API_URL: ''
 }));
 
@@ -53,7 +54,7 @@ describe('Audits Component', () => {
 
     describe('By default, on init', () => {
         it('should set all default values correctly', async () => {
-            axios.get.mockReturnValue(Promise.resolve({}));
+            mockedAxios.get.mockReturnValue(Promise.resolve({}));
 
             comp.init();
             await comp.$nextTick();
@@ -70,7 +71,7 @@ describe('Audits Component', () => {
     describe('OnInit', () => {
         it('Should call load all on init', async () => {
             // GIVEN
-            axios.get.mockReturnValue(Promise.resolve({data:['test']}));
+            mockedAxios.get.mockReturnValue(Promise.resolve({data:['test']}));
             const today = getDate();
             const fromDate = getDate(false);
             // WHEN
@@ -78,7 +79,7 @@ describe('Audits Component', () => {
             await comp.$nextTick();
 
             // THEN
-            expect(axios.get).toHaveBeenCalledWith(`management/audits?fromDate=${fromDate}&toDate=${today}&sort=auditEventDate,desc&sort=id&page=0&size=20`);
+            expect(mockedAxios.get).toHaveBeenCalledWith(`management/audits?fromDate=${fromDate}&toDate=${today}&sort=auditEventDate,desc&sort=id&page=0&size=20`);
             expect(comp.audits.length).toEqual(1);
         });
     });

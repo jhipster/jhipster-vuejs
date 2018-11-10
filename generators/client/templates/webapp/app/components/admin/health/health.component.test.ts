@@ -2,12 +2,13 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import * as config from '@/shared/config';
+import * as config from '../../../shared/config';
 import HealthComponent from '@/components/admin/health/Health.vue';
 import HealthModal from '@/components/admin/health/HealthModal.vue';
 import HealthService from '@/components/admin/health/HealthService.vue';
 
 const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -19,7 +20,7 @@ localVue.component('health-modal', HealthModal);
 jest.mock('axios', () => ({
     get: jest.fn()
 }));
-jest.mock('@/constants.js', () =>({
+jest.mock('@/constants.ts', () =>({
     SERVER_API_URL: ''
 }));
 
@@ -301,26 +302,26 @@ describe('Health Component', () => {
     describe('refresh', () => {
         it('should call refresh on init', async () => {
             // GIVEN
-            axios.get.mockReturnValue(Promise.resolve({}));
+            mockedAxios.get.mockReturnValue(Promise.resolve({}));
 
             // WHEN
             comp.refresh();
             await comp.$nextTick();
 
             // THEN
-            expect(axios.get).toHaveBeenCalledWith('management/health');
+            expect(mockedAxios.get).toHaveBeenCalledWith('management/health');
             expect(comp.updatingHealth).toEqual(false);
         });
         it('should handle a 503 on refreshing health data', async () => {
             // GIVEN
-            axios.get.mockReturnValue(Promise.reject({}));
+            mockedAxios.get.mockReturnValue(Promise.reject({}));
 
             // WHEN
             comp.refresh();
             await comp.$nextTick();
 
             // THEN
-            expect(axios.get).toHaveBeenCalledWith('management/health');
+            expect(mockedAxios.get).toHaveBeenCalledWith('management/health');
             expect(comp.updatingHealth).toEqual(false);
         });
     });
