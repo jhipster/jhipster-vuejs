@@ -87,6 +87,7 @@ function writeFiles() {
     this.template('webapp/app/components/admin/configuration/ConfigurationService.vue.ejs', 'src/main/webapp/app/components/admin/configuration/ConfigurationService.vue');
     this.template('webapp/app/components/admin/configuration/configuration.component.test.ts', 'src/main/webapp/app/components/admin/configuration/configuration.component.test.ts');
     this.template('webapp/app/components/admin/docs/Docs.vue.ejs', 'src/main/webapp/app/components/admin/docs/Docs.vue');
+    this.template('webapp/app/components/admin/docs/Docs.component.ts.ejs', 'src/main/webapp/app/components/admin/docs/Docs.component.ts');
     this.template('webapp/app/components/admin/health/Health.vue.ejs', 'src/main/webapp/app/components/admin/health/Health.vue');
     this.template('webapp/app/components/admin/health/Health.component.ts.ejs', 'src/main/webapp/app/components/admin/health/Health.component.ts');
     this.template('webapp/app/components/admin/health/HealthModal.vue.ejs', 'src/main/webapp/app/components/admin/health/HealthModal.vue');
