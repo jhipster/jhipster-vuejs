@@ -16,6 +16,7 @@ const store = config.initVueXStore(localVue);
 localVue.mixin(HealthService);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('health-modal', HealthModal);
+localVue.component('b-modal', {});
 
 jest.mock('axios', () => ({
     get: jest.fn()

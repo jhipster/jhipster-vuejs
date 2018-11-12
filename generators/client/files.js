@@ -101,6 +101,13 @@ function writeFiles() {
     this.template('webapp/app/components/admin/audits/Audits.component.ts.ejs', 'src/main/webapp/app/components/admin/audits/Audits.component.ts');
     this.template('webapp/app/components/admin/audits/AuditsService.vue.ejs', 'src/main/webapp/app/components/admin/audits/AuditsService.vue');
     this.template('webapp/app/components/admin/audits/audits.component.test.ts', 'src/main/webapp/app/components/admin/audits/audits.component.test.ts');
+    this.template('webapp/app/components/admin/metrics/Metrics.vue.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.vue');
+    this.template('webapp/app/components/admin/metrics/Metrics.component.ts.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.component.ts');
+    this.template('webapp/app/components/admin/metrics/MetricsService.vue.ejs', 'src/main/webapp/app/components/admin/metrics/MetricsService.vue');
+    this.template('webapp/app/components/admin/metrics/Metrics.component.test.ts', 'src/main/webapp/app/components/admin/metrics/metrics.component.test.ts');
+    this.template('webapp/app/components/admin/metrics/MetricsModal.vue.ejs', 'src/main/webapp/app/components/admin/metrics/MetricsModal.vue');
+    this.template('webapp/app/components/admin/metrics/Metrics.modal.component.ts.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.modal.component.ts');
+    this.template('webapp/app/components/admin/metrics/metrics.modal.component.test.ts', 'src/main/webapp/app/components/admin/metrics/metrics.modal.component.test.ts');
     if (this.applicationType === 'gateway' && this.serviceDiscoveryType) {
         this.template('webapp/app/components/admin/gateway/Gateway.vue.ejs', 'src/main/webapp/app/components/admin/gateway/Gateway.vue');
         this.template('webapp/app/components/admin/gateway/Gateway.component.ts.ejs', 'src/main/webapp/app/components/admin/gateway/Gateway.component.ts');
@@ -132,6 +139,8 @@ function writeFiles() {
             'app/components/admin/configuration/Configuration.vue',
             'app/components/admin/health/Health.vue',
             'app/components/admin/logs/Logs.vue',
+            'app/components/admin/metrics/Metrics.vue',
+            'app/components/admin/metrics/MetricsModal.vue',
             'app/components/admin/audits/Audits.vue'
         ]);
         if (this.applicationType === 'gateway' && this.serviceDiscoveryType) {

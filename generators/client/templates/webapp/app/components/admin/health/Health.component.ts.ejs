@@ -45,7 +45,7 @@ const <%=jhiPrefixCapitalized%>HealthComponent = {
         },
         showHealth(health) {
             this.currentHealth = health;
-            this.$root.$emit('bv::show::modal','healthModal');
+            this.$refs.healthModal.show();
         },
         subSystemName(name) {
             return this.getSubSystemName(name);

@@ -3,7 +3,7 @@
         <h2>
             <span id="health-page-heading" v-text="$t('health.title')">Health Checks</span>
             <button class="btn btn-primary float-right" v-on:click="refresh()" :disabled="updatingHealth">
-                <font-awesome-icon icon="sync"></font-awesome-icon> <span v-text="$t('health.refresh.button')">Refresh</span>
+                <font-awesome-icon icon="sync"></font-awesome-icon> <span v-text="$t('health[\'refresh.button\']')">Refresh</span>
             </button>
         </h2>
         <div class="table-responsive">
@@ -32,8 +32,8 @@
                 </tbody>
             </table>
         </div>
-        <b-modal id="healthModal" v-if="currentHealth">
-            <h4 slot="modal-title" class="modal-title" id="showHealthLabel"><% if (enableTranslation) { %>
+        <b-modal ref="healthModal">
+            <h4 slot="modal-title" v-if="currentHealth" class="modal-title" id="showHealthLabel"><% if (enableTranslation) { %>
                     <span v-text="$t('health.indicator.' + baseName(currentHealth.name))"/> <% } else { %> <span class="text-capitalize">{{ baseName(currentHealth.name) }}</span><% } %>
                 {{subSystemName(currentHealth.name)}}
             </h4>
