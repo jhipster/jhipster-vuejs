@@ -82,6 +82,16 @@ function writeFiles() {
     this.copy('webapp/app/components/account/settings/settings.component.test.ts', 'src/main/webapp/app/components/account/settings/settings.component.test.ts');
     this.copy('webapp/app/shared/date/filters.ts', 'src/main/webapp/app/shared/date/filters.ts');
     this.template('webapp/app/config/axios-interceptor.ts.ejs', 'src/main/webapp/app/config/axios-interceptor.ts');
+    this.template('webapp/app/components/admin/user-management/UserManagement.vue.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagement.vue');
+    this.template('webapp/app/components/admin/user-management/UserManagement.component.ts.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagement.component.ts');
+    this.template('webapp/app/components/admin/user-management/UserManagementView.vue.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagementView.vue');
+    this.template('webapp/app/components/admin/user-management/UserManagementView.component.ts.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagementView.component.ts');
+    this.template('webapp/app/components/admin/user-management/UserManagementEdit.vue.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagementEdit.vue');
+    this.template('webapp/app/components/admin/user-management/UserManagementEdit.component.ts.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagementEdit.component.ts');
+    this.template('webapp/app/components/admin/user-management/UserManagementService.vue.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagementService.vue');
+    this.template('webapp/app/components/admin/user-management/user-management.component.test.ts', 'src/main/webapp/app/components/admin/user-management/user-management.component.test.ts');
+    this.template('webapp/app/components/admin/user-management/user-management-view.component.test.ts', 'src/main/webapp/app/components/admin/user-management/user-management-view.component.test.ts');
+    this.template('webapp/app/components/admin/user-management/user-management-edit.component.test.ts.ejs', 'src/main/webapp/app/components/admin/user-management/user-management-edit.component.test.ts');
     this.template('webapp/app/components/admin/configuration/Configuration.vue.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.vue');
     this.template('webapp/app/components/admin/configuration/Configuration.component.ts.ejs', 'src/main/webapp/app/components/admin/configuration/Configuration.component.ts');
     this.template('webapp/app/components/admin/configuration/ConfigurationService.vue.ejs', 'src/main/webapp/app/components/admin/configuration/ConfigurationService.vue');
@@ -104,7 +114,7 @@ function writeFiles() {
     this.template('webapp/app/components/admin/metrics/Metrics.vue.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.vue');
     this.template('webapp/app/components/admin/metrics/Metrics.component.ts.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.component.ts');
     this.template('webapp/app/components/admin/metrics/MetricsService.vue.ejs', 'src/main/webapp/app/components/admin/metrics/MetricsService.vue');
-    this.template('webapp/app/components/admin/metrics/Metrics.component.test.ts', 'src/main/webapp/app/components/admin/metrics/metrics.component.test.ts');
+    this.template('webapp/app/components/admin/metrics/metrics.component.test.ts', 'src/main/webapp/app/components/admin/metrics/metrics.component.test.ts');
     this.template('webapp/app/components/admin/metrics/MetricsModal.vue.ejs', 'src/main/webapp/app/components/admin/metrics/MetricsModal.vue');
     this.template('webapp/app/components/admin/metrics/Metrics.modal.component.ts.ejs', 'src/main/webapp/app/components/admin/metrics/Metrics.modal.component.ts');
     this.template('webapp/app/components/admin/metrics/metrics.modal.component.test.ts', 'src/main/webapp/app/components/admin/metrics/metrics.modal.component.test.ts');
@@ -136,6 +146,9 @@ function writeFiles() {
             'app/components/account/reset-password/ResetPassword.vue',
             'app/components/account/sessions/Sessions.vue',
             'app/components/account/settings/Settings.vue',
+            'app/components/admin/user-management/UserManagement.vue',
+            'app/components/admin/user-management/UserManagementView.vue',
+            'app/components/admin/user-management/UserManagementEdit.vue',
             'app/components/admin/configuration/Configuration.vue',
             'app/components/admin/health/Health.vue',
             'app/components/admin/logs/Logs.vue',
