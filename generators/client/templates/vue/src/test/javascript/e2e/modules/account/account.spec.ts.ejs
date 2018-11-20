@@ -3,22 +3,29 @@ import { browser, element, by } from 'protractor';
 
 import SignInPage from '../../page-objects/signin-page';
 import NavBarPage from '../../page-objects/navbar-page';
+<%_ if (authenticationType !== 'oauth2') { _%>
 import RegisterPage from '../../page-objects/register-page';
 import PasswordPage from '../../page-objects/password-page';
 import SettingsPage from '../../page-objects/settings-page';
 import {
     getToastByInnerText,
     getUserDeactivatedButtonByLogin,
+    <%_ if (databaseType !== 'cassandra') { _%>
     getModifiedDateSortButton,
+    <%_ } _%>
     waitUntilDisplayed,
     waitUntilHidden, getUserDeleteButtonByLogin
 } from '../../util/utils';
+<%_ } else { _%>
+import { waitUntilDisplayed } from '../../util/utils';
+<%_ } _%>
 
 const expect = chai.expect;
 
 describe('Account', () => {
   let navBarPage: NavBarPage;
   let signInPage: SignInPage;
+<%_ if (authenticationType !== 'oauth2') { _%>
   let passwordPage: PasswordPage;
   let settingsPage: SettingsPage;
   let registerPage: RegisterPage;
@@ -26,16 +33,20 @@ describe('Account', () => {
   const registerPageTitle = 'register-title';
   const passwordPageTitle = 'password-title';
   const settingsPageTitle = 'settings-title';
+<%_ } _%>
   const loginPageTitle = 'login-title';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
+<%_ if (authenticationType !== 'oauth2') { _%>
     await signInPage.waitUntilDisplayed();
+<%_ } _%>
   });
 
   it('should fail to login with bad password', async () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
     // Login page should appear
     expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
@@ -45,12 +56,28 @@ describe('Account', () => {
 
     // Login page should stay open when login fails
     expect(await signInPage.getTitle()).to.eq(loginPageTitle);
+<%_ } else { _%>
+    await signInPage.loginWithOAuth('admin', 'foo');
+    const alert = element(by.css('.alert-error'));
+    if (await alert.isPresent()) {
+        // Keycloak
+        expect(await alert.getText()).to.eq('Invalid username or password.');
+    } else {
+        // Okta
+        const error = element(by.css('.infobox-error'));
+        await waitUntilDisplayed(error);
+        expect(await error.getText()).to.eq('Sign in failed!');
+    }
+    await signInPage.clearUserName();
+    await signInPage.clearPassword();
+<%_ } _%>
   });
 
   it('should login with admin account', async () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
     await browser.get('/');
-      signInPage = await navBarPage.getSignInPage();
-      await signInPage.waitUntilDisplayed();
+    signInPage = await navBarPage.getSignInPage();
+    await signInPage.waitUntilDisplayed();
 
     expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
@@ -62,8 +89,18 @@ describe('Account', () => {
     // Login page should close when login success
     expect(await signInPage.isHidden()()).to.be.true;
     await navBarPage.autoSignOut();
+<%_ } else { _%>
+      // Keycloak credentials by default, change them to be able to use oauth2 with Okta
+    await signInPage.loginWithOAuth('admin', 'admin');
+    const success = element(by.className('alert-success'));
+    await waitUntilDisplayed(success);
+
+    // Success alert should appear in home page
+    expect(await success.isPresent()).to.be.true;
+<%_ } _%>
   });
 
+<%_ if (authenticationType !== 'oauth2') { _%>
   it('should be able to sign up', async () => {
     await waitUntilDisplayed(navBarPage.accountMenu);
 
@@ -72,7 +109,11 @@ describe('Account', () => {
     expect(await registerPage.getTitle()).to.eq(registerPageTitle);
 
     await registerPage.autoSignUpUsing('user_test', 'admin@localhost.jh', 'user_test');
+<%_ if (enableTranslation) { _%>
     const toast = getToastByInnerText('Registration saved! Please check your email for confirmation.');
+<% } else { %>
+    const toast = getToastByInnerText('<strong>Registration saved!</strong> Please check your email for confirmation.');
+<%_ } _%>
     await waitUntilDisplayed(toast);
 
     // Success toast should appear
@@ -103,10 +144,12 @@ describe('Account', () => {
 
   it('should activate the new registered user', async () => {
     expect(await element(by.id('user-management-page-heading')).isPresent()).to.be.true;
+<%_ if (databaseType !== 'cassandra') { _%>
 
     const modifiedDateSortButton = getModifiedDateSortButton();
     await waitUntilDisplayed(modifiedDateSortButton);
     await modifiedDateSortButton.click();
+<%_ } _%>
 
     const deactivatedButton = getUserDeactivatedButtonByLogin('user_test');
     await waitUntilDisplayed(deactivatedButton);
@@ -183,7 +226,11 @@ describe('Account', () => {
     expect(await passwordPage.getTitle()).to.eq(passwordPageTitle);
 
     await passwordPage.autoChangePassword('bad_password', 'new_password', 'new_password');
+<%_ if (enableTranslation) { _%>
     const toast = getToastByInnerText('An error has occurred! The password could not be changed.');
+<% } else { %>
+    const toast = getToastByInnerText('<strong>An error has occurred!</strong> The password could not be changed.');
+<%_ } _%>
     await waitUntilDisplayed(toast);
 
     // Error toast should appear
@@ -197,7 +244,11 @@ describe('Account', () => {
     expect(await passwordPage.getTitle()).to.eq(passwordPageTitle);
 
     await passwordPage.autoChangePassword('admin', 'new_password', 'new_password');
+<%_ if (enableTranslation) { _%>
     const toast = getToastByInnerText('Password changed!');
+<% } else { %>
+    const toast = getToastByInnerText('<strong>Password changed!</strong>');
+<%_ } _%>
     await waitUntilDisplayed(toast);
 
     // Success toast should appear
@@ -308,6 +359,7 @@ describe('Account', () => {
     // Delete modal should disappear
     expect(await deleteModal.isDisplayed()).to.be.false;
   });
+<%_ } _%>
 
   after(async () => {
     await navBarPage.autoSignOut();

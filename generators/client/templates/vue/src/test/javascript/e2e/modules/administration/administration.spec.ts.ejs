@@ -16,6 +16,7 @@ describe('Administration', () => {
     navBarPage = new NavBarPage();
     await navBarPage.autoSignOut();//TODO: Remove this when JWT logout issue is fixed
     signInPage = await navBarPage.getSignInPage();
+<%_ if (authenticationType !== 'oauth2') { _%>
     await signInPage.waitUntilDisplayed();
 
     await signInPage.username.sendKeys('admin');
@@ -23,9 +24,11 @@ describe('Administration', () => {
     await signInPage.loginButton.click();
     await signInPage.waitUntilHidden();
 
+<%_ } _%>
     await waitUntilDisplayed(navBarPage.adminMenu);
   });
 
+<%_ if (authenticationType !== 'oauth2') { _%>
   it('should load user management', async () => {
     await navBarPage.clickOnAdminMenuItem('user-management');
     const heading = element(by.id('user-management-page-heading'));
@@ -33,6 +36,7 @@ describe('Administration', () => {
     // Title should be equal to 'Users'
     expect(await heading.isPresent()).to.be.true;
   });
+<%_ } _%>
 
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
     it('should load gateway', async () => {
@@ -40,6 +44,7 @@ describe('Administration', () => {
         expect(await element(by.id('gateway-page-heading')).getText()).to.eq('Gateway');
     });
 <%_ } _%>
+
   it('should load metrics', async () => {
     await navBarPage.clickOnAdminMenuItem('<%= jhiPrefixDashed %>-metrics');
     expect(await element(by.id('metrics-page-heading')).getText()).to.eq('Application Metrics');
@@ -55,11 +60,13 @@ describe('Administration', () => {
     expect(await element(by.id('configuration-page-heading')).getText()).to.eq('Configuration');
   });
 
+<%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
   it('should load audits', async () => {
     await navBarPage.clickOnAdminMenuItem('audits');
     expect(await element(by.id('audits-page-heading')).getText()).to.eq('Audits');
   });
 
+<%_ } _%>
   it('should load logs', async () => {
     await navBarPage.clickOnAdminMenuItem('logs');
     expect(await element(by.id('logs-page-heading')).getText()).to.eq('Logs');

@@ -32,6 +32,9 @@ const <%= entityAngularName %> = {
                 vm.retrieve<%= entityAngularName %>s();
                 vm.removeId = null;
             });
+        },
+        closeDialog() {
+            this.$refs.removeEntity.hide();
         }
     }
 }

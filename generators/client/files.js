@@ -174,16 +174,15 @@ function writeFiles() {
     }
     if (this.protractorTests) {
         this.copy('tsconfig.e2e.json', 'tsconfig.e2e.json');
-        this.copy('vue/src/test/javascript/protractor.conf.js', 'src/test/javascript/protractor.conf.js');
-        this.copy('vue/src/test/javascript/e2e/util/utils.ts', 'src/test/javascript/e2e/util/utils.ts');
+        this.template('vue/src/test/javascript/protractor.conf.js.ejs', 'src/test/javascript/protractor.conf.js');
+        this.template('vue/src/test/javascript/e2e/util/utils.ts.ejs', 'src/test/javascript/e2e/util/utils.ts');
         this.copy('vue/src/test/javascript/e2e/page-objects/base-component.ts', 'src/test/javascript/e2e/page-objects/base-component.ts');
-        this.copy('vue/src/test/javascript/e2e/page-objects/jhi-page-objects.ts', 'src/test/javascript/e2e/page-objects/jhi-page-objects.ts');
-        this.copy('vue/src/test/javascript/e2e/page-objects/navbar-page.ts', 'src/test/javascript/e2e/page-objects/navbar-page.ts');
+        this.template('vue/src/test/javascript/e2e/page-objects/navbar-page.ts.ejs', 'src/test/javascript/e2e/page-objects/navbar-page.ts');
         this.copy('vue/src/test/javascript/e2e/page-objects/password-page.ts', 'src/test/javascript/e2e/page-objects/password-page.ts');
         this.copy('vue/src/test/javascript/e2e/page-objects/register-page.ts', 'src/test/javascript/e2e/page-objects/register-page.ts');
         this.copy('vue/src/test/javascript/e2e/page-objects/settings-page.ts', 'src/test/javascript/e2e/page-objects/settings-page.ts');
-        this.copy('vue/src/test/javascript/e2e/page-objects/signin-page.ts', 'src/test/javascript/e2e/page-objects/signin-page.ts');
-        this.copy('vue/src/test/javascript/e2e/modules/account/account.spec.ts', 'src/test/javascript/e2e/modules/account/account.spec.ts');
+        this.template('vue/src/test/javascript/e2e/page-objects/signin-page.ts.ejs', 'src/test/javascript/e2e/page-objects/signin-page.ts');
+        this.template('vue/src/test/javascript/e2e/modules/account/account.spec.ts.ejs', 'src/test/javascript/e2e/modules/account/account.spec.ts');
         this.template('vue/src/test/javascript/e2e/modules/administration/administration.spec.ts.ejs', 'src/test/javascript/e2e/modules/administration/administration.spec.ts');
     }
 }

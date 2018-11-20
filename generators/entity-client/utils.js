@@ -35,10 +35,10 @@ function addEntityToMenu(generator, entityName, className) {
             needle: 'jhipster-needle-add-entity-to-menu',
             splicable: [
                 // prettier-ignore
-                `<router-link to="${entityName}" tag="b-dropdown-item" class="dropdown-item" v-on:click="collapseNavbar()">
+                `<b-dropdown-item to="/entity/${entityName}" class="dropdown-item" v-on:click="collapseNavbar()">
                     <font-awesome-icon icon="asterisk" />
                     <span ${menuI18nTitle}>${className}</span>
-              </router-link>`
+              </b-dropdown-item>`
             ]
         },
         generator
@@ -71,19 +71,19 @@ function addEntityToRouter(generator, entityName, className) {
             splicable: [
                 // prettier-ignore
                 `,{
-                    path: '/${entityName}',
+                    path: '/entity/${entityName}',
                     name: '${className}',
                     component: ${className}
               },{
-                   path: '/${entityName}/new',
+                   path: '/entity/${entityName}/new',
                    name: '${className}Create',
                    component: ${className}Update
              },{
-                   path: '/${entityName}/:${entityName}Id/edit',
+                   path: '/entity/${entityName}/:${entityName}Id/edit',
                    name: '${className}Edit',
                    component: ${className}Update
              },{
-                   path: '/${entityName}/:${entityName}Id/view',
+                   path: '/entity/${entityName}/:${entityName}Id/view',
                    name: '${className}View',
                    component: ${className}Details
              }

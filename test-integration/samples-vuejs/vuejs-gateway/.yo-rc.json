@@ -4,13 +4,14 @@
       "packageName": "com.mycompany.myapp",
       "nativeLanguage": "en"
     },
-    "applicationType": "monolith",
-    "baseName": "jhipster",
+    "jhipsterVersion": "5.5.0",
+    "applicationType": "gateway",
+    "baseName": "test2",
     "packageName": "com.mycompany.myapp",
     "packageFolder": "com/mycompany/myapp",
     "serverPort": "8080",
     "authenticationType": "jwt",
-    "cacheProvider": "ehcache",
+    "cacheProvider": "hazelcast",
     "enableHibernateCache": true,
     "websocket": false,
     "databaseType": "sql",
@@ -18,24 +19,29 @@
     "prodDatabaseType": "mysql",
     "searchEngine": false,
     "messageBroker": false,
-    "serviceDiscoveryType": false,
+    "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "YzQxYjVjZDJiZWM5ODQ1OTFiN2VjZDQwMTM2YjliODc1OWMyNTkyNTVjY2UxZmQ5YjA2YjQ5NDM1YzdiNWY0NzI3NjgzNjJhY2JmMjdjNTljYmQxMTdjNDc2N2ZhZTg2MWRkOThkZWVhZDc4NzA4YmVlOWZlOTIyMjkxZDI2MGU=",
-    "enableTranslation": false,
-    "testFrameworks": ["protractor"],
+    "jwtSecretKey": "Nzc4NjQ3YmM4MDFhODAzZjZhNWJkYzA1ZGI5OTExYzE4MjU3MjcwZmY0MGUwMzA1NzNhZjE2MTJiODNlY2Y0MGJlZDI1NGMxOTAyYTgwMDNiOWJlMDAxZjNkYWQ4OWRhNjNkMmIwNDBkYWJiYTg3OWE2YTBlZjIyOTRmMWNiZWY=",
+    "enableTranslation": true,
+    "languages": [
+      "en"
+    ],
+    "testFrameworks": [
+      "protractor"
+    ],
     "jhiPrefix": "jhi",
     "clientPackageManager": "npm",
-    "blueprint": "generator-jhipster-vuejs",
-    "clientFramework": "vue",
-    "useSass": false
+    "nativeLanguage": "en",
+    "blueprint": "generator-jhipster-vuejs"
   },
   "generator-jhipster-vuejs": {
-    "applicationType": "monolith",
-    "baseName": "jhipster",
+    "jhipsterVersion": "5.5.0",
+    "applicationType": "gateway",
+    "baseName": "test2",
     "clientFramework": "vue",
     "useSass": false,
     "clientPackageManager": "npm",
-    "enableTranslation": false
+    "enableTranslation": true
   }
 }
