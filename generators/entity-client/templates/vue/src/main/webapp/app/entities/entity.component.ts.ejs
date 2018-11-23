@@ -1,9 +1,8 @@
-import axios from 'axios'
-import {SERVER_API_URL} from "../../<%_ if (clientRootFolder) { _%>../<%_ } _%>constants";
 import Principal from '../../<%_ if (clientRootFolder) { _%>../<%_ } _%>components/account/Principal.vue';
+import <%= entityAngularName %>Service from './<%= entityFileName %>.service.vue';
 
 const <%= entityAngularName %> = {
-    mixins: [Principal],
+    mixins: [Principal, <%= entityAngularName %>Service],
     data() {
       return {
           removeId: null,
@@ -12,13 +11,13 @@ const <%= entityAngularName %> = {
     },
     beforeRouteEnter (to, from, next) {
         next(vm => {
-            vm.retrieve<%= entityAngularName %>s();
+            vm.retrieveAll<%= entityAngularName %>s();
         })
     },
     methods: {
-        retrieve<%= entityAngularName %>s() {
+        retrieveAll<%= entityAngularName %>s() {
             let vm = this;
-            axios.get(SERVER_API_URL + 'api/<%= entityInstance %>s').then(res => {
+            this.retrieve<%= entityAngularName %>s().then(res => {
                 vm.<%= entityInstance %>s = res.data;
             });
         },
@@ -28,15 +27,16 @@ const <%= entityAngularName %> = {
         },
         remove<%= entityAngularName %>() {
             let vm = this;
-            axios.delete(SERVER_API_URL + 'api/<%= entityInstance %>s/' + vm.removeId).then(res => {
-                vm.retrieve<%= entityAngularName %>s();
+            this.delete<%= entityAngularName %>(vm.removeId).then(() => {
                 vm.removeId = null;
+                vm.retrieveAll<%= entityAngularName %>s();
+                vm.closeDialog();
             });
         },
         closeDialog() {
             this.$refs.removeEntity.hide();
         }
     }
-}
+};
 
 export default <%= entityAngularName %>;

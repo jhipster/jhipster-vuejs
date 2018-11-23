@@ -27,8 +27,8 @@ module.exports = {
     addEntityToRouter
 };
 
-function addEntityToMenu(generator, entityName, className) {
-    const menuI18nTitle = generator.enableTranslation ? `v-text="$t('global.menu.entities.${entityName}')"` : '';
+function addEntityToMenu(generator, entityName, translationKey, className) {
+    const menuI18nTitle = generator.enableTranslation ? `v-text="$t('global.menu.entities.${translationKey}')"` : '';
     jhipsterUtils.rewriteFile(
         {
             file: `${CLIENT_MAIN_SRC_DIR}/app/components/jhi-navbar/JhiNavbar.vue`,
@@ -52,18 +52,16 @@ function addEntityToRouterImport(generator, className, fileName, folderName) {
             needle: 'jhipster-needle-add-entity-to-router-import',
             splicable: [
                 // prettier-ignore
-                `
-                import ${className} from '../entities/${folderName}/${fileName}.vue'
-                import ${className}Update from '../entities/${folderName}/${fileName}-update.vue'
-                import ${className}Details from '../entities/${folderName}/${fileName}-details.vue'
-                `
+                `import ${className} from '../entities/${folderName}/${fileName}.vue';
+                import ${className}Update from '../entities/${folderName}/${fileName}-update.vue';
+                import ${className}Details from '../entities/${folderName}/${fileName}-details.vue';`
             ]
         },
         generator
     );
 }
 
-function addEntityToRouter(generator, entityName, className) {
+function addEntityToRouter(generator, entityName, entityFileName, className) {
     jhipsterUtils.rewriteFile(
         {
             file: `${CLIENT_MAIN_SRC_DIR}/app/router/index.ts`,
@@ -71,23 +69,22 @@ function addEntityToRouter(generator, entityName, className) {
             splicable: [
                 // prettier-ignore
                 `,{
-                    path: '/entity/${entityName}',
+                    path: '/entity/${entityFileName}',
                     name: '${className}',
                     component: ${className}
               },{
-                   path: '/entity/${entityName}/new',
+                   path: '/entity/${entityFileName}/new',
                    name: '${className}Create',
                    component: ${className}Update
              },{
-                   path: '/entity/${entityName}/:${entityName}Id/edit',
+                   path: '/entity/${entityFileName}/:${entityName}Id/edit',
                    name: '${className}Edit',
                    component: ${className}Update
              },{
-                   path: '/entity/${entityName}/:${entityName}Id/view',
+                   path: '/entity/${entityFileName}/:${entityName}Id/view',
                    name: '${className}View',
                    component: ${className}Details
-             }
-              `
+             }`
             ]
         },
         generator

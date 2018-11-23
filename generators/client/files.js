@@ -139,6 +139,8 @@ function writeFiles() {
         this.template('vue/src/main/webapp/app/components/admin/tracker/TrackerService.vue.ejs', 'src/main/webapp/app/components/admin/tracker/TrackerService.vue');
     }
     this.template('vue/src/main/webapp/app/shared/ItemCount.vue.ejs', 'src/main/webapp/app/shared/ItemCount.vue');
+    const entityFolderName = this.getEntityFolderName(this.clientRootFolder, 'user');
+    this.copy('vue/src/main/webapp/app/entities/UserService.vue', `src/main/webapp/app/entities/${entityFolderName}/user.service.vue`);
 
     utils.addLanguagesToApplication(this);
     utils.addLanguagesToWebPackConfiguration(this);

@@ -58,6 +58,10 @@ const vueFiles = {
                 {
                     file: 'entities/entity.component.ts',
                     renameTo: generator => `entities/${generator.entityFolderName}/${generator.entityFileName}.component.ts`
+                },
+                {
+                    file: 'entities/entity.service.vue',
+                    renameTo: generator => `entities/${generator.entityFolderName}/${generator.entityFileName}.service.vue`
                 }
             ]
         }
@@ -97,11 +101,11 @@ function writeFiles() {
     // Add entity to menu
     const className = this.entityClass;
     const entityName = this.entityInstance;
-    utils.addEntityToMenu(this, entityName, className);
+    utils.addEntityToMenu(this, this.entityFileName, this.entityTranslationKeyMenu, className);
 
     // Add entity paths to routing system
     utils.addEntityToRouterImport(this, className, this.entityFileName, this.entityFolderName);
-    utils.addEntityToRouter(this, entityName, className);
+    utils.addEntityToRouter(this, entityName, this.entityFileName, className);
 
     if (!this.enableTranslation) {
         clientUtils.replaceTranslation(this, [
