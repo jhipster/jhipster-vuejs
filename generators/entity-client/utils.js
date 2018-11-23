@@ -50,12 +50,12 @@ function addEntityToRouterImport(generator, className, fileName, folderName) {
         {
             file: `${CLIENT_MAIN_SRC_DIR}/app/router/index.ts`,
             needle: 'jhipster-needle-add-entity-to-router-import',
-            splicable: [
+            splicable: [generator.stripMargin(
                 // prettier-ignore
-                `import ${className} from '../entities/${folderName}/${fileName}.vue';
-                import ${className}Update from '../entities/${folderName}/${fileName}-update.vue';
-                import ${className}Details from '../entities/${folderName}/${fileName}-details.vue';`
-            ]
+                `|// prettier-ignore
+                |import ${className} from '../entities/${folderName}/${fileName}.vue';
+                |import ${className}Update from '../entities/${folderName}/${fileName}-update.vue';
+                |import ${className}Details from '../entities/${folderName}/${fileName}-details.vue';`)]
         },
         generator
     );
@@ -66,26 +66,13 @@ function addEntityToRouter(generator, entityName, entityFileName, className) {
         {
             file: `${CLIENT_MAIN_SRC_DIR}/app/router/index.ts`,
             needle: 'jhipster-needle-add-entity-to-router',
-            splicable: [
+            splicable: [generator.stripMargin(
                 // prettier-ignore
-                `,{
-                    path: '/entity/${entityFileName}',
-                    name: '${className}',
-                    component: ${className}
-              },{
-                   path: '/entity/${entityFileName}/new',
-                   name: '${className}Create',
-                   component: ${className}Update
-             },{
-                   path: '/entity/${entityFileName}/:${entityName}Id/edit',
-                   name: '${className}Edit',
-                   component: ${className}Update
-             },{
-                   path: '/entity/${entityFileName}/:${entityName}Id/view',
-                   name: '${className}View',
-                   component: ${className}Details
-             }`
-            ]
+                `|, // prettier-ignore
+                |    { path: '/entity/${entityFileName}', name: '${className}', component: ${className} },
+                |    { path: '/entity/${entityFileName}/new', name: '${className}Create', component: ${className}Update },
+                |    { path: '/entity/${entityFileName}/:${entityName}Id/edit', name: '${className}Edit', component: ${className}Update },
+                |    { path: '/entity/${entityFileName}/:${entityName}Id/view', name: '${className}View', component: ${className}Details }`)]
         },
         generator
     );
