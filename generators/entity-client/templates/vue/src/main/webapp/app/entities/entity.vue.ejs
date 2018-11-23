@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span v-text="$t('<%= i18nKeyPrefix %>.home.title')" id="<%= entityFileName %>-heading"><%= entityAngularName %></span>
+            <span v-text="$t('<%= i18nKeyPrefix %>.home.title')" id="<%= entityFileName %>-heading"><%= entityClassPluralHumanized %></span>
             <router-link to="/entity/<%= entityUrl %>/new" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-<%= entityUrl %>">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
                 <span  v-text="$t('<%= i18nKeyPrefix %>.home.createLabel')">
@@ -47,7 +47,7 @@
                             </td>
                         <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'any') { _%>
                             <td>
-                                <a v-if="<%= entityInstance %>.<%= fieldName %>" v-bind:click="openFile(<%= entityInstance %>.<%= fieldName %>ContentType, <%= entityInstance %>.<%= fieldName %>)" v-text="$t('entity.action.open')">open</a>
+                                <a v-if="<%= entityInstance %>.<%= fieldName %>" v-on:click="openFile(<%= entityInstance %>.<%= fieldName %>ContentType, <%= entityInstance %>.<%= fieldName %>)" v-text="$t('entity.action.open')">open</a>
                                 <span v-if="<%= entityInstance %>.<%= fieldName %>">{{<%= entityInstance %>.<%= fieldName %>ContentType}}, {{byteSize(<%= entityInstance %>.<%= fieldName %>)}}</span>
                             </td>
                         <%_ } else if (fields[idx].fieldIsEnum) { _%>

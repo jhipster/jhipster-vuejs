@@ -19,9 +19,12 @@ import <%= entityAngularName %>Service from './<%= entityFileName %>.service.vue
 _%>
 import <%= otherEntityAngularName %>Service from '../<%= otherEntityFolderName %>/<%= otherEntityFileName %>.service.vue';
 <%_ } _%>
+<% if (fieldsContainBlob) { %>
+import JhiDataUtils from '../../<% if (clientRootFolder) { %>../<% } %>shared/data/DataUtilsService.vue';
+<% } %>
 
 const <%= entityAngularName %>Update =  {
-    mixins: [<%= entityAngularName %>Service<%_ for (idx in relationships) { const otherEntityAngularName = relationships[idx].otherEntityAngularName;_%> ,<%= otherEntityAngularName %>Service <%_ } _%>],
+    mixins: [<%= entityAngularName %>Service<% if (fieldsContainBlob) { %>, JhiDataUtils<% } %><%_ for (idx in relationships) { const otherEntityAngularName = relationships[idx].otherEntityAngularName;_%> ,<%= otherEntityAngularName %>Service <%_ } _%>],
     data() {
         return {
             <%= entityInstance %>: {
@@ -120,6 +123,11 @@ const <%= entityAngularName %>Update =  {
         previousState() {
             this.$router.go(-1);
         },
+        <%_ if (fieldsContainBlob && fieldsContainImageBlob) { _%>
+        _clearInputImage(field, fieldContentType, idInput) {
+            this.clearInputImage(this.<%= entityInstance %>, this.elementRef, field, fieldContentType, idInput);
+        },
+        <%_ } _%>
         initRelationships() {
             let vm = this;
             <%_

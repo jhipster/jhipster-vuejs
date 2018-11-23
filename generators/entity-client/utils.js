@@ -55,7 +55,8 @@ function addEntityToRouterImport(generator, className, fileName, folderName) {
                 `|// prettier-ignore
                 |import ${className} from '../entities/${folderName}/${fileName}.vue';
                 |import ${className}Update from '../entities/${folderName}/${fileName}-update.vue';
-                |import ${className}Details from '../entities/${folderName}/${fileName}-details.vue';`)]
+                |import ${className}Details from '../entities/${folderName}/${fileName}-details.vue';`
+            )]
         },
         generator
     );
@@ -72,7 +73,8 @@ function addEntityToRouter(generator, entityName, entityFileName, className) {
                 |    { path: '/entity/${entityFileName}', name: '${className}', component: ${className} },
                 |    { path: '/entity/${entityFileName}/new', name: '${className}Create', component: ${className}Update },
                 |    { path: '/entity/${entityFileName}/:${entityName}Id/edit', name: '${className}Edit', component: ${className}Update },
-                |    { path: '/entity/${entityFileName}/:${entityName}Id/view', name: '${className}View', component: ${className}Details }`)]
+                |    { path: '/entity/${entityFileName}/:${entityName}Id/view', name: '${className}View', component: ${className}Details }`
+            )]
         },
         generator
     );

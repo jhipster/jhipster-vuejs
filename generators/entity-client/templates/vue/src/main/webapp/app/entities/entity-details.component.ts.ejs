@@ -1,7 +1,10 @@
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service.vue';
+<% if (fieldsContainBlob) { %>
+    import JhiDataUtils from '../../<% if (clientRootFolder) { %>../<% } %>shared/data/DataUtilsService.vue';
+<% } %>
 
 const <%= entityAngularName %>Details =  {
-    mixins: [<%= entityAngularName %>Service],
+    mixins: [<%= entityAngularName %>Service<% if (fieldsContainBlob) { %>, JhiDataUtils<% } %>],
     data() {
         return {
             <%= entityInstance %>: {}

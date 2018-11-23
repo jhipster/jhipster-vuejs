@@ -1,8 +1,11 @@
 import Principal from '../../<%_ if (clientRootFolder) { _%>../<%_ } _%>components/account/Principal.vue';
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service.vue';
+<% if (fieldsContainBlob) { %>
+    import JhiDataUtils from '../../<% if (clientRootFolder) { %>../<% } %>shared/data/DataUtilsService.vue';
+<% } %>
 
 const <%= entityAngularName %> = {
-    mixins: [Principal, <%= entityAngularName %>Service],
+    mixins: [Principal, <%= entityAngularName %>Service<% if (fieldsContainBlob) { %>, JhiDataUtils<% } %>],
     data() {
       return {
           removeId: null,
@@ -23,11 +26,11 @@ const <%= entityAngularName %> = {
         },
         prepareRemove(instance) {
             this.removeId = instance.id;
-            this.$refs.removeEntity.show();
+            this.$refs.removeEntisetFileDataSETDSty.show();
         },
         remove<%= entityAngularName %>() {
             let vm = this;
-            this.delete<%= entityAngularName %>(vm.removeId).then(() => {
+            this.delete<%= entityAngularName %>(this.removeId).then(() => {
                 vm.removeId = null;
                 vm.retrieveAll<%= entityAngularName %>s();
                 vm.closeDialog();

@@ -90,6 +90,7 @@ function writeFiles() {
     this.copy('vue/src/main/webapp/app/components/account/settings/Settings.component.ts', 'src/main/webapp/app/components/account/settings/Settings.component.ts');
     this.copy('vue/src/main/webapp/app/components/account/settings/settings.component.test.ts', 'src/main/webapp/app/components/account/settings/settings.component.test.ts');
     this.copy('vue/src/main/webapp/app/shared/date/filters.ts', 'src/main/webapp/app/shared/date/filters.ts');
+    this.copy('vue/src/main/webapp/app/shared/data/DataUtilsService.vue', 'src/main/webapp/app/shared/data/DataUtilsService.vue');
     this.template('vue/src/main/webapp/app/config/axios-interceptor.ts.ejs', 'src/main/webapp/app/config/axios-interceptor.ts');
     this.template('vue/src/main/webapp/app/components/admin/user-management/UserManagement.vue.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagement.vue');
     this.template('vue/src/main/webapp/app/components/admin/user-management/UserManagement.component.ts.ejs', 'src/main/webapp/app/components/admin/user-management/UserManagement.component.ts');
@@ -151,6 +152,7 @@ function writeFiles() {
             'app/components/jhi-footer/JhiFooter.vue',
             'app/components/jhi-navbar/JhiNavbar.vue',
             'app/components/ribbon/Ribbon.vue',
+            'app/shared/ItemCount.vue',
             'app/components/account/change-password/ChangePassword.vue',
             'app/components/account/login-form/LoginForm.vue',
             'app/components/account/register/Register.vue',
@@ -162,6 +164,7 @@ function writeFiles() {
             'app/components/admin/user-management/UserManagementEdit.vue',
             'app/components/admin/configuration/Configuration.vue',
             'app/components/admin/health/Health.vue',
+            'app/components/admin/health/HealthModal.vue',
             'app/components/admin/logs/Logs.vue',
             'app/components/admin/metrics/Metrics.vue',
             'app/components/admin/metrics/MetricsModal.vue',
