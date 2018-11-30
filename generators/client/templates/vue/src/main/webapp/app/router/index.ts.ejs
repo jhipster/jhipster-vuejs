@@ -16,10 +16,10 @@ const <%= jhiPrefixCapitalized %>UserManagementComponent = () => import('../comp
 const <%= jhiPrefixCapitalized %>UserManagementViewComponent = () => import('../components/admin/user-management/UserManagementView.vue');
 const <%= jhiPrefixCapitalized %>UserManagementEditComponent = () => import('../components/admin/user-management/UserManagementEdit.vue');
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
-import <%= jhiPrefixCapitalized %>GatewayComponent = () => import('../components/admin/gateway/Gateway.vue');
+const <%= jhiPrefixCapitalized %>GatewayComponent = () => import('../components/admin/gateway/Gateway.vue');
 <%_ } _%>
 <%_ if (websocket === 'spring-websocket') { _%>
-import <%= jhiPrefixCapitalized %>TrackerComponent = () => import('../components/admin/tracker/Tracker.vue');
+const <%= jhiPrefixCapitalized %>TrackerComponent = () => import('../components/admin/tracker/Tracker.vue');
 <%_ } _%>
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 

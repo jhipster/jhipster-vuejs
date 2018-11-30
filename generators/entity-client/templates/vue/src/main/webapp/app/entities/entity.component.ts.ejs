@@ -72,7 +72,7 @@ const <%= entityAngularName %> = {
         },
         prepareRemove(instance) {
             this.removeId = instance.id;
-            this.$refs.removeEntisetFileDataSETDSty.show();
+            this.$refs.removeEntity.show();
         },
         remove<%= entityAngularName %>() {
             this.delete<%= entityAngularName %>(this.removeId).then(() => {
