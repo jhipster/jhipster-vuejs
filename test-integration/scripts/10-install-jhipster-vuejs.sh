@@ -85,13 +85,17 @@ cp "$JHI_CLONED"/test-integration/scripts/00-init-env.sh "$JHI_HOME"/test-integr
 cp -R "$JHI_CLONED"/test-integration/samples-vuejs/* "$JHI_HOME"/test-integration/samples/
 
 #-------------------------------------------------------------------------------
+# Install yeoman
+#-------------------------------------------------------------------------------
+npm install -g yo
+
+#-------------------------------------------------------------------------------
 # Install JHipster Vuejs
 #-------------------------------------------------------------------------------
 cd "$JHI_CLONED"/
 npm ci
 npm link
 npm link generator-jhipster
-
 ls -al /home/travis/.nvm/versions/node/v10.13.0/lib/node_modules/
 
 npm run lint
