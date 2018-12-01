@@ -92,6 +92,8 @@ npm ci
 npm link
 npm link generator-jhipster
 
+ls -al /home/travis/.nvm/versions/node/v10.13.0/lib/node_modules/
+
 npm run lint
 if [[ "$JHI_APP" == "" || "$JHI_APP" == "vuejs-default" ]]; then
     npm test
