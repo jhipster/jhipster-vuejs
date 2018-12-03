@@ -89,7 +89,7 @@ function writeFiles() {
     this.template('vue/src/main/webapp/app/components/account/Principal.vue.ejs', 'src/main/webapp/app/components/account/Principal.vue');
     this.copy('vue/src/main/webapp/app/components/account/register/Register.vue', 'src/main/webapp/app/components/account/register/Register.vue');
     this.copy('vue/src/main/webapp/app/components/account/register/Register.component.ts', 'src/main/webapp/app/components/account/register/Register.component.ts');
-    this.copy('vue/src/main/webapp/app/components/account/RegisterService.vue', 'src/main/webapp/app/components/account/RegisterService.vue');
+    this.copy('vue/src/main/webapp/app/components/account/register/RegisterService.ts', 'src/main/webapp/app/components/account/register/RegisterService.ts');
     this.copy('vue/src/main/webapp/app/components/account/reset-password/ResetPassword.vue', 'src/main/webapp/app/components/account/reset-password/ResetPassword.vue');
     this.copy('vue/src/main/webapp/app/components/account/reset-password/ResetPassword.component.ts', 'src/main/webapp/app/components/account/reset-password/ResetPassword.component.ts');
     this.copy('vue/src/main/webapp/app/components/account/sessions/Sessions.vue', 'src/main/webapp/app/components/account/sessions/Sessions.vue');

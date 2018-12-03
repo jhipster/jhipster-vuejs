@@ -8,6 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {Modal, Pagination, Progress} from 'bootstrap-vue/es/components';
 import * as config from './shared/config';
 import JhiItemCountComponent from './shared/ItemCount.vue';
+import RegisterService from './components/account/register/RegisterService';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -28,10 +29,15 @@ Vue.use(Modal);
 Vue.use(Pagination);
 Vue.use(Progress);
 
+const registerService = new RegisterService();
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   components: { App },
+  provide: {
+    registerService: () => registerService,
+  },
   template: '<App/>',
   router,
 <%_ if (enableTranslation) { _%>    i18n,<%_ } _%>
