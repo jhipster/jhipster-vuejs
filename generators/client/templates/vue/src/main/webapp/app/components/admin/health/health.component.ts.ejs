@@ -3,17 +3,10 @@ import <%=jhiPrefixCapitalized%>HealthModal from './health-modal.vue';
 import { Component } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 
-const beforeRouteEnter = (to, from, next) => {
-  next(vm => {
-    vm.refresh();
-  });
-};
-
 @Component({
   components: {
     'health-modal': <%=jhiPrefixCapitalized%>HealthModal
-  },
-  beforeRouteEnter
+  }
 })
 export default class <%=jhiPrefixCapitalized%>Health extends mixins(HealthService) {
   public healthData: any;
@@ -25,6 +18,10 @@ export default class <%=jhiPrefixCapitalized%>Health extends mixins(HealthServic
     this.healthData = null;
     this.currentHealth = null;
     this.updatingHealth = false;
+  }
+
+  public mounted(): void {
+    this.refresh();
   }
 
   public baseName(name: any): any {

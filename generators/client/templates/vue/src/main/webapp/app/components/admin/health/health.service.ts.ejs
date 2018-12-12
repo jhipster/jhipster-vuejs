@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class HealthService extends Vue {
-  public separator: String;
+  public separator: string;
 
   constructor() {
     super();
@@ -11,7 +11,7 @@ export default class HealthService extends Vue {
   }
 
   public checkHealth(): AxiosPromise<any> {
-      return axios.get('management/health');
+    return axios.get('management/health');
   }
 
   public transformHealthData(data: any): any {

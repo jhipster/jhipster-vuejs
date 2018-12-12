@@ -26,6 +26,7 @@ describe('Health Component', () => {
   let health: HealthClass;
 
   beforeEach(() => {
+    mockedAxios.get.mockReturnValue(Promise.resolve({}));
     wrapper = shallowMount<HealthClass>(Health, { store, i18n, localVue, stubs: { bModal: true } });
     health = wrapper.vm;
   });
