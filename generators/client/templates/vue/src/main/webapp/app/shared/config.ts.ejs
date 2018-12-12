@@ -39,7 +39,11 @@ export function initVueXStore(vue) {
     state: {
       logon: false,
       userIdentity: null,
-      authenticated: false
+      authenticated: false,
+      currentLanguage: '<%= nativeLanguage %>',
+      languages: {
+        // jhipster-needle-i18n-language-key-pipe - JHipster will add/remove languages in this object
+      }
     },
     mutations: {
       authenticate(state) {
@@ -59,7 +63,9 @@ export function initVueXStore(vue) {
     getters: {
       logon: state => state.logon,
       account: state => state.userIdentity,
-      authenticated: state => state.authenticated
+      authenticated: state => state.authenticated,
+      currentLanguage: state => state.currentLanguage,
+      languages: state => state.languages
     }
   });
 }

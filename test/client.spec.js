@@ -97,7 +97,6 @@ const expectedFiles = {
 
         `${CLIENT_MAIN_SRC_DIR}app/config/axios-interceptor.ts`,
 
-        `${CLIENT_MAIN_SRC_DIR}app/locale/LanguageService.vue`,
         `${CLIENT_MAIN_SRC_DIR}app/locale/translation.service.ts`,
 
         `${CLIENT_MAIN_SRC_DIR}app/router/index.ts`,

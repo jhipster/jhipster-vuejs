@@ -3,20 +3,22 @@ import { Component, Inject } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import axios from 'axios';
 import {VERSION} from "@/constants";
-import TranslationService from '@/locale/translation.service';
 import LoginModalService from '@/components/account/login-modal.service';
+import TranslationService from '@/locale/translation.service';
 import Principal from '@/components/account/principal';
-import LanguageService from '@/locale/LanguageService.vue';
 
 @Component({
   computed: mapGetters(['authenticated'])
 })
-export default class JhiNavbar extends mixins(TranslationService, Principal, LanguageService) {
+export default class JhiNavbar extends mixins(Principal) {
   @Inject('loginModalService') private loginModalService: () => LoginModalService;
+  @Inject('translationService') private translationService: () => TranslationService;
   public version: string;
   public swaggerEnabled: boolean;
   public inProduction: boolean;
   public isNavbarCollapsed: boolean;
+  private currentLanguage: string;
+  private languages: any;
 
   constructor() {
     super();
@@ -24,9 +26,12 @@ export default class JhiNavbar extends mixins(TranslationService, Principal, Lan
     this.swaggerEnabled = false;
     this.inProduction = false;
     this.isNavbarCollapsed = true;
+    this.currentLanguage = this.$store.getters.currentLanguage;
+    this.languages = this.$store.getters.languages;
   }
 
   created() {
+    this.translationService().refreshTranslation(this.$i18n, this.currentLanguage);
     axios.get('management/info').then((res) => {
       if (res.data && res.data.activeProfiles && res.data.activeProfiles.indexOf('swagger') > -1) {
         this.swaggerEnabled = true;
@@ -45,8 +50,8 @@ export default class JhiNavbar extends mixins(TranslationService, Principal, Lan
     this.isNavbarCollapsed = true;
   }
 
-  public changeLanguage(language) : void {
-    this.currentLanguage = language;
+  public changeLanguage(newLanguage) : void {
+    this.translationService().refreshTranslation(this.$i18n, this.currentLanguage, newLanguage);
   }
 
   public logout() : void {

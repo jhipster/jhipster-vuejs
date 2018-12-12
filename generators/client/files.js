@@ -98,7 +98,6 @@ const vueFiles = {
                 'config/axios-interceptor.ts',
                 'shared/config.ts',
                 'router/index.ts',
-                'locale/LanguageService.vue',
                 'locale/translation.service.ts'
             ]
         }
