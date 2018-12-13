@@ -6,6 +6,7 @@ import * as config from '@/shared/config';
 import Metrics from '@/components/admin/metrics/metrics.vue';
 import MetricsModal from '@/components/admin/metrics/metrics-modal.vue';
 import MetricsClass from '@/components/admin/metrics/metrics.component';
+import MetricsService from '@/components/admin/metrics/metrics.service';
 
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
@@ -26,8 +27,18 @@ describe('Metrics Component', () => {
   let metrics: MetricsClass;
 
   beforeEach(() => {
-    mockedAxios.get.mockReturnValue(Promise.resolve({}));
-    wrapper = shallowMount<MetricsClass>(Metrics, { store, i18n, localVue, stubs: { bModal: true } });
+    mockedAxios.get.mockReturnValue(Promise.resolve({data:{}}));
+    wrapper = shallowMount<MetricsClass>(Metrics, {
+      store,
+      i18n,
+      localVue,
+      stubs: {
+        bModal: true
+      },
+      provide: {
+        metricsService: () => new MetricsService()
+      }
+    });
     metrics = wrapper.vm;
   });
 

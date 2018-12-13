@@ -1,21 +1,21 @@
 import numeral from 'numeral';
 import <%=jhiPrefixCapitalized%>MetricsModal from './metrics-modal.vue';
 import MetricsService from './metrics.service';
-import { Component } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject } from 'vue-property-decorator';
 
 @Component({
   components: {
     'metrics-modal': <%=jhiPrefixCapitalized%>MetricsModal
   }
 })
-export default class <%=jhiPrefixCapitalized%>Metrics extends mixins(MetricsService) {
+export default class <%=jhiPrefixCapitalized%>Metrics extends Vue {
   public metrics: any;
   public cachesStats: any;
   public servicesStats: any;
   public updatingMetrics: boolean;
   public JCACHE_KEY: string;
   public threads: any;
+  @Inject('metricsService') private metricsService: () => MetricsService;
 
   constructor() {
     super();
@@ -33,7 +33,7 @@ export default class <%=jhiPrefixCapitalized%>Metrics extends mixins(MetricsServ
 
   public refresh(): void {
     this.updatingMetrics = true;
-    this.getMetrics().then(res => {
+    this.metricsService().getMetrics().then(res => {
       this.metrics = res.data;
       this.updatingMetrics = false;
       this.servicesStats = {};
@@ -65,7 +65,7 @@ export default class <%=jhiPrefixCapitalized%>Metrics extends mixins(MetricsServ
     if ((<any>this.$refs.metricsModal).show) {
       (<any>this.$refs.metricsModal).show();
     }
-    this.retrieveThreadDump().then(res => {
+    this.metricsService().retrieveThreadDump().then(res => {
       this.threads = res.data.threads;
     });
   }

@@ -1,8 +1,12 @@
-import axios, { AxiosPromise } from 'axios';
-import { Component, Vue } from 'vue-property-decorator';
+import axios, { AxiosInstance, AxiosPromise } from 'axios';
 
-@Component
-export default class MetricsService extends Vue {
+export default class MetricsService {
+  private axios: AxiosInstance;
+
+  constructor() {
+    this.axios = axios;
+  }
+
   public getMetrics(): AxiosPromise<any> {
     return axios.get('management/metrics');
   }
