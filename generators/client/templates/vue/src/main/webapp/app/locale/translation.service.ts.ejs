@@ -1,13 +1,7 @@
 import axios from 'axios';
-import { Component, Vue } from 'vue-property-decorator';
 import VueI18n from 'vue-i18n';
 
-@Component
-export default class TranslationService extends Vue {
-
-  constructor() {
-    super();
-  }
+export default class TranslationService {
 
   public refreshTranslation(i18n: VueI18n, currentLanguage: string, newLanguage: string) {
     currentLanguage = newLanguage ? newLanguage : '<%= nativeLanguage %>';
