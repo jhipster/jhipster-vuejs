@@ -35,7 +35,9 @@ export default class JhiNavbar extends mixins(Principal) {
   }
 
   created() {
+    <%_ if (enableTranslation) { _%>
     this.translationService().refreshTranslation(this.$i18n, this.currentLanguage, this.currentLanguage);
+    <%_ } _%>
     axios.get('management/info').then((res) => {
       if (res.data && res.data.activeProfiles && res.data.activeProfiles.indexOf('swagger') > -1) {
         this.swaggerEnabled = true;
