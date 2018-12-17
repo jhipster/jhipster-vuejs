@@ -11,13 +11,21 @@
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="manifest" href="manifest.webapp" />
+    <link rel="stylesheet" href="content/css/loading.css">
     <!-- jhipster-needle-add-resources-to-root - JHipster will add new resources here -->
 </head>
 <body>
     <!--[if lt IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div id="app"></div>
+    <div id="app">
+        <div class="app-loading">
+            <div class="lds-pacman">
+                <div><div></div><div></div><div></div></div>
+                <div><div></div><div></div><div></div></div>
+            </div>
+        </div>
+    </div>
     <noscript>
         <h1>You must enable javascript to view this page.</h1>
     </noscript>
