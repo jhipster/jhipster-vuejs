@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { Component, Inject, Vue } from 'vue-property-decorator';
+<%_ if (enableTranslation) { _%>
+import TranslationService from '@/locale/translation.service';
+<%_ } _%>
 
 <%_ if (websocket === 'spring-websocket') { _%>
 import TrackerService from '../admin/tracker/TrackerService.vue';
@@ -10,6 +13,9 @@ export default class Principal extends Vue {
 
   <%_ if (websocket === 'spring-websocket') { _%>
   @Inject('trackerService') private trackerService: () => TrackerService;
+  <%_ } _%>
+  <%_ if (enableTranslation) { _%>
+  @Inject('translationService') private translationService: () => TranslationService;
   <%_ } _%>
 
   public created(): void {
@@ -26,7 +32,7 @@ export default class Principal extends Vue {
       if (account) {
         this.$store.commit('authenticated', account);
         if (this.$store.getters.currentLanguage !== account.langKey) {
-          this.$store.getters.currentLanguage = account.langKey;
+          this.$store.commit('currentLanguage', account.langKey);
         }
         <%_ if (websocket === 'spring-websocket') { _%>
         this.trackerService.connect();
@@ -35,6 +41,7 @@ export default class Principal extends Vue {
         this.$store.commit('logout');
         (<any> this).$router.push('/');
       }
+      this.refreshTranslation(this.$store.getters.currentLanguage);
     }).catch(() => {
       this.$store.commit('logout');
       (<any> this).$router.push('/');
@@ -68,5 +75,10 @@ export default class Principal extends Vue {
 
   public get username(): string {
     return this.$store.getters.account ? this.$store.getters.account.login : ''
+  }
+
+  public refreshTranslation(newLanguage) {
+    this.translationService().refreshTranslation(this.$i18n,
+      this.$store.getters.currentLanguage, newLanguage);
   }
 }

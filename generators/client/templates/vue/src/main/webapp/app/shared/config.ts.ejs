@@ -122,6 +122,9 @@ export function initVueXStore(vue) {
         state.userIdentity = null;
         state.authenticated = false;
         state.logon = false;
+      },
+      currentLanguage(state, newLanguage) {
+        state.currentLanguage = newLanguage;
       }
     },
     getters: {
