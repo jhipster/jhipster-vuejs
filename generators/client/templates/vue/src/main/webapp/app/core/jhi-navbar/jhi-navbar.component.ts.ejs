@@ -54,6 +54,10 @@ export default class JhiNavbar extends mixins(Principal) {
   public changeLanguage(newLanguage) : void {
     this.refreshTranslation(newLanguage);
   }
+
+  public isActiveLanguage(key) {
+    return key == this.$store.getters.currentLanguage;
+  }
   <%_ } _%>
 
   public logout() : void {
