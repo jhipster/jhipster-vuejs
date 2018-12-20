@@ -76,7 +76,7 @@ const beforeRouteEnter = (to, from, next) => {
 })
 export default class <%= entityAngularName %>Update extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils)<% } else { %>Vue<% } %> {
   @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service : () => <%= entityAngularName %>Service;
-  public <%= entityInstance %>: I<%= entityAngularName %>;
+  public <%= entityInstance %>: I<%= entityAngularName %> = {};
   <%_
     const entitiesSeen = [entityAngularName];
     for (idx in relationships) {
@@ -87,32 +87,9 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
   <%_ if (!entitiesSeen.includes(otherEntityAngularName)) { %>
   @Inject('<%= otherEntityName %>Service') private <%= otherEntityName %>Service : () => <%= otherEntityAngularName %>Service;
   <%_ } _%>
-  public <%= otherEntityNamePlural %> : <% if (otherEntityAngularName === 'User') { %>Array<any><%_ } else { _%>I<%= otherEntityAngularName %>[]<%_ } _%>;
+  public <%= otherEntityNamePlural %> : <% if (otherEntityAngularName === 'User') { %>Array<any><%_ } else { _%>I<%= otherEntityAngularName %>[]<%_ } _%> = [];
   <%_ entitiesSeen.push(otherEntityAngularName); } _%>
-  public isSaving: boolean;
-
-  constructor() {
-    super();
-    this.<%= entityInstance %> = {
-      <%_ for (idx in fields) {
-          const fieldName = fields[idx].fieldName;
-      _%>
-      <%= fieldName %>: null,
-      <%_ } _%>
-      <%_ for (idx in relationships) {
-          const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
-          if (relationships[idx].relationshipType !== 'many-to-one') {
-      _%>
-      <%= otherEntityNamePlural %>: [],
-      <%_ } } _%>
-    };
-    <%_ for (idx in relationships) {
-      const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
-    _%>
-    this.<%= otherEntityNamePlural %> = [];
-    <%_ } _%>
-    this.isSaving = false;
-  }
+  public isSaving: boolean = false;
 
   public save() : void {
     this.isSaving = true;

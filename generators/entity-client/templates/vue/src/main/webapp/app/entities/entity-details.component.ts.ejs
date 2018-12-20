@@ -19,12 +19,7 @@ const beforeRouteEnter = (to, from, next) => {
 })
 export default class <%= entityAngularName %>Details extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils)<% } else { %>Vue<% } %> {
   @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service : () => <%= entityAngularName %>Service;
-  public <%= entityInstance %>: I<%= entityAngularName %>;
-
-  constructor() {
-    super();
-    this.<%= entityInstance %> = {};
-  }
+  public <%= entityInstance %>: I<%= entityAngularName %> = {};
 
   public retrieve<%= entityAngularName %>(<%= entityInstance %>Id) {
     this.<%= entityInstance %>Service().find(<%= entityInstance %>Id).then((res) => {
