@@ -1,9 +1,10 @@
 import axios from 'axios';
 import VueI18n from 'vue-i18n';
+import { Store } from 'vuex';
 
 export default class TranslationService {
-
-  private Store<{}> store;
+  
+  private store: Store<{}>;
 
   constructor(store: Store<{}>) {
     this.store = store;
