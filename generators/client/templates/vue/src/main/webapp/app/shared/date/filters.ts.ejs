@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import { format } from 'date-fns'
 
+<%_ if (enableTranslation) { _%>
 import { enUS } from 'date-fns/locale'
+<%_ }  _%>
 
 export const DATE_FORMAT = 'yyyy-MM-dd'
 export const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm'
 
-export const locales = { enUS }
+<%_ if (enableTranslation) { _%>
+export const locales = { 
+    enUS
+}
+<%_ }  _%>
 
 export function initFilters() {
   Vue.filter('formatDate', function(value, language){
@@ -14,7 +20,11 @@ export function initFilters() {
     if (value && language) { 
         return format(value, DATE_TIME_FORMAT, {locale: locales[language]});
     } else if (value) {
-        return format(value, DATE_TIME_FORMAT, { locale: de });
+        <%_ if (enableTranslation) { _%>
+        return format(value, DATE_TIME_FORMAT, { locale: locales[<%= nativeLanguage %>] });
+        <%_ } else { _%>
+        return format(value, DATE_TIME_FORMAT);
+        <%_ }  _%>
     }
 });
 }
