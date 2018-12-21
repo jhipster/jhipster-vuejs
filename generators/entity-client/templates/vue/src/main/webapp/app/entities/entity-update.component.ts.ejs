@@ -14,6 +14,7 @@ import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validator
         _%>
 import format from 'date-fns/format';
 import parse from 'date-fns/parse'
+import { DATE_TIME_LONG_FORMAT, INSTANT_FORMAT, ZONED_DATE_TIME_FORMAT } from '@/shared/date/filters';
     <%_ } } _%>
 
 <%_
@@ -121,17 +122,25 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
         _%>
     public convertDateTimeFromServer(date: Date): string {
       if (date) {
-        return format(date, "yyyy-MM-dd'T'HH:mm");
+        return format(date, DATE_TIME_LONG_FORMAT);
       }
       return null;
     }
 
     public updateInstantField(field, event) {
-      this.<%= entityInstance %>[field] = parse(event.target.value, "yyyy-MM-dd'T'HH:mm", new Date());
+      if (event.target.value) {
+        this.<%= entityInstance %>[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
+      } else {
+        this.<%= entityInstance %>[field] = null;
+      }
     }
 
     public updateZonedDateTimeField(field, event) {
-        this.<%= entityInstance %>[field] = parse(event.target.value, "yyyy-MM-dd'T'HH:mm", new Date())
+      if (event.target.value) {
+        this.<%= entityInstance %>[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date())
+      } else {
+        this.<%= entityInstance %>[field] = null;
+      }
     }
     <%_ } } _%>
 
@@ -142,11 +151,15 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
       <%_ for (idx in fields) {
           const fieldName = fields[idx].fieldName;
           const fieldType = fields[idx].fieldType;
-          if ([ 'Instant' ].includes(fieldType)) { _%>      
-            this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), "yyyy-MM-dd'T'HH:mm:ssZ", new Date());
+          if ([ 'Instant' ].includes(fieldType)) { _%>
+            if (this.<%= entityInstance %>.<%= fieldName %>) {      
+              this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), INSTANT_FORMAT, new Date());
+            }
           <%_ }
           if ([ 'ZonedDateTime' ].includes(fieldType)) { _%>
-            this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), "yyyy-MM-dd'T'HH:mm:ssXXXXX", new Date());
+            if (this.<%= entityInstance %>.<%= fieldName %>) {
+              this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), ZONED_DATE_TIME_FORMAT, new Date());
+            }
           <%_ }
       } _%>
     });
