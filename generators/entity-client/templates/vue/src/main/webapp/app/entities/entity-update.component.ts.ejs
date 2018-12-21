@@ -12,7 +12,8 @@ import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validator
     if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !include) {
         include = true;
         _%>
-import moment from 'moment'
+import format from 'date-fns/format';
+import parse from 'date-fns/parse'
     <%_ } } _%>
 
 <%_
@@ -96,9 +97,6 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
     <%_ for (idx in fields) {
         const fieldName = fields[ idx ].fieldName;
         const fieldType = fields[idx].fieldType;
-        if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType)) { _%>
-      this.<%= entityInstance %>.<%= fieldName %> = moment(this.<%= entityInstance %>.<%= fieldName %>, 'YYYY-MM-DDTHH:mm');
-        <%_ }
     } _%>
     if (this.<%= entityInstance %>.id) {
       this.<%= entityInstance %>Service().update(this.<%= entityInstance %>).then(() => {
@@ -120,8 +118,11 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
       <%_ for (idx in fields) {
           const fieldName = fields[idx].fieldName;
           const fieldType = fields[idx].fieldType;
-          if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType)) { _%>
-      this.<%= entityInstance %>.<%= fieldName %> = moment(this.<%= entityInstance %>.<%= fieldName %>, 'YYYY-MM-DDTHH:mm:ssZ');
+          if ([ 'Instant' ].includes(fieldType)) { _%>      
+            this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), "yyyy-MM-dd'T'HH:mm:ssZ", new Date());
+          <%_ }
+          if ([ 'ZonedDateTime' ].includes(fieldType)) { _%>
+            this.<%= entityInstance %>.<%= fieldName %> = parse(this.<%= entityInstance %>.<%= fieldName %>.toString(), "yyyy-MM-dd'T'HH:mm:ssXXXXX", new Date());
           <%_ }
       } _%>
     });

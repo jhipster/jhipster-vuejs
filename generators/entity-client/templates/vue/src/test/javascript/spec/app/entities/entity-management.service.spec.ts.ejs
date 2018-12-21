@@ -23,6 +23,8 @@ _%>
 import axios from 'axios';
 <%_ if (fieldsContainDate) { _%>
 import moment from 'moment';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
 <%_ } _%>
 
 import * as config from '@/shared/config/config';
@@ -51,12 +53,12 @@ describe('Service Tests', () => {
     let service: <%= entityAngularName %>Service;
     let elemDefault;
     <%_ if (fieldsContainDate) { _%>
-    let currentDate: moment.Moment;
+    let currentDate: Date;
     <%_ } _%>
     beforeEach(() => {
       service = new <%= entityAngularName %>Service();
       <%_ if (fieldsContainDate) { _%>
-      currentDate = moment();
+      currentDate = new Date();
       <%_ } _%>
 
       elemDefault = new <%= entityAngularName %>(
