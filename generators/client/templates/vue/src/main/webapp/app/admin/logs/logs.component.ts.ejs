@@ -21,7 +21,7 @@ export default class <%=jhiPrefixCapitalized%>Logs extends Vue {
   }
 
   public updateLevel(name, level): void {
-    this.logsService().changeLevel({ name: name, level: level }).then(() => {
+    this.logsService().changeLevel({ 'name': name, 'level': level }).then(() => {
       this.init();
     });
   }
