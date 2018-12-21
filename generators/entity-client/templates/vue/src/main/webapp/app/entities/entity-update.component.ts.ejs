@@ -111,6 +111,30 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
     }
   }
 
+  <%_
+    let included = false;
+    for (idx in fields) {
+    const fieldName = fields[ idx ].fieldName;
+    const fieldType = fields[idx].fieldType;
+    if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !included) {
+        included = true;
+        _%>
+    public convertDateTimeFromServer(date: Date): string {
+      if (date) {
+        return format(date, "yyyy-MM-dd'T'HH:mm");
+      }
+      return null;
+    }
+
+    public updateInstantField(field, event) {
+      this.<%= entityInstance %>[field] = parse(event.target.value, "yyyy-MM-dd'T'HH:mm", new Date());
+    }
+
+    public updateZonedDateTimeField(field, event) {
+        this.<%= entityInstance %>[field] = parse(event.target.value, "yyyy-MM-dd'T'HH:mm", new Date())
+    }
+    <%_ } } _%>
+
   public retrieve<%= entityAngularName %>(<%= entityInstance %>Id) : void {
     this.<%= entityInstance %>Service().find(<%= entityInstance %>Id).then((res) => {
       this.<%= entityInstance %> = res;
