@@ -20,7 +20,7 @@ export default class <%= entityAngularName %> extends mixins(Principal<% if (fie
   public page: number = 1;
   public previousPage: number = null;
   public propOrder: string = 'id';
-  public reverse: boolean = false;
+  public reverse: boolean = <%_ if (pagination === 'infinite-scroll') { _%>true<%_ } else { _%>false<%_ } _%>;
   public totalItems: number = 0;
   <%_ } _%>
   public <%= entityInstancePlural %>: I<%= entityAngularName %>[] = [];
