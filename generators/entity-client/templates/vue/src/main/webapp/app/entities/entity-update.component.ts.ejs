@@ -30,7 +30,7 @@ import <%= otherEntityAngularName %>Service from '../<%= otherEntityFolderName %
 import { I<%= otherEntityAngularName %> } from '@/shared/model/<%= otherEntityModelName %>.model';
   <% } %>
 <%_ importEntitiesSeen.push(otherEntityAngularName); } _%>
-import { I<%= entityAngularName %> } from '@/shared/model/<%= entityModelFileName %>.model';
+import { I<%= entityAngularName %>, <%= entityAngularName %> } from '@/shared/model/<%= entityModelFileName %>.model';
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service';
 
 const validations: any = {
@@ -76,7 +76,7 @@ const beforeRouteEnter = (to, from, next) => {
 })
 export default class <%= entityAngularName %>Update extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils)<% } else { %>Vue<% } %> {
   @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service : () => <%= entityAngularName %>Service;
-  public <%= entityInstance %>: I<%= entityAngularName %> = {};
+  public <%= entityInstance %>: I<%= entityAngularName %> = new <%= entityAngularName %>();
   <%_
     const entitiesSeen = [entityAngularName];
     for (idx in relationships) {

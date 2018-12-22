@@ -38,7 +38,11 @@ const validations: any = {
 export default class Register extends Vue {
   @Inject('registerService') private registerService : () => RegisterService;
   @Inject('loginModalService') private loginModalService : () => LoginModalService;
-  public registerAccount: any = {};
+  public registerAccount: any = {
+    login: undefined,
+    email: undefined,
+    password: undefined
+  };
   public confirmPassword: any = null;
   public doNotMatch: string = '';
   public error: string = '';
