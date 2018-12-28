@@ -196,7 +196,10 @@ const vueFiles = {
                 'account/reset-password/reset-password.vue',
                 'account/reset-password/reset-password.component.ts',
                 'account/settings/settings.vue',
-                'account/settings/settings.component.ts'
+                'account/settings/settings.component.ts',
+                'account/activate/activate.component.ts',
+                'account/activate/activate.service.ts',
+                'account/activate/activate.vue'
             ]
         },
         {
