@@ -376,6 +376,7 @@ function writeFiles() {
             'app/core/ribbon/ribbon.vue',
             'app/shared/jhi-item-count.vue',
             'app/account/change-password/change-password.vue',
+            'app/account/activate/activate.vue',
             'app/account/login-form/login-form.vue',
             'app/account/register/register.vue',
             'app/account/reset-password/reset-password.vue',
