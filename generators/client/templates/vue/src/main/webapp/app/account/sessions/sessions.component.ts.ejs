@@ -1,43 +1,44 @@
 import axios from 'axios';
 import Principal from '../principal';
-import { mapGetters } from 'vuex';
+import { Component, Inject, Vue } from 'vue-property-decorator';
 
-const Sessions = {
-  mixins: [Principal],
-  data() {
-    return {
-      success: null,
-      error: null,
-      sessions: []
-    };
-  },
-  created() {
-    this.retrieveSessions();
-  },
-  methods: {
-    retrieveSessions: function() {
-      axios.get('api/account/sessions/').then((response) => {
-        this.error = null;
-        this.sessions = response.data;
-      });
-    },
-    invalidate: function(session) {
-      axios
-        .delete('api/account/sessions/' + session)
-        .then(() => {
-          this.error = null;
-          this.success = 'OK';
-          this.retrieveSessions();
-        })
-        .catch(() => {
-          this.success = null;
-          this.error = 'ERROR';
+@Component
+export default class Sessions extends Vue {
+    public success: string = null;
+    public error: string = null;
+    public sessions: any[] = [];
+    @Inject('principal') private principal: () => Principal;
+
+    public created(): void {
+        this.retrieveSessions();
+    }
+
+    public retrieveSessions(): void {
+        axios.get('api/account/sessions/').then(response => {
+            this.error = null;
+            this.sessions = response.data;
         });
     }
-  },
-  computed: {
-    ...mapGetters(['account'])
-  }
-};
 
-export default Sessions;
+    public invalidate(session): void {
+        axios
+            .delete('api/account/sessions/' + session)
+            .then(() => {
+                this.error = null;
+                this.success = 'OK';
+                this.retrieveSessions();
+            })
+            .catch(() => {
+                this.success = null;
+                this.error = 'ERROR';
+            });
+    }
+
+    public get authenticated(): boolean {
+        return this.principal().authenticated;
+    }
+
+    public get username(): string {
+        return this.principal().username;
+    }
+}
