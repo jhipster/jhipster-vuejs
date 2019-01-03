@@ -45,6 +45,15 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}i18n/fr/user-management.json`
     ],
 
+    common: [
+        '.editorconfig',
+        '.gitattributes',
+        '.gitignore',
+        '.prettierrc',
+        '.prettierignore',
+        'README.md',
+    ],
+
     app: [
         `${CLIENT_MAIN_SRC_DIR}app/account/change-password/change-password.component.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/account/change-password/change-password.vue`,
@@ -228,6 +237,7 @@ describe('Vue.js JHipster blueprint', () => {
         });
         it('creates expected files from jhipster client generator', () => {
             assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.test);
             assert.noFile(expectedFiles.protractor);
@@ -237,6 +247,10 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
         });
     });
     describe('Default with Gradle', () => {
@@ -275,6 +289,7 @@ describe('Vue.js JHipster blueprint', () => {
         });
         it('creates expected files from jhipster client generator', () => {
             assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.test);
             assert.noFile(expectedFiles.protractor);
@@ -284,6 +299,10 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
         });
     });
     describe('noi18n with Maven', () => {
@@ -321,6 +340,7 @@ describe('Vue.js JHipster blueprint', () => {
         });
         it('creates expected files from jhipster client generator', () => {
             assert.noFile(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.test);
             assert.noFile(expectedFiles.protractor);
@@ -330,6 +350,10 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
         });
     });
     describe('Elasticsearch and Protractor', () => {
@@ -370,6 +394,7 @@ describe('Vue.js JHipster blueprint', () => {
         });
         it('creates expected files from jhipster client generator', () => {
             assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.test);
             assert.file(expectedFiles.protractor);
@@ -379,6 +404,10 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
         });
     });
     describe('Websocket', () => {
@@ -419,6 +448,7 @@ describe('Vue.js JHipster blueprint', () => {
         });
         it('creates expected files from jhipster client generator', () => {
             assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.test);
             assert.file(expectedFiles.protractor);
@@ -429,6 +459,10 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
         });
     });
 });
