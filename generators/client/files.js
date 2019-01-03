@@ -36,7 +36,6 @@ const vueFiles = {
                 'package.json',
                 'tsconfig.json',
                 '.postcssrc.js',
-                { file: '.editorconfig', method: 'copy', noEjs: true },
                 'tsconfig.test.json',
                 'tslint.json',
                 'config/index.js',
