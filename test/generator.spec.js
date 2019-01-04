@@ -216,241 +216,7 @@ describe('Vue.js JHipster blueprint', () => {
                         require('../generators/client/index.js'), // eslint-disable-line global-require
                         'jhipster-vuejs:client',
                         path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'jwt',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['en', 'fr'],
-                    buildTool: 'maven',
-                    clientFramework: 'Vue.js'
-                })
-                .on('end', done);
-        });
-        it('creates expected files from jhipster client generator', () => {
-            assert.file(expectedFiles.i18n);
-            assert.file(expectedFiles.app);
-            assert.file(expectedFiles.test);
-            assert.noFile(expectedFiles.protractor);
-            assert.file(expectedFiles.webpack);
-        });
-        it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('package.json', '"vue"');
-            assert.fileContent('package.json', '"vuex"');
-            assert.fileContent('package.json', '"vuelidate"');
-        });
-    });
-    describe('Default with Gradle', () => {
-        before((done) => {
-            helpers
-                .run('generator-jhipster/generators/app')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'vuejs',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/client/index.js'), // eslint-disable-line global-require
-                        'jhipster-vuejs:client',
-                        path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'jwt',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['en', 'fr'],
-                    buildTool: 'gradle',
-                    clientFramework: 'Vue.js'
-                })
-                .on('end', done);
-        });
-        it('creates expected files from jhipster client generator', () => {
-            assert.file(expectedFiles.i18n);
-            assert.file(expectedFiles.app);
-            assert.file(expectedFiles.test);
-            assert.noFile(expectedFiles.protractor);
-            assert.file(expectedFiles.webpack);
-        });
-        it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('package.json', '"vue"');
-            assert.fileContent('package.json', '"vuex"');
-            assert.fileContent('package.json', '"vuelidate"');
-        });
-    });
-    describe('noi18n with Maven', () => {
-        before((done) => {
-            helpers
-                .run('generator-jhipster/generators/app')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'vuejs',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/client/index.js'), // eslint-disable-line global-require
-                        'jhipster-vuejs:client',
-                        path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'jwt',
-                    enableTranslation: false,
-                    nativeLanguage: 'en',
-                    buildTool: 'maven',
-                    clientFramework: 'Vue.js'
-                })
-                .on('end', done);
-        });
-        it('creates expected files from jhipster client generator', () => {
-            assert.noFile(expectedFiles.i18n);
-            assert.file(expectedFiles.app);
-            assert.file(expectedFiles.test);
-            assert.noFile(expectedFiles.protractor);
-            assert.file(expectedFiles.webpack);
-        });
-        it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('package.json', '"vue"');
-            assert.fileContent('package.json', '"vuex"');
-            assert.fileContent('package.json', '"vuelidate"');
-        });
-    });
-    describe('Elasticsearch and Protractor', () => {
-        before((done) => {
-            helpers
-                .run('generator-jhipster/generators/app')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'vuejs',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/client/index.js'), // eslint-disable-line global-require
-                        'jhipster-vuejs:client',
-                        path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'jwt',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['en', 'fr'],
-                    testFrameworks: ['protractor'],
-                    buildTool: 'maven',
-                    clientFramework: 'Vue.js',
-                    serverSideOptions: ['searchEngine:elasticsearch']
-                })
-                .on('end', done);
-        });
-        it('creates expected files from jhipster client generator', () => {
-            assert.file(expectedFiles.i18n);
-            assert.file(expectedFiles.app);
-            assert.file(expectedFiles.test);
-            assert.file(expectedFiles.protractor);
-            assert.file(expectedFiles.webpack);
-        });
-        it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('package.json', '"vue"');
-            assert.fileContent('package.json', '"vuex"');
-            assert.fileContent('package.json', '"vuelidate"');
-        });
-    });
-    describe('Websocket', () => {
-        before((done) => {
-            helpers
-                .run('generator-jhipster/generators/app')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'vuejs',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/client/index.js'), // eslint-disable-line global-require
-                        'jhipster-vuejs:client',
-                        path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleWebsocket',
-                    packageName: 'io.github.jhipster',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'jwt',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['en', 'fr'],
-                    testFrameworks: ['protractor'],
-                    buildTool: 'maven',
-                    clientFramework: 'Vue.js',
-                    serverSideOptions: ['websocket:spring-websocket']
-                })
-                .on('end', done);
-        });
-        it('creates expected files from jhipster client generator', () => {
-            assert.file(expectedFiles.i18n);
-            assert.file(expectedFiles.app);
-            assert.file(expectedFiles.test);
-            assert.file(expectedFiles.protractor);
-            assert.file(expectedFiles.websocket);
-            assert.file(expectedFiles.webpack);
-        });
-        it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('package.json', '"vue"');
-            assert.fileContent('package.json', '"vuex"');
-            assert.fileContent('package.json', '"vuelidate"');
-        });
-    });
-    describe('Common module', () => {
-        before((done) => {
-            helpers
-                .run('generator-jhipster/generators/app')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'vuejs',
-                    skipChecks: true
-                })
-                .withGenerators([
+                    ],
                     [
                         require('../generators/common/index.js'), // eslint-disable-line global-require
                         'jhipster-vuejs:common',
@@ -474,10 +240,270 @@ describe('Vue.js JHipster blueprint', () => {
                 })
                 .on('end', done);
         });
-        it('creates expected files from jhipster common generator', () => {
+        it('creates expected files from jhipster vue.js generator', () => {
+            assert.file(expectedFiles.i18n);
             assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.test);
+            assert.noFile(expectedFiles.protractor);
+            assert.file(expectedFiles.webpack);
         });
         it('contains the specific change added by the blueprint', () => {
+            assert.fileContent('package.json', '"vue"');
+            assert.fileContent('package.json', '"vuex"');
+            assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
+        });
+        it('uses correct prettier formatting', () => {
+            // tabWidth = 2 (see generators/common/templates/.prettierrc.ejs)
+            assert.fileContent('webpack/webpack.dev.js', / {2}devtool:/);
+            assert.fileContent('tsconfig.json', / {2}"compilerOptions":/);
+        });
+    });
+    describe('Default with Gradle', () => {
+        before((done) => {
+            helpers
+                .run('generator-jhipster/generators/app')
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'vuejs',
+                    skipChecks: true
+                })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ],
+                    [
+                        require('../generators/common/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:common',
+                        path.join(__dirname, '../generators/common/index.js')
+                    ]
+                ])
+                .withPrompts({
+                    baseName: 'sampleMysql',
+                    packageName: 'com.mycompany.myapp',
+                    applicationType: 'monolith',
+                    databaseType: 'sql',
+                    devDatabaseType: 'h2Disk',
+                    prodDatabaseType: 'mysql',
+                    cacheProvider: 'ehcache',
+                    authenticationType: 'jwt',
+                    enableTranslation: true,
+                    nativeLanguage: 'en',
+                    languages: ['en', 'fr'],
+                    buildTool: 'gradle',
+                    clientFramework: 'Vue.js'
+                })
+                .on('end', done);
+        });
+        it('creates expected files from jhipster vue.js generator', () => {
+            assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.test);
+            assert.noFile(expectedFiles.protractor);
+            assert.file(expectedFiles.webpack);
+        });
+        it('contains the specific change added by the blueprint', () => {
+            assert.fileContent('package.json', '"vue"');
+            assert.fileContent('package.json', '"vuex"');
+            assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
+        });
+        it('uses correct prettier formatting', () => {
+            // tabWidth = 2 (see generators/common/templates/.prettierrc.ejs)
+            assert.fileContent('webpack/webpack.dev.js', / {2}devtool:/);
+            assert.fileContent('tsconfig.json', / {2}"compilerOptions":/);
+        });
+    });
+    describe('noi18n with Maven', () => {
+        before((done) => {
+            helpers
+                .run('generator-jhipster/generators/app')
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'vuejs',
+                    skipChecks: true
+                })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ],
+                    [
+                        require('../generators/common/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:common',
+                        path.join(__dirname, '../generators/common/index.js')
+                    ]
+                ])
+                .withPrompts({
+                    baseName: 'sampleMysql',
+                    packageName: 'com.mycompany.myapp',
+                    applicationType: 'monolith',
+                    databaseType: 'sql',
+                    devDatabaseType: 'h2Disk',
+                    prodDatabaseType: 'mysql',
+                    cacheProvider: 'ehcache',
+                    authenticationType: 'jwt',
+                    enableTranslation: false,
+                    nativeLanguage: 'en',
+                    buildTool: 'maven',
+                    clientFramework: 'Vue.js'
+                })
+                .on('end', done);
+        });
+        it('creates expected files from jhipster vue.js generator', () => {
+            assert.noFile(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.test);
+            assert.noFile(expectedFiles.protractor);
+            assert.file(expectedFiles.webpack);
+        });
+        it('contains the specific change added by the blueprint', () => {
+            assert.fileContent('package.json', '"vue"');
+            assert.fileContent('package.json', '"vuex"');
+            assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
+        });
+        it('uses correct prettier formatting', () => {
+            // tabWidth = 2 (see generators/common/templates/.prettierrc.ejs)
+            assert.fileContent('webpack/webpack.dev.js', / {2}devtool:/);
+            assert.fileContent('tsconfig.json', / {2}"compilerOptions":/);
+        });
+    });
+    describe('Elasticsearch and Protractor', () => {
+        before((done) => {
+            helpers
+                .run('generator-jhipster/generators/app')
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'vuejs',
+                    skipChecks: true
+                })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ],
+                    [
+                        require('../generators/common/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:common',
+                        path.join(__dirname, '../generators/common/index.js')
+                    ]
+                ])
+                .withPrompts({
+                    baseName: 'sampleMysql',
+                    packageName: 'com.mycompany.myapp',
+                    applicationType: 'monolith',
+                    databaseType: 'sql',
+                    devDatabaseType: 'h2Disk',
+                    prodDatabaseType: 'mysql',
+                    cacheProvider: 'ehcache',
+                    authenticationType: 'jwt',
+                    enableTranslation: true,
+                    nativeLanguage: 'en',
+                    languages: ['en', 'fr'],
+                    testFrameworks: ['protractor'],
+                    buildTool: 'maven',
+                    clientFramework: 'Vue.js',
+                    serverSideOptions: ['searchEngine:elasticsearch']
+                })
+                .on('end', done);
+        });
+        it('creates expected files from jhipster vue.js generator', () => {
+            assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.test);
+            assert.file(expectedFiles.protractor);
+            assert.file(expectedFiles.webpack);
+        });
+        it('contains the specific change added by the blueprint', () => {
+            assert.fileContent('package.json', '"vue"');
+            assert.fileContent('package.json', '"vuex"');
+            assert.fileContent('package.json', '"vuelidate"');
+            assert.fileContent('.prettierrc', 'tabWidth: 2');
+            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
+                + 'indent_style = space\n'
+                + 'indent_size = 2');
+        });
+        it('uses correct prettier formatting', () => {
+            // tabWidth = 2 (see generators/common/templates/.prettierrc.ejs)
+            assert.fileContent('webpack/webpack.dev.js', / {2}devtool:/);
+            assert.fileContent('tsconfig.json', / {2}"compilerOptions":/);
+        });
+    });
+    describe('Websocket', () => {
+        before((done) => {
+            helpers
+                .run('generator-jhipster/generators/app')
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'vuejs',
+                    skipChecks: true
+                })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ],
+                    [
+                        require('../generators/common/index.js'), // eslint-disable-line global-require
+                        'jhipster-vuejs:common',
+                        path.join(__dirname, '../generators/common/index.js')
+                    ]
+                ])
+                .withPrompts({
+                    baseName: 'sampleWebsocket',
+                    packageName: 'io.github.jhipster',
+                    applicationType: 'monolith',
+                    databaseType: 'sql',
+                    devDatabaseType: 'h2Disk',
+                    prodDatabaseType: 'mysql',
+                    cacheProvider: 'ehcache',
+                    authenticationType: 'jwt',
+                    enableTranslation: true,
+                    nativeLanguage: 'en',
+                    languages: ['en', 'fr'],
+                    testFrameworks: ['protractor'],
+                    buildTool: 'maven',
+                    clientFramework: 'Vue.js',
+                    serverSideOptions: ['websocket:spring-websocket']
+                })
+                .on('end', done);
+        });
+        it('creates expected files from jhipster vue.js generator', () => {
+            assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.test);
+            assert.file(expectedFiles.protractor);
+            assert.file(expectedFiles.websocket);
+            assert.file(expectedFiles.webpack);
+        });
+        it('contains the specific change added by the blueprint', () => {
+            assert.fileContent('package.json', '"vue"');
+            assert.fileContent('package.json', '"vuex"');
+            assert.fileContent('package.json', '"vuelidate"');
             assert.fileContent('.prettierrc', 'tabWidth: 2');
             assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
                 + 'indent_style = space\n'
