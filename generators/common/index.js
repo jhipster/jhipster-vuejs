@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 /* eslint-disable consistent-return */
-const CommonClientGenerator = require('generator-jhipster/generators/common');
+const CommonGenerator = require('generator-jhipster/generators/common');
 const writeFiles = require('./files').writeFiles;
 
-module.exports = class extends CommonClientGenerator {
+module.exports = class extends CommonGenerator {
     constructor(args, opts) {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important
     }

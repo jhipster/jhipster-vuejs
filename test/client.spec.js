@@ -293,10 +293,6 @@ describe('Vue.js JHipster blueprint', () => {
             assert.fileContent('package.json', '"vue"');
             assert.fileContent('package.json', '"vuex"');
             assert.fileContent('package.json', '"vuelidate"');
-            assert.fileContent('.prettierrc', 'tabWidth: 2');
-            assert.fileContent('.editorconfig', '[*.{ts,tsx,js,json,css,scss,sql,ejs}]\n'
-                + 'indent_style = space\n'
-                + 'indent_size = 2');
         });
     });
     describe('noi18n with Maven', () => {
