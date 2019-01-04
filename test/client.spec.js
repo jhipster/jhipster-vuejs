@@ -483,5 +483,10 @@ describe('Vue.js JHipster blueprint', () => {
                 + 'indent_style = space\n'
                 + 'indent_size = 2');
         });
+        it('uses correct prettier formatting', () => {
+            // tabWidth = 2 (see generators/common/templates/.prettierrc.ejs)
+            assert.fileContent('webpack/webpack.dev.js', / {2}devtool:/);
+            assert.fileContent('tsconfig.json', / {2}"compilerOptions":/);
+        });
     });
 });
