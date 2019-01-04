@@ -35,6 +35,12 @@ const <%= jhiPrefixCapitalized %>TrackerComponent = () => import('../admin/track
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 Vue.use(Router);
+
+const router = new Router({
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'exact-active'
+});
+
 // prettier-ignore
 export default new Router({
   routes: [
