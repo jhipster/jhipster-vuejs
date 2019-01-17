@@ -185,6 +185,19 @@ const vueFiles = {
     ],
     accountModule: [
         {
+            path: VUE_DIR,
+            templates: [
+                'account/account.service.ts'
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: VUE_DIR,
+            templates: [
+                'account/login.service.ts'
+            ]
+        },
+        {
             condition: generator => generator.authenticationType !== 'oauth2',
             path: VUE_DIR,
             templates: [
@@ -193,7 +206,6 @@ const vueFiles = {
                 'account/login-form/login-form.vue',
                 'account/login-form/login-form.component.ts',
                 'account/login-modal.service.ts',
-                'account/principal.ts',
                 'account/register/register.vue',
                 'account/register/register.component.ts',
                 'account/register/register.service.ts',
