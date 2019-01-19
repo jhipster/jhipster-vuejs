@@ -39,10 +39,10 @@ export default class Principal {
 
   public retrieveProfiles(): any {
     axios.get('management/info').then((res) => {
-    if (res.data && res.data.activeProfiles && res.data.activeProfiles.indexOf(res.data['display-ribbon-on-profiles']) > -1) {
-      this.store.commit('setRibbonOnProfiles', res.data['display-ribbon-on-profiles']);
-      this.store.commit('setActiveProfiles', res.data['activeProfiles']);
-    }
+      if (res.data && res.data.activeProfiles && res.data.activeProfiles.indexOf(res.data['display-ribbon-on-profiles']) > -1) {
+        this.store.commit('setRibbonOnProfiles', res.data['display-ribbon-on-profiles']);
+        this.store.commit('setActiveProfiles', res.data['activeProfiles']);
+      }
     });
   }
 
