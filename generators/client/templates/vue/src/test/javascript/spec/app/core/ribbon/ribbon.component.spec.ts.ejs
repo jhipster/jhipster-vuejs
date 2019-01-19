@@ -42,7 +42,7 @@ describe('Ribbon', () => {
     expect(ribbon.ribbonEnv).toBeNull();
   });
 
-  it('should not have ribbonEnv when empty activeProfiles', async () => {
+  it('should have ribbonEnv set to value in store', async () => {
     const profile = 'dev';
     store.commit('setRibbonOnProfiles', profile);
     expect(ribbon.ribbonEnv).toEqual(profile);
