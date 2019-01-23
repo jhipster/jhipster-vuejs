@@ -300,6 +300,7 @@ const vueFiles = {
             path: TEST_SRC_DIR,
             templates: [
                 'jest.conf.js',
+                'spec/app/account/account.service.spec.ts',
                 'spec/app/core/jhi-footer/jhi-footer.component.spec.ts',
                 'spec/app/core/ribbon/ribbon.component.spec.ts',
                 'spec/app/admin/configuration/configuration.component.spec.ts',
@@ -322,6 +323,13 @@ const vueFiles = {
                 'spec/app/account/reset-password/reset-password.component.spec.ts',
                 'spec/app/account/settings/settings.component.spec.ts',
                 'spec/app/account/activate/activate.component.spec.ts'
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: TEST_SRC_DIR,
+            templates: [
+                'spec/app/account/login.service.spec.ts'
             ]
         },
         {

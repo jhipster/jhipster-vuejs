@@ -57,6 +57,7 @@ const expectedFiles = {
 
     oauth2: [
         `${CLIENT_MAIN_SRC_DIR}app/account/login.service.ts`,
+        `${CLIENT_SPEC_SRC_DIR}app/account/login.service.spec.ts`
     ],
 
     jwtSession: [
@@ -121,6 +122,7 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/admin/metrics/metrics-modal.vue`,
         `${CLIENT_MAIN_SRC_DIR}app/admin/metrics/metrics.service.ts`,
 
+        `${CLIENT_SPEC_SRC_DIR}app/account/account.service.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/audits/audits.component.spec.ts`,
         // `${CLIENT_SPEC_SRC_DIR}app/admin/audits/audits.service.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/configuration/configuration.component.spec.ts`,

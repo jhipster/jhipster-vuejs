@@ -1,10 +1,7 @@
 export default class LoginService {
 
-  public login() {
-    let port = (location.port ? ':' + location.port : '');
-    if (port === ':9000') {
-      port = ':8080';
-    }
-    location.href = '//' + location.hostname + port + location.pathname + 'login';
+  public login(loc = window.location) {
+    const port = (loc.port ? ':' + loc.port : '');
+    loc.href = '//' + loc.hostname + port + loc.pathname + 'login';
   }
 }
