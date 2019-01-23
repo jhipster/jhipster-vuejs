@@ -7,7 +7,9 @@ import LoginModalService from '@/account/login-modal.service';
 import LoginService from '@/account/login.service';
 <%_ } %>
 import AccountService from '@/account/account.service';
+<%_ if (enableTranslation) { _%>
 import TranslationService from '@/locale/translation.service';
+<%_ } %>
 
 @Component
 export default class JhiNavbar extends Vue {
