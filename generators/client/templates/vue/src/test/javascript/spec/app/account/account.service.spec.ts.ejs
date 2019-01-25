@@ -46,23 +46,6 @@ describe('Account Service test suite', () => {
     expect(store.getters.ribbonOnProfiles).toBe('dev');
   });
 
-  it('should init service and retrieve account if already logged in before', async () => {
-    <%_ if (authenticationType == 'jwt') { _%>
-    localStorage.setItem('jhi-authenticationToken', 'token');
-    <%_ } %>
-    mockedAxios.get.mockReturnValue(Promise.resolve({ data: { account: true}}));
-    accountService = await new AccountService(store, <%_ if (enableTranslation) { _%>new TranslationService(store, i18n),<%_ } %><%_ if (authenticationType === 'session' || authenticationType === 'oauth2') { _%>mockedCookie,<%_ } %><%_ if (websocket === 'spring-websocket') { _%>null,<%_ } %> router);
-
-    expect(store.getters.logon).toBe(false);
-    expect(accountService.authenticated).toBe(true);
-    expect(store.getters.account.account).toBe(true);
-    expect(mockedAxios.get).toHaveBeenCalledWith('api/account');
-    expect(mockedAxios.get).toHaveBeenCalledWith('management/info');
-    <%_ if (enableTranslation) { _%>
-    expect(mockedAxios.get).toHaveBeenCalledWith('i18n/en.json');
-    <%_ } %>
-  });
-
   it('should init service and retrieve account if already logged in before but no account found', async () => {
     <%_ if (authenticationType == 'jwt') { _%>
     localStorage.setItem('jhi-authenticationToken', 'token');
