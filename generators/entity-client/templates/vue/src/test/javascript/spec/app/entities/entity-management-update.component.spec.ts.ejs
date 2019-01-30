@@ -36,12 +36,13 @@ import <%= entityAngularName %>Service from '@/entities/<%= entityFolderName %>/
     const otherEntityAngularName = relationships[idx].otherEntityAngularName;
     const otherEntityFileName = relationships[idx].otherEntityFileName;
     const otherEntityFolderName = relationships[idx].otherEntityFileName;
+    const otherEntityClientRootFolder = relationships[idx].otherEntityClientRootFolder;
     const otherEntityModelName = relationships[idx].otherEntityModelName;
 _%>
   <% if (otherEntityAngularName === 'User' && authenticationType !== "oauth2") { %>
 import UserService from '@/admin/user-management/user-management.service';
   <% } else if (otherEntityAngularName !== 'User' && !importEntitiesSeen.includes(otherEntityAngularName)) { %>
-import <%= otherEntityAngularName %>Service from '@/entities/<%= otherEntityFolderName %>/<%= otherEntityFileName %>.service';
+import <%= otherEntityAngularName %>Service from '@/entities/<%= otherEntityClientRootFolder %><%= otherEntityFolderName %>/<%= otherEntityFileName %>.service';
   <% } %>
 <%_ importEntitiesSeen.push(otherEntityAngularName); } _%>
 
