@@ -55,13 +55,11 @@ describe('Home', () => {
   });
 
   it('should use login service', () => {
-    <%_ if (authenticationType !== 'oauth2') { _%>
     home.openLogin();
 
+    <%_ if (authenticationType !== 'oauth2') { _%>
     expect(loginModalService.openLogin).toHaveBeenCalled();
     <%_ } else { %>
-    home.login();
-
     expect(loginService.login).toHaveBeenCalled();
     <%_ } %>
   });
