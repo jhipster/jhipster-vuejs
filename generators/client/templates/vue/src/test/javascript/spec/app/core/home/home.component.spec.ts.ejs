@@ -1,11 +1,6 @@
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import Home from '@/core/home/home.vue';
 import HomeClass from '@/core/home/home.component';
-<%_ if (authenticationType !== 'oauth2') { _%>
-import LoginModalService from '@/account/login-modal.service';
-<%_ } else { _%>
-import LoginService from '@/account/login.service';
-<%_ } _%>
 import * as config from '@/shared/config/config';
 
 const localVue = createLocalVue();
