@@ -1,0 +1,67 @@
+import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import Home from '@/core/home/home.vue';
+import HomeClass from '@/core/home/home.component';
+<%_ if (authenticationType !== 'oauth2') { _%>
+import LoginModalService from '@/account/login-modal.service';
+<%_ } else { _%>
+import LoginService from '@/account/login.service';
+<%_ } _%>
+import * as config from '@/shared/config/config';
+
+const localVue = createLocalVue();
+config.initVueApp(localVue);
+const store = config.initVueXStore(localVue);
+
+describe('Home', () => {
+    let home: HomeClass;
+    let wrapper: Wrapper<HomeClass>;
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    const loginModalService = {openLogin: jest.fn()};
+    <%_ } else { %>
+    const loginService = {login: jest.fn()};
+    <%_ } %>
+
+    beforeEach(() => {
+        wrapper = shallowMount<HomeClass>(Home, {
+            store,
+            localVue,
+            provide: {
+                <%_ if (authenticationType !== 'oauth2') { _%>
+                loginModalService: () => loginModalService
+                <%_ } else { %>
+                loginService: () => loginService
+                <%_ } %>
+            }
+        });
+        home = wrapper.vm;
+    });
+
+    it('should be a Vue instance', () => {
+        expect(wrapper.isVueInstance()).toBeTruthy();
+    });
+
+    it('should not have user data set', () => {
+        expect(home.authenticated).toBeFalsy();
+        expect(home.username).toBe('');
+    });
+
+    it('should have user data set after authentication', () => {
+        store.commit('authenticated', {login: 'test'});
+
+        expect(home.authenticated).toBeTruthy();
+        expect(home.username).toBe('test');
+    });
+
+    it('should use login service', () => {
+        <%_ if (authenticationType !== 'oauth2') { _%>
+        home.openLogin();
+
+        expect(loginModalService.openLogin).toHaveBeenCalled();
+        <%_ } else { %>
+        home.login();
+
+        expect(loginService.login).toHaveBeenCalled();
+        <%_ } %>
+
+    });
+});
