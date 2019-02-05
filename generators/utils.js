@@ -120,13 +120,13 @@ function addEntityToMenu(generator, entityName, translationKey, className) {
         {
             file: `${CLIENT_MAIN_SRC_DIR}/app/core/jhi-navbar/jhi-navbar.vue`,
             needle: 'jhipster-needle-add-entity-to-menu',
-            splicable: [
+            splicable: [generator.stripMargin(
                 // prettier-ignore
                 `<b-dropdown-item to="/entity/${entityName}" v-on:click="collapseNavbar()">
                     <font-awesome-icon icon="asterisk" />
                     <span ${menuI18nTitle}>${className}</span>
               </b-dropdown-item>`
-            ]
+            )]
         },
         generator
     );
