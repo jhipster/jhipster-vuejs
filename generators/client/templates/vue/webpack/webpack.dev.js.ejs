@@ -29,12 +29,12 @@ module.exports = merge(baseWebpackConfig, {
     main: './<%= MAIN_SRC_DIR %>app/main'
   },
   output: {
-    path: jhiUtils.root('<%= BUILD_DIR %>www'),
+    path: jhiUtils.root('<%= DIST_DIR %>'),
     filename: 'app/[name].bundle.js',
     chunkFilename: 'app/[id].chunk.js'
   },
   devServer: {
-    contentBase: './<%= BUILD_DIR %>www',
+    contentBase: './<%= DIST_DIR %>',
     port: 9060,
     proxy: [
       {
