@@ -1,4 +1,4 @@
-import { ExpectedConditions, ElementArrayFinder, ElementFinder, browser, by, element } from 'protractor';
+import { ExpectedConditions, ElementArrayFinder, ElementFinder, browser, by, element, protractor } from 'protractor';
 
 const waitUntilDisplayedTimeout = 30000;
 
@@ -95,3 +95,12 @@ export const getInfoToast = (): ElementFinder =>
 
 export const getDangerToast = (): ElementFinder =>
   element(by.css('div[role=alert].alert.alert-danger'));
+
+export const clearElement = (elem, length) => {
+  length = length || 100;
+  var backspaceSeries = '';
+  for (var i = 0; i < length; i++) {
+    backspaceSeries += protractor.Key.BACK_SPACE;
+  }
+  elem.sendKeys(backspaceSeries);
+}

@@ -32,11 +32,11 @@ export default class <%= entityClass %>ComponentsPage {
   }
 
   async clickOnFirstDetailsButton() {
-    await this.detailButtons.first().click();
+    await this.detailButtons.last().click();
   }
 
   async clickOnFirstEditButton() {
-    await this.editButtons.first().click();
+    await this.editButtons.last().click();
   }
 
   async clickOnLastDeleteButton() {
