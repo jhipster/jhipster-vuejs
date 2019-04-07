@@ -92,7 +92,7 @@
                             :class="{'valid': !$v.<%= entityInstance %>.<%= fieldName %>.$invalid, 'invalid': $v.<%= entityInstance %>.<%= fieldName %>.$invalid }" v-model="$v.<%= entityInstance %>.<%= fieldName %>.$model" <% if (fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required')) { %> required<% } %>></textarea>
                         <%_ } else { _%>
                         <input type="<%= fieldInputType %>" class="<%= fieldInputClass %>" name="<%= fieldName %>" id="<%= entityFileName %>-<%= fieldName %>"
-                            :class="{'valid': !$v.<%= entityInstance %>.<%= fieldName %>.$invalid, 'invalid': $v.<%= entityInstance %>.<%= fieldName %>.$invalid }" v-model="$v.<%= entityInstance %>.<%= fieldName %>.$model" <% if (fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required')) { %> required<% } %>/>
+                            :class="{'valid': !$v.<%= entityInstance %>.<%= fieldName %>.$invalid, 'invalid': $v.<%= entityInstance %>.<%= fieldName %>.$invalid }" v-model<% if (fieldInputType === 'number') { %>.number<% } %>="$v.<%= entityInstance %>.<%= fieldName %>.$model" <% if (fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required')) { %> required<% } %>/>
                             <%_ if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent !== 'text') { _%>
                         <input type="hidden" class="<%= fieldInputClass %>" name="<%= fieldName %>ContentType" id="<%= entityFileName %>-<%= fieldName %>ContentType"
                             v-model="<%= entityInstance %>.<%= fieldName %>ContentType" />
