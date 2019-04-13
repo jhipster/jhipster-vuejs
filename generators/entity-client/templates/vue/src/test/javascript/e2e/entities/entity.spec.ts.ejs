@@ -81,8 +81,18 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityInstance %>ComponentsPage = new <%= entityClass %>ComponentsPage();
     const heading = await <%= entityInstance %>ComponentsPage.getTitle();
     await waitUntilDisplayed(heading);
+
+    const footer = await <%= entityInstance %>ComponentsPage.getFooter();
+    await waitUntilDisplayed(footer);
+    
     expect(await heading.getText()).not.to.be.empty;
     nbButtonsBeforeCreate = await <%= entityInstance %>ComponentsPage.countDeleteButtons();
+    
+    // Bug-fix with Protractor.
+    // force to recalculate in case of value is still 0
+    if (nbButtonsBeforeCreate === 0) {
+      nbButtonsBeforeCreate = await <%= entityInstance %>ComponentsPage.countDeleteButtons();
+    }
   });
 
   it('should load create <%= entityClass %> page', async () => {
@@ -181,9 +191,7 @@ describe('<%= entityClass %> e2e test', () => {
     // Success toast should appear
     expect(await toast.isPresent()).to.be.true;
     
-    console.log('>>> <%= entityInstance %>ComponentsPage.waitUntilDeleteButtonsLength -> ' + nbButtonsBeforeCreate);
     await <%= entityInstance %>ComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeCreate + 1);
-    console.log('>>> await <%= entityInstance %>ComponentsPage.countDeleteButtons');
     expect(await <%= entityInstance %>ComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1);
   });<%= closeBlockComment %>
 

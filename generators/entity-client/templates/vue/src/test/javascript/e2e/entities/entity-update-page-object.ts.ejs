@@ -35,18 +35,15 @@ for (let relationship of relationships) {
 } _%>
 export default class <%= entityClass %>UpdatePage {
     async getPageTitle() {
-        const pageTitle = await element(by.id('<%= i18nKeyPrefix %>.home.createOrEditLabel'));
-        return pageTitle;
+        return await element(by.id('<%= i18nKeyPrefix %>.home.createOrEditLabel'));
     }
 
     async getFooter() {
-        const footer = await element(by.id('footer'));
-        return footer;
+        return await element(by.id('footer'));
     }
 
     async getSaveButton() {
-        const saveButton = await element(by.id('save-entity'));
-        return saveButton;
+        return await element(by.id('save-entity'));
     }
 
     async isSaveButtonPresent() {
@@ -168,5 +165,4 @@ export default class <%= entityClass %>UpdatePage {
 
     <%_ } _%>
     <%_ }); _%>
-
 }

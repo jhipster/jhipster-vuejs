@@ -69,11 +69,16 @@ export default class <%= entityClass %>ComponentsPage {
   }
 
   async countDeleteButtons() {
-    return await element.all(by.css('div table .btn-danger')).count();
+    const deleteButtons = await element.all(by.css('div table .btn-danger'));
+    return deleteButtons.length;
   }
 
   async getTitle() {
     return await element(by.id('<%= entityFileName %>-heading'));
+  }
+
+  async getFooter() {
+    return await element(by.id('footer'));
   }
 
   async waitUntilLoaded() {
