@@ -1,0 +1,293 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+/* tslint:disable no-unused-expression */
+
+import NavBarPage from './../../<%= entityParentPathAddition %>page-objects/navbar-page';
+import SignInPage from './../../<%= entityParentPathAddition %>page-objects/signin-page';
+import <%= entityClass %>ComponentsPage from './<%= entityFileName %>.page-object';
+import { <%= entityClass %>DeleteDialog } from './<%= entityFileName %>.page-object';
+import <%= entityClass %>UpdatePage from './<%= entityFileName%>-update.page-object';
+import <%= entityClass %>DetailsPage from './<%= entityFileName%>-details.page-object';
+import { getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityParentPathAddition %>util/utils';
+<%_ if (fieldsContainBlobOrImage) { _%>
+import path from 'path';
+<%_ } _%>
+<%_
+let elementGetter = `getText()`;
+let openBlockComment = ``;
+let closeBlockComment = ``;
+if (enableTranslation) {
+    elementGetter = `getAttribute('jhiTranslate')`;
+}
+for (let relationship of relationships) {
+    if (relationship.relationshipRequired) {
+        openBlockComment = `/*`;
+        closeBlockComment = `*/`;
+        break;
+    }
+} _%>
+
+describe('<%= entityClass %> e2e test', () => {
+  <%_ if (fieldsContainBlobOrImage) { _%>
+  const fileToUpload = '../../../../../<%= entityParentPathAddition %>main/webapp/content/images/logo-jhipster.png';
+  const absolutePath = path.resolve(__dirname, fileToUpload);
+  <%_ } _%>
+  let nbButtonsBeforeCreate = 0;
+
+  before(() => {
+    cy.server();
+    cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+    cy.visit('/');
+    NavBarPage.getSignInPage();
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    SignInPage.autoSignInUsing('admin', 'admin');
+    <%_ } else if (authenticationType === 'oauth2') {_%>
+    SignInPage.loginWithOAuth('admin', 'admin');
+    <%_ } _%>
+
+    cy.wait("@authenticationRequest");
+  });
+
+  it('should load <%= entityClassPlural %>', () => {
+    cy.server();
+    cy.route('GET', '/api/<%= entityFileName %>*').as('entitiesRequest');
+
+    NavBarPage.getEntityPage('<%= entityStateName %>');
+    cy.wait('@entitiesRequest');
+
+    <%= entityClass %>ComponentsPage.getFooter().should('exist');
+
+    <%= entityClass %>ComponentsPage.getTitle()
+                                    .invoke('text')
+                                    .should('not.have.lengthOf', 0);
+
+    <%= entityClass %>ComponentsPage.count<%= entityClass %>().then(lengthOf => {
+      nbButtonsBeforeCreate = lengthOf;
+    });
+  });
+
+  it('should load create <%= entityClass %> page', () => {
+    <%= entityClass %>ComponentsPage.clickOnCreateButton();
+
+    <%= entityClass %>UpdatePage.getFooter().should('exist');
+    <%= entityClass %>UpdatePage.getSaveButton().should('exist');
+
+    <%_ if (enableTranslation) { _%>
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('attr', 'id').should('match', /<%= i18nKeyPrefix %>.home.createOrEditLabel/);
+    <%_ } else { _%>
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityClass %>')
+    <%_ } _%>
+  });
+
+   <%= openBlockComment %> it('should create and save <%= entityClassPlural %>', () => {
+    <%_ fields.forEach((field) => {
+      const fieldName = field.fieldName;
+      const fieldNameCapitalized = field.fieldNameCapitalized;
+      const fieldType = field.fieldType;
+      const fieldTypeBlobContent = field.fieldTypeBlobContent;
+      const fieldIsEnum = field.fieldIsEnum;
+    _%>
+    cy.server();
+    cy.route('POST', '/api/<%= entityFileName %>').as('saveEntityRequest');
+
+    <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '5');
+
+    <%_ } else if (fieldType === 'LocalDate') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2001');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
+
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+    // TODO: to fix with implementing tab input
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2001' + protractor.Key.TAB + '02:30AM');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2001-01-01T02:30');
+
+    <%_ } else if (fieldType === 'Duration') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('12');
+
+    <%_ } else if (fieldType === 'Boolean') { _%>
+    const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
+    if (selected<%= fieldNameCapitalized %>) {
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.false');
+    } else {
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.true');
+    }
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input(absolutePath);
+
+    <%_ } else if (fieldIsEnum) { _%>
+    <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
+
+    <%_ } else if (fieldType === 'UUID'){ _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade974');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade974/);
+
+    <%_ } else { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
+
+    <%_ } _%>
+    <%_ }); _%>
+    <%_ relationships.forEach((relationship) => {
+      const relationshipType = relationship.relationshipType;
+      const ownerSide = relationship.ownerSide;
+      const relationshipName = relationship.relationshipName; _%>
+    <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
+    // <%= entityClass %>UpdatePage.<%=relationshipName %>SelectLastOption();
+    <%_ } else if ((relationshipType === 'many-to-many' && ownerSide === true)) { _%>
+    // <%= entityClass %>UpdatePage.<%=relationshipName %>SelectLastOption();
+    <%_ } _%>
+    <%_ }); _%>
+
+    <%= entityClass %>UpdatePage.save();
+
+    cy.wait('@saveEntityRequest');
+
+    <%= entityClass %>UpdatePage.getSaveButton().should('not.exist');
+
+    // Success toast should appear
+    getSuccessToast().should('exist');
+
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', nbButtonsBeforeCreate + 1);
+  });<%= closeBlockComment %>
+
+  it('should load details <%= entityClass %> page and fetch data', () => {
+    <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
+
+    <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
+    <%= entityClass %>UpdatePage.getFooter().should('exist');
+    <%= entityClass %>DetailsPage.getBackButton().should('exist');
+
+    <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
+
+    <%= entityClass %>DetailsPage.getBackButton().click();
+    cy.get('div table .btn-danger').should('have.lengthOf', nbButtonsBeforeCreate + 1);
+  });
+
+  it('should load edit <%= entityClass %> page and fetch data', () => {
+    <%= entityClass %>ComponentsPage.clickOnLastEditButton();
+    <%= entityClass %>UpdatePage.getFooter().should('exist');
+    <%= entityClass %>UpdatePage.getSaveButton().should('exist');
+    <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
+
+    <%_ fields.forEach((field) => {
+      const fieldName = field.fieldName;
+      const fieldNameCapitalized = field.fieldNameCapitalized;
+      const fieldType = field.fieldType;
+      const fieldTypeBlobContent = field.fieldTypeBlobContent;
+      const fieldIsEnum = field.fieldIsEnum;
+    _%>
+    <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('6');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '6');
+
+    <%_ } else if (fieldType === 'LocalDate') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2019');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01');
+
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+
+      // TODO: fix tab navigation
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2019' + protractor.Key.TAB + '02:30AM');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2019-01-01T02:30');
+
+    <%_ } else if (fieldType === 'Duration') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('14');
+
+    <%_ } else if (fieldType === 'Boolean') { _%>
+      const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
+      if (selected<%= fieldNameCapitalized %>) {
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.false');
+      } else {
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.true');
+      }
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('updated<%= fieldName %>');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /updated<%= fieldName %>/);
+
+    <%_ } else if (fieldType === 'UUID'){ _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade978');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade978/);
+
+    <%_ } else if (!fieldIsEnum && !['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('modified');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /modified/);
+
+    <%_ } _%>
+    <%_ }); _%>
+
+    <%= entityClass %>UpdatePage.save();
+
+    // TODO: fix wait
+    <%= entityClass %>UpdatePage.getSaveButton().should('not.exist');
+
+    // Info toast should appear
+    getInfoToast().should('exist');
+  });
+
+  <%= openBlockComment %> it('should delete last <%= entityClass %>', () => {
+    cy.server();
+    cy.route('DELETE', '/api/<%= entityFileName %>/*').as('deleteEntityRequest');
+
+    <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
+
+    cy.get('.modal').should('exist');
+
+    <%= entityClass %>DeleteDialog.getDialogTitle()
+                                  .invoke('attr', 'id')
+                                  .should('match', /<%= jhiPrefixDashed %>-delete-<%= entityInstance %>-heading/);
+
+    <%= entityClass %>DeleteDialog.clickOnConfirmButton();
+
+    cy.wait('@deleteEntityRequest');
+
+    // Delete modal should disappear
+    cy.get('.modal').should('exist');
+
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', nbButtonsBeforeCreate);
+
+    // Danger toast should appear
+    getDangerToast().should('exist')
+  });<%= closeBlockComment %>
+
+  after(() => {
+    NavBarPage.autoSignOut();
+  });
+});

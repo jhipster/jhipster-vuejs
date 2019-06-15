@@ -1,0 +1,396 @@
+import SignInPage from '../../page-objects/signin-page';
+import NavBarPage from '../../page-objects/navbar-page';
+<%_ if (authenticationType !== 'oauth2') { _%>
+import RegisterPage from '../../page-objects/register-page';
+import PasswordPage from '../../page-objects/password-page';
+import SettingsPage from '../../page-objects/settings-page';
+
+import {
+    getUserDeactivatedButtonByLogin,
+    <%_ if (databaseType !== 'cassandra') { _%>
+    getModifiedDateSortButton,
+    <%_ } _%>
+    getUserDeleteButtonByLogin,
+    getUserDetailsButtonByLogin,
+    getUserEditButtonByLogin,
+    getUserEmailByLogin,
+    getSuccessToast,
+    getInfoToast,
+    getDangerToast
+} from '../../util/utils';
+<%_ } _%>
+
+describe('Account', () => {
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+    const registerPageTitle = 'register-title';
+    const passwordPageTitle = 'password-title';
+    const settingsPageTitle = 'settings-title';
+<%_ } _%>
+    const loginPageTitle = 'login-title';
+
+    before(() => {
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+    })
+
+    it('should fail to login with bad password', () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
+        SignInPage.getTitle().should('equal', loginPageTitle);
+        SignInPage.getUsernameElement().type('admin');
+        SignInPage.getPasswordElement().type('foo');
+
+        SignInPage.getLoginButton().click();
+        SignInPage.getTitle().should('equal', loginPageTitle);
+<%_ } else { _%>
+        SignInPage.loginWithOAuth('admin', 'foo');
+
+        cy.get('.alert-error').then($alert => {
+          if ($alert.length) {
+            // Keycloak
+            $alert.invoke('text').should('equal', 'Invalid username or password.');
+          } else {
+            // Okta
+            cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');
+          }
+        }
+<%_ } _%>
+    });
+
+    it('should login with admin account', () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        SignInPage.clearUserName();
+        SignInPage.setUserName('admin');
+        SignInPage.clearPassword();
+        SignInPage.setPassword('admin');
+        SignInPage.login();
+
+        cy.wait("@authenticationRequest");
+
+        SignInPage.getTitleElement().should('not.exist');
+        NavBarPage.autoSignOut();
+<%_ } else { _%>
+        // Keycloak credentials by default, change them to be able to use oauth2 with Okta
+        SignInPage.loginWithOAuth('admin', 'admin');
+
+        // Success alert should appear in home page
+        cy.get('.alert-success').should('exist');
+<%_ } _%>
+    });
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+    it('should be able to sign up', () => {
+        cy.server();
+        cy.route("POST", "/api/register").as("registrationRequest");
+
+        cy.visit('/');
+        NavBarPage.getRegisterPage();
+
+        RegisterPage.getTitle().should('equal', registerPageTitle);
+        RegisterPage.autoSignUpUsing('user_test', 'admin@localhost.jh', 'user_test');
+
+
+        cy.wait("@registrationRequest");
+
+        getSuccessToast().should('exist');
+    });
+
+    it('should load user management', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+        SignInPage.autoSignInUsing('admin', 'admin');
+
+        cy.wait("@authenticationRequest");
+
+        NavBarPage.clickOnAdminMenuItem('user-management');
+
+        cy.get('#user-management-page-heading').should('exist');
+    });
+
+    it('should activate the new registered user', () => {
+        cy.server();
+        cy.route("PUT", "/api/users").as("activateUserRequest");
+  <%_ if (databaseType !== 'cassandra') { _%>
+        getModifiedDateSortButton().click({ force: true });
+  <%_ } _%>
+        getUserDeactivatedButtonByLogin('user_test').click();
+
+        cy.wait("@activateUserRequest");
+
+        // Deactivated button should disappear
+        getUserDeactivatedButtonByLogin('user_test').should('not.exist');
+        NavBarPage.autoSignOut();
+    });
+
+    it('should not be able to sign up if login already taken', () => {
+        cy.server();
+        cy.route("POST", "/api/register").as("registrationRequest");
+
+        cy.visit('/');
+        NavBarPage.getRegisterPage();
+        RegisterPage.getTitle().should('equal', registerPageTitle);
+
+        RegisterPage.autoSignUpUsing('user_test', 'admin@localhost.jh', 'user_test');
+
+        cy.wait("@registrationRequest");
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+    });
+
+    it('should not be able to sign up if email already taken', () => {
+        cy.server();
+        cy.route("POST", "/api/register").as("registrationRequest");
+
+        RegisterPage.getTitle().should('equal', registerPageTitle);
+
+        RegisterPage.setUserName('_jhi');
+        RegisterPage.save();
+
+        cy.wait("@registrationRequest");
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+    });
+
+    it('should be able to log in with new registered account', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('user_test', 'user_test');
+        SignInPage.login();
+
+        // Login page should close when login success
+        cy.wait("@authenticationRequest");
+        SignInPage.getSelf().should('not.exist');
+        NavBarPage.autoSignOut();
+    });
+
+    // Why this test
+    it('should login with admin account', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('admin', 'admin');
+        SignInPage.login();
+
+        cy.wait("@authenticationRequest");
+        SignInPage.getSelf().should('not.exist');
+    });
+
+    it('should fail to update password when using incorrect current password', () => {
+        cy.server();
+        cy.route("POST", "/api/account/change-password").as("changePasswordRequest");
+
+        NavBarPage.getPasswordPage();
+
+        PasswordPage.getTitle().should('equal', passwordPageTitle);
+
+        PasswordPage.autoChangePassword('bad_password', 'new_password', 'new_password');
+
+        cy.wait("@changePasswordRequest");
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+        NavBarPage.autoSignOut();
+    });
+
+    // TODO: Why this test
+    it('should login with admin account', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('admin', 'admin');
+        SignInPage.login();
+
+        cy.wait("@authenticationRequest");
+        SignInPage.getSelf().should('not.exist');
+    });
+
+    it('should be able to update password', () => {
+        cy.server();
+        cy.route("POST", "/api/account/change-password").as("changePasswordRequest");
+
+        NavBarPage.getPasswordPage();
+
+        PasswordPage.getTitle().should('equal', passwordPageTitle);
+
+        PasswordPage.autoChangePassword('admin', 'new_password', 'new_password');
+
+        cy.wait("@changePasswordRequest");
+
+        // Error toast should appear
+        getSuccessToast().should('exist');
+        NavBarPage.autoSignOut();
+    });
+
+    it('should be able to log in with new password', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('admin', 'new_password');
+        SignInPage.login();
+
+        cy.wait("@authenticationRequest");
+
+        // change back to default
+        NavBarPage.getPasswordPage();
+        PasswordPage.getTitle().should('equal', passwordPageTitle);
+
+        PasswordPage.autoChangePassword('new_password', 'admin', 'admin');
+
+        NavBarPage.autoSignOut();
+    });
+
+    it('should login with user_test account', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('user_test', 'user_test');
+        SignInPage.login();
+
+        // Login page should close when login success
+        cy.wait("@authenticationRequest");
+        SignInPage.getSelf().should('not.exist');
+    });
+
+    // TODO: Why Post ?
+    it('should be able to change user_test settings', () => {
+        cy.server();
+        cy.route("POST", "/api/account").as("settingsModificationRequest");
+
+        NavBarPage.getSettingsPage();
+
+        SettingsPage.getTitle().should('equal', settingsPageTitle);
+
+        SettingsPage.setFirstName('jhipster');
+        SettingsPage.setLastName('retspihj');
+        SettingsPage.save();
+
+        cy.wait('@settingsModificationRequest');
+
+        // Success toast should appear
+        getSuccessToast().should('exist');
+        NavBarPage.autoSignOut();
+    });
+
+    it('should login with admin account', () => {
+        cy.server();
+        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+
+        SignInPage.getTitle().should('equal', loginPageTitle);
+
+        SignInPage.autoSignInUsing('admin', 'admin');
+        SignInPage.login();
+
+        cy.wait("@authenticationRequest");
+        SignInPage.getSelf().should('not.exist');
+    });
+
+    it('should not be able to change admin settings if email already exists', () => {
+        cy.server();
+        cy.route("POST", "/api/account").as("settingsModificationRequest");
+
+        NavBarPage.getSettingsPage();
+        SettingsPage.getTitle().should('equal', settingsPageTitle);
+
+        SettingsPage.setEmail('.jh');
+        SettingsPage.save();
+
+        cy.wait('@settingsModificationRequest');
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+    });
+
+    it('should preview details from previously created fake user', () => {
+        cy.visit('/admin/user-management');
+        getUserDetailsButtonByLogin('user_test').click();
+
+        // TODO: remove
+        cy.get('h2.jh-entity-heading');
+        const loginDetails = cy.get('.jh-entity-details > dd > span').first();
+
+        loginDetails.invoke('text').should('equal', 'user_test');
+    });
+
+    it('should edit details from previously created fake user', () => {
+        cy.server();
+        cy.route("GET", "/api/users/user_test").as("userDetailRequest");
+        cy.route("PUT", "/api/users").as("userDetailModificationRequest");
+
+        cy.visit('/admin/user-management');
+        getUserEditButtonByLogin('user_test').click();
+
+        cy.wait('@userDetailRequest');
+
+        cy.get('input#email').type('ipster');
+        cy.get('.btn-primary').click();
+
+        cy.wait('@userDetailModificationRequest');
+
+        // Info toast should appear
+        getInfoToast().should('exist');
+
+        const userEmail = getUserEmailByLogin('user_test');
+        userEmail.invoke('text').should('equal', 'admin@localhost.jhipster');
+    });
+
+    it('should delete previously created fake user', () => {
+        cy.server();
+        cy.route("DELETE", "/api/users/user_test").as("userDeleteRequest");
+
+        cy.visit('/admin/user-management');
+
+        getUserDeleteButtonByLogin('user_test').click();
+        cy.get('.modal').should('exist');
+        cy.get('button').contains('OK').click();
+        cy.wait('@userDeleteRequest');
+
+        // Delete modal should disappear
+        cy.get('.modal').should('not.be.visible');
+
+        // Danger toast should appear
+        getDangerToast().should('exist');
+    });
+<%_ } _%>
+
+    after(() => {
+        NavBarPage.autoSignOut();
+    });
+});
