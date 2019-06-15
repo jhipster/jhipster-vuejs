@@ -1,0 +1,95 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+/// <reference types="cypress" />
+
+export default class <%= entityClass %>ComponentsPage {
+  static isSaveButtonPresent() {
+    cy.get('#save-entity').then($saveElement => {
+      if ($saveElement) {
+        return true;
+      }
+    });
+
+    return false;
+  }
+
+  static save() {
+    return cy.get('#save-entity').click();
+  }
+
+  static cancel() {
+    return cy.get('#cancel-save').click();
+  }
+
+  static getCreateButton() {
+    return cy.get('#jh-create-entity');
+  }
+
+  static clickOnCreateButton() {
+    return cy.get('#jh-create-entity').click();
+  }
+
+  static getDetailButtons() {
+    return cy.get('.btn-info.details');
+  }
+
+  static clickOnLastDetailsButton() {
+    return this.getDetailButtons().last().click();
+  }
+
+  static getEditButtons() {
+    return cy.get('.btn-primary.edit');
+  }
+
+  static clickOnLastEditButton() {
+    return this.getEditButtons().last().click();
+  }
+
+  static getDeleteButtons() {
+    return cy.get('div table .btn-danger');
+  }
+
+  static clickOnLastDeleteButton() {
+    return this.getDeleteButtons().last().click();
+  }
+
+  static count<%= entityClass %>() {
+    return this.getDeleteButtons().getDeleteButtons().then($buttons => {
+      return ($buttons.length);
+    });
+  }
+
+  static getTitle() {
+    return cy.get('#<%= entityFileName %>-heading');
+  }
+
+  static getFooter() {
+    return cy.get('#footer');
+  }
+}
+
+export class <%= entityClass %>DeleteDialog {
+  static getDialogTitle() {
+    return cy.get('#<%= jhiPrefixDashed %>-delete-<%= entityInstance %>-heading');
+  }
+
+  static clickOnConfirmButton() {
+    return cy.get('#<%= jhiPrefixDashed %>-confirm-delete-<%= entityInstance %>').click();
+  }
+}
