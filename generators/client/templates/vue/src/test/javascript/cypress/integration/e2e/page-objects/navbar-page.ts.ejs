@@ -2,21 +2,22 @@ import BasePage from './base-component';
 import SignInPage from './signin-page';
 
 export default class NavBarPage extends BasePage {
-    static getSelf() {
-        return cy.get('#app-header');
-    }
+  static getSelf() {
+    return cy.get('#app-header');
+  }
 
-    static getAdminMenuElement() {
-        return cy.get('#admin-menu');
-    }
+  static getAdminMenuElement() {
+      eturn cy.get('#admin-menu');
+  }
 
-    static getAccountMenuElement() {
-        return cy.get('#account-menu');
-    }
+  static getAccountMenuElement() {
+    return cy.get('#account-menu');
+  }
 
-    static getEntityMenuElement() {
-        return cy.get('#entity-menu');
-    }
+  static getEntityMenuElement() {
+    return cy.get('#entity-menu');
+  }
+
 <%_ if (authenticationType !== 'oauth2') { _%>
   static getPasswordPage() {
     return this.clickOnAccountMenuItem('password');
@@ -30,6 +31,7 @@ export default class NavBarPage extends BasePage {
     this.clickOnAccountMenu();
     return this.clickOnTabMenu('#register');
   }
+
 <%_ } _%>
   static getSignInPage() {
     this.clickOnAccountMenu();
