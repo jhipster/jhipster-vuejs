@@ -53,7 +53,7 @@ describe('Account', () => {
             // Okta
             cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');
           }
-        }
+        });
 <%_ } _%>
     });
 
