@@ -280,7 +280,7 @@ describe('<%= entityClass %> e2e test', () => {
     // Delete modal should disappear
     cy.get('.modal').should('exist');
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', 0);
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
 
     // Danger toast should appear
     getDangerToast().should('exist')
