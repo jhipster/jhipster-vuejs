@@ -84,13 +84,9 @@ export default class <%= entityClass %>UpdatePage {
       return this.get<%= fieldNameCapitalized %>Input().click();
     }
 
-    static isSelected<%= fieldNameCapitalized %>Input() {
-      return this.get<%= fieldNameCapitalized %>Input().isSelected();
-    }
-
     <%_ } else if (fieldIsEnum) { _%>
     static set<%= fieldNameCapitalized %>Select(<%= fieldName %>) {
-      return cy.get('select#<%= entityFileName %>-<%= fieldName %>').type(<%= fieldName %>);
+      return cy.get('select#<%= entityFileName %>-<%= fieldName %>').select(<%= fieldName %>);
     }
 
     static get<%= fieldNameCapitalized %>Select() {
@@ -101,8 +97,10 @@ export default class <%= entityClass %>UpdatePage {
 
     static <%=fieldName %>SelectLastOption() {
       return cy.get('select#<%= entityFileName %>-<%= fieldName %>')
-                .find('option')
-                .last().click();
+          .find('option').last()
+          .then($els => $els.get(0).setAttribute('selected', 'selected'))
+          .parent()
+          .trigger('change');
     }
 
     <%_ } else { _%>
