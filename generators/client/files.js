@@ -52,6 +52,10 @@ const vueFiles = {
         {
             condition: generator => generator.protractorTests,
             templates: ['tsconfig.e2e.json']
+        },
+        {
+            condition: generator => generator.cypressTests,
+            templates: ['cypress.json']
         }
     ],
     image: [

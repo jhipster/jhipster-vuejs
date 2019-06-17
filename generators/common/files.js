@@ -32,14 +32,7 @@ const commonFiles = {
                     file: 'editorconfig',
                     renameTo: () => '.editorconfig',
                     method: 'copy'
-                },
-                {
-                    condition: generator => generator.cypressTests,
-                    templates: [
-                        'cypress.json'
-                    ]
                 }
-
             ]
         }
     ]
