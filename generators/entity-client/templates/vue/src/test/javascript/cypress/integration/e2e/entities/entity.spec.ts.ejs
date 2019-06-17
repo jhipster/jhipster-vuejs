@@ -69,7 +69,7 @@ describe('<%= entityClass %> e2e test', () => {
     cy.route('GET', '/api/<%= entityFileName %>*').as('entitiesRequest');
 
     NavBarPage.getEntityPage('<%= entityStateName %>');
-    cy.wait('@entitiesRequest').then(array => {
+    cy.wait('@entitiesRequest').its('responseBody').then(array => {
       expect(array.length).to.equal(0);
     });
 
