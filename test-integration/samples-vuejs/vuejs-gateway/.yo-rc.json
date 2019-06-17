@@ -27,7 +27,7 @@
       "en"
     ],
     "testFrameworks": [
-      "protractor"
+      "cypress"
     ],
     "jhiPrefix": "jhi",
     "clientPackageManager": "npm",

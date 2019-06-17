@@ -25,7 +25,7 @@
     "languages": [
       "en"
     ],
-    "testFrameworks": ["protractor"],
+    "testFrameworks": ["cypress"],
     "jhiPrefix": "jhi",
     "clientPackageManager": "npm",
     "nativeLanguage": "en",

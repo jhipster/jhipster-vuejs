@@ -31,8 +31,8 @@ jobs:
           JHI_LIB_REPO: https://github.com/jhipster/jhipster.git
           JHI_LIB_BRANCH: master
           # if JHI_GEN_BRANCH value is release, use the release from NPM
-          JHI_GEN_REPO: https://github.com/jhipster/generator-jhipster.git
-          JHI_GEN_BRANCH: master
+          JHI_GEN_REPO: https://github.com/clement26695/generator-jhipster.git
+          JHI_GEN_BRANCH: add-cypress-option
           # specific config
           SPRING_OUTPUT_ANSI_ENABLED: NEVER
           SPRING_JPA_SHOW_SQL: false
@@ -128,5 +128,5 @@ jobs:
         #     displayName: 'TESTS: frontend'
           - bash: $(JHI_SCRIPTS)/23-package.sh
             displayName: 'TESTS: packaging'
-          - bash: $(JHI_SCRIPTS)/26-tests-e2e-cypress.sh
+          - bash: test-integration/26-tests-e2e-cypress.sh
             displayName: 'TESTS: End-to-End'
