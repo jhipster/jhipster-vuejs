@@ -29,12 +29,9 @@ import { getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityP
 import path from 'path';
 <%_ } _%>
 <%_
-let elementGetter = `getText()`;
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
 let openBlockComment = ``;
 let closeBlockComment = ``;
-if (enableTranslation) {
-    elementGetter = `getAttribute('jhiTranslate')`;
-}
 for (let relationship of relationships) {
     if (relationship.relationshipRequired) {
         openBlockComment = `/*`;
@@ -48,11 +45,10 @@ describe('<%= entityClass %> e2e test', () => {
   const fileToUpload = '../../../../../<%= entityParentPathAddition %>main/webapp/content/images/logo-jhipster.png';
   const absolutePath = path.resolve(__dirname, fileToUpload);
   <%_ } _%>
-  let nbButtonsBeforeCreate = 0;
 
   before(() => {
     cy.server();
-    cy.route("POST", "/api/authenticate").as("authenticationRequest");
+    cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
 
     cy.visit('/');
     NavBarPage.getSignInPage();
@@ -62,15 +58,17 @@ describe('<%= entityClass %> e2e test', () => {
     SignInPage.loginWithOAuth('admin', 'admin');
     <%_ } _%>
 
-    cy.wait("@authenticationRequest");
+    cy.wait('@getAccountRequest');
   });
 
   it('should load <%= entityClassPlural %>', () => {
     cy.server();
-    cy.route('GET', '/api/<%= entityFileName %>*').as('entitiesRequest');
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
     NavBarPage.getEntityPage('<%= entityStateName %>');
-    cy.wait('@entitiesRequest');
+    cy.wait('@entitiesRequest').its('responseBody').then(array => {
+      expect(array.length).to.equal(0);
+    });
 
     <%= entityClass %>ComponentsPage.getFooter().should('exist');
 
@@ -78,9 +76,7 @@ describe('<%= entityClass %> e2e test', () => {
                                     .invoke('text')
                                     .should('not.have.lengthOf', 0);
 
-    <%= entityClass %>ComponentsPage.count<%= entityClass %>().then(lengthOf => {
-      nbButtonsBeforeCreate = lengthOf;
-    });
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
   });
 
   it('should load create <%= entityClass %> page', () => {
@@ -97,6 +93,9 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
    <%= openBlockComment %> it('should create and save <%= entityClassPlural %>', () => {
+    cy.server();
+    cy.route('POST', '/<%= baseApi + entityApiUrl %>').as('saveEntityRequest');
+
     <%_ fields.forEach((field) => {
       const fieldName = field.fieldName;
       const fieldNameCapitalized = field.fieldNameCapitalized;
@@ -104,42 +103,33 @@ describe('<%= entityClass %> e2e test', () => {
       const fieldTypeBlobContent = field.fieldTypeBlobContent;
       const fieldIsEnum = field.fieldIsEnum;
     _%>
-    cy.server();
-    cy.route('POST', '/api/<%= entityFileName %>').as('saveEntityRequest');
-
     <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5');
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '5');
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2001');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01');
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-    // TODO: to fix with implementing tab input
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2001' + protractor.Key.TAB + '02:30AM');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2001-01-01T02:30');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01T02:30');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('equal', '2001-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('12');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '12');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
-    const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
-    if (selected<%= fieldNameCapitalized %>) {
-      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.false');
-    } else {
-      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.true');
-    }
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
+    <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input(absolutePath);
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('integration-test.png', 'image/png');
 
     <%_ } else if (fieldIsEnum) { _%>
     <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
@@ -174,7 +164,7 @@ describe('<%= entityClass %> e2e test', () => {
     // Success toast should appear
     getSuccessToast().should('exist');
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', nbButtonsBeforeCreate + 1);
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf',  1);
   });<%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
@@ -187,7 +177,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
 
     <%= entityClass %>DetailsPage.getBackButton().click();
-    cy.get('div table .btn-danger').should('have.lengthOf', nbButtonsBeforeCreate + 1);
+    cy.get('div table .btn-danger').should('have.lengthOf', 1);
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
@@ -210,30 +200,22 @@ describe('<%= entityClass %> e2e test', () => {
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2019');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01');
       <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-
-      // TODO: fix tab navigation
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2019' + protractor.Key.TAB + '02:30AM');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2019-01-01T02:30');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01T02:30');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
       <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('14');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '14');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
-      const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
-      if (selected<%= fieldNameCapitalized %>) {
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
       <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.false');
-      } else {
-      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.true');
-      }
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
@@ -264,7 +246,7 @@ describe('<%= entityClass %> e2e test', () => {
 
   <%= openBlockComment %> it('should delete last <%= entityClass %>', () => {
     cy.server();
-    cy.route('DELETE', '/api/<%= entityFileName %>/*').as('deleteEntityRequest');
+    cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
     <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
 
@@ -281,7 +263,7 @@ describe('<%= entityClass %> e2e test', () => {
     // Delete modal should disappear
     cy.get('.modal').should('exist');
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', nbButtonsBeforeCreate);
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
 
     // Danger toast should appear
     getDangerToast().should('exist')

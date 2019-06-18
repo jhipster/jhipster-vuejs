@@ -53,7 +53,7 @@ describe('Account', () => {
             // Okta
             cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');
           }
-        }
+        });
 <%_ } _%>
     });
 
@@ -66,7 +66,6 @@ describe('Account', () => {
         SignInPage.setUserName('admin');
         SignInPage.clearPassword();
         SignInPage.setPassword('admin');
-        SignInPage.login();
 
         cy.wait("@authenticationRequest");
 
@@ -171,7 +170,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('user_test', 'user_test');
-        SignInPage.login();
 
         // Login page should close when login success
         cy.wait("@authenticationRequest");
@@ -190,7 +188,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('admin', 'admin');
-        SignInPage.login();
 
         cy.wait("@authenticationRequest");
         SignInPage.getSelf().should('not.exist');
@@ -224,7 +221,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('admin', 'admin');
-        SignInPage.login();
 
         cy.wait("@authenticationRequest");
         SignInPage.getSelf().should('not.exist');
@@ -256,7 +252,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('admin', 'new_password');
-        SignInPage.login();
 
         cy.wait("@authenticationRequest");
 
@@ -279,7 +274,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('user_test', 'user_test');
-        SignInPage.login();
 
         // Login page should close when login success
         cy.wait("@authenticationRequest");
@@ -316,7 +310,6 @@ describe('Account', () => {
         SignInPage.getTitle().should('equal', loginPageTitle);
 
         SignInPage.autoSignInUsing('admin', 'admin');
-        SignInPage.login();
 
         cy.wait("@authenticationRequest");
         SignInPage.getSelf().should('not.exist');
