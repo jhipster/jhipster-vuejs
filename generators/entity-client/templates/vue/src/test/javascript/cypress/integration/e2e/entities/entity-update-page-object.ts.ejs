@@ -19,7 +19,7 @@
 /// <reference types="cypress" />
 
 // TODO: conditionnal adding
-import { datetimeToMinutes } from '../../util/utils';
+import { datetimeToMinutes } from '<% if (clientRootFolder && !skipUiGrouping) { %>../<% } %>../../util/utils';
 
 <%_
 const openBlockComment = `/*`;

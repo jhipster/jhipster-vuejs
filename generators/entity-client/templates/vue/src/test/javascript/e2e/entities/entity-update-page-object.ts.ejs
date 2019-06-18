@@ -17,7 +17,7 @@
  limitations under the License.
 -%>
 import { element, by, ElementFinder, protractor, browser } from 'protractor';
-import { clearElement, waitUntilDisplayed } from '<% if (clientRootFolder && !skipUiGrouping) { %>../<% } %>../../util/utils';
+import { clearElement, waitUntilDisplayed } from '../../<%= entityParentPathAddition %>util/utils';
 
 <%_
 let elementGetter = `getText()`;
