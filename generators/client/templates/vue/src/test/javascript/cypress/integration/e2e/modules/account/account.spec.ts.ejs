@@ -66,6 +66,7 @@ describe('Account', () => {
         SignInPage.setUserName('admin');
         SignInPage.clearPassword();
         SignInPage.setPassword('admin');
+        SignInPage.getLoginButton().click();
 
         cy.wait("@authenticationRequest");
 
