@@ -108,17 +108,17 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '5');
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2001');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01');
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
     // TODO: we can not test these with cypress
     // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2001' + protractor.Key.TAB + '02:30AM');
-    // <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2001-01-01T02:30');
+    // <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').sould('equal', '2001-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('12');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().sould('have.value', '12');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
@@ -203,7 +203,7 @@ describe('<%= entityClass %> e2e test', () => {
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01-01-2019');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01');
       <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
@@ -216,7 +216,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ } else if (fieldType === 'Duration') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
       <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('14');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '14');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
       const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
