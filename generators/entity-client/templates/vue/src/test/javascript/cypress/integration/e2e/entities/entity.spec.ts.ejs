@@ -73,6 +73,7 @@ describe('<%= entityClass %> e2e test', () => {
     cy.server();
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
+    cy.visit('/');
     NavBarPage.getEntityPage('<%= entityStateName %>');
     cy.wait('@entitiesRequest');
 
