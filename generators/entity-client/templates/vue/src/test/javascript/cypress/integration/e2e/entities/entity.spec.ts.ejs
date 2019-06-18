@@ -51,6 +51,7 @@ describe('<%= entityClass %> e2e test', () => {
   before(() => {
     cy.server();
     cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
     cy.visit('/');
     NavBarPage.getSignInPage();
@@ -61,6 +62,11 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ } _%>
 
     cy.wait('@getAccountRequest');
+
+    NavBarPage.getEntityPage('<%= entityStateName %>');
+    cy.wait('@entitiesRequest').its('responseBody').then(array => {
+      startingEntitiesCount = array.length;
+    });
   });
 
   it('should load <%= entityClassPlural %>', () => {
@@ -68,9 +74,7 @@ describe('<%= entityClass %> e2e test', () => {
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
     NavBarPage.getEntityPage('<%= entityStateName %>');
-    cy.wait('@entitiesRequest').its('responseBody').then(array => {
-      startingEntitiesCount = array.length;
-    });
+    cy.wait('@entitiesRequest');
 
     <%= entityClass %>ComponentsPage.getFooter().should('exist');
 
