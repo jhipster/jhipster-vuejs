@@ -99,7 +99,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ if (enableTranslation) { _%>
     <%= entityClass %>UpdatePage.getPageTitle().invoke('attr', 'id').should('match', /<%= i18nKeyPrefix %>.home.createOrEditLabel/);
     <%_ } else { _%>
-    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityClass %>')
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityAngularName %>')
     <%_ } _%>
   });
 
