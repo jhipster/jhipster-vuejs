@@ -30,4 +30,5 @@ export const getInfoToast = () => cy.get('div[role=alert].alert.alert-info');
 
 export const getDangerToast = () => cy.get('div[role=alert].alert.alert-danger');
 
+// Fix this
 export const datetimeToMinutes = (datetime: string) => new Date(datetime).valueOf() / 60000;
