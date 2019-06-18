@@ -78,7 +78,11 @@ describe('<%= entityClass %> e2e test', () => {
                                     .invoke('text')
                                     .should('not.have.lengthOf', 0);
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
+    if (startingEntitiesCount === 0) {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
+    } else {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount);
+    }
   });
 
   it('should load create <%= entityClass %> page', () => {
