@@ -46,6 +46,8 @@ describe('<%= entityClass %> e2e test', () => {
   const absolutePath = path.resolve(__dirname, fileToUpload);
   <%_ } _%>
 
+  let startingEntitiesCount = 0;
+
   before(() => {
     cy.server();
     cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
@@ -67,7 +69,7 @@ describe('<%= entityClass %> e2e test', () => {
 
     NavBarPage.getEntityPage('<%= entityStateName %>');
     cy.wait('@entitiesRequest').its('responseBody').then(array => {
-      expect(array.length).to.equal(0);
+      startingEntitiesCount = array.length;
     });
 
     <%= entityClass %>ComponentsPage.getFooter().should('exist');
@@ -164,7 +166,7 @@ describe('<%= entityClass %> e2e test', () => {
     // Success toast should appear
     getSuccessToast().should('exist');
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf',  1);
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount + 1);
   });<%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
@@ -177,7 +179,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
 
     <%= entityClass %>DetailsPage.getBackButton().click();
-    cy.get('div table .btn-danger').should('have.lengthOf', 1);
+    cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount + 1);
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
@@ -263,8 +265,11 @@ describe('<%= entityClass %> e2e test', () => {
     // Delete modal should disappear
     cy.get('.modal').should('exist');
 
-    <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
-
+    if (startingEntitiesCount === 0) {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
+    } else {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount);
+    }
     // Danger toast should appear
     getDangerToast().should('exist')
   });<%= closeBlockComment %>
