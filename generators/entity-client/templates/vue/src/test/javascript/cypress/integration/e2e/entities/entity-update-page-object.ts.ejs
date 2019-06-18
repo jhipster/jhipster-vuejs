@@ -19,7 +19,7 @@
 /// <reference types="cypress" />
 
 // TODO: conditionnal adding
-import { datetimeToMinutes } from '../../util/utils';
+import { datetimeToMinutes } from '<% if (clientRootFolder && !skipUiGrouping) { %>../<% } %>../../util/utils';
 
 <%_
 const openBlockComment = `/*`;
@@ -119,10 +119,10 @@ export default class <%= entityClass %>UpdatePage {
 
         static set<%= fieldNameCapitalized %>Input(fileName, mimeType) {
             return cy.fixture(fileName).then(fileContent => {
-                FieldTestPagerEntityUpdatePage.get<%= fieldNameCapitalized %>Input().upload(
-                    { fileContent, fileName, mimeType },
-                    { subjectType: 'input' },
-                );
+              <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().upload(
+                { fileContent, fileName, mimeType },
+                { subjectType: 'input' },
+              );
             });
         }
 
