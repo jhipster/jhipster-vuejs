@@ -112,7 +112,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-    // TODO: we can not test these with cypress
+    // Not supported by Cypress for the moment
     // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2001' + protractor.Key.TAB + '02:30AM');
     // <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('equal', '2001-01-01T02:30');
 
@@ -132,7 +132,8 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input(absolutePath);
+    // Not supported by Cypress for the moment
+    // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input(absolutePath);
 
     <%_ } else if (fieldIsEnum) { _%>
     <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
