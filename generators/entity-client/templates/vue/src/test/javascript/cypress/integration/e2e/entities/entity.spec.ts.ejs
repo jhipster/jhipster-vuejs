@@ -112,9 +112,8 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-    // Not supported by Cypress for the moment
-    // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2001' + protractor.Key.TAB + '02:30AM');
-    // <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('equal', '2001-01-01T02:30');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01T02:30');
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('equal', '2001-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S');
@@ -124,16 +123,13 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
     <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
-    <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
-    // Not supported by Cypress for the moment
-    // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input(absolutePath);
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('integration-test.png', 'image/png');
 
     <%_ } else if (fieldIsEnum) { _%>
     <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
@@ -208,11 +204,8 @@ describe('<%= entityClass %> e2e test', () => {
       <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-
-      // TODO: we can not test these with cypress
-      // <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('01/01/2019' + protractor.Key.TAB + '02:30AM');
-      // <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').contains('2019-01-01T02:30');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01T02:30');
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
@@ -220,14 +213,9 @@ describe('<%= entityClass %> e2e test', () => {
       <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '14');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
-      const selected<%= fieldNameCapitalized %> = <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input();
-      if (selected<%= fieldNameCapitalized %>) {
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
       <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.false');
-      } else {
-      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.isSelected<%= fieldNameCapitalized %>Input().should('be.true');
-      }
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();

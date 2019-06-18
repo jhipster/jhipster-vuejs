@@ -18,8 +18,11 @@
 -%>
 /// <reference types="cypress" />
 
+// TODO: conditionnal adding
+import { datetimeToMinutes } from '../../util/utils';
+
 <%_
-let openBlockComment = `/*`;
+const openBlockComment = `/*`;
 let closeBlockComment = `*/`;
  _%>
 export default class <%= entityClass %>UpdatePage {
@@ -74,6 +77,22 @@ export default class <%= entityClass %>UpdatePage {
       return this.get<%= fieldNameCapitalized %>Input().click();
     }
 
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+
+    static get<%= fieldNameCapitalized %>Input() {
+      return cy.get('input#<%= entityFileName %>-<%= fieldName %>');
+    }
+
+    static set<%= fieldNameCapitalized %>Input(<%= fieldName %>) {
+      return this.clear<%= fieldNameCapitalized %>Input().then($input => {
+        $input.get(0).stepUp(datetimeToMinutes(<%= fieldName %>));
+      }).trigger('change');
+    }
+
+    static clear<%= fieldNameCapitalized %>Input() {
+      return this.get<%= fieldNameCapitalized %>Input().clear();
+    }
+
     <%_ } else if (fieldIsEnum) { _%>
     static set<%= fieldNameCapitalized %>Select(<%= fieldName %>) {
       return cy.get('select#<%= entityFileName %>-<%= fieldName %>').select(<%= fieldName %>);
@@ -93,15 +112,24 @@ export default class <%= entityClass %>UpdatePage {
           .trigger('change');
     }
 
+    <%_ } else if  (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent !== 'text') { _%>
+        static get<%= fieldNameCapitalized %>Input() {
+            return cy.get('input#file_<%= fieldName %>');
+        }
+
+        static set<%= fieldNameCapitalized %>Input(fileName, mimeType) {
+            return cy.fixture(fileName).then(fileContent => {
+                FieldTestPagerEntityUpdatePage.get<%= fieldNameCapitalized %>Input().upload(
+                    { fileContent, fileName, mimeType },
+                    { subjectType: 'input' },
+                );
+            });
+        }
+
     <%_ } else { _%>
-      <%_ if (['byte[]', 'ByteBuffer'].includes(fieldType) { _%>
-    <%= openBlockComment %>
-      <%_ } _%>
     static get<%= fieldNameCapitalized %>Input() {
       <%_ if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
       return cy.get('textarea#<%= entityFileName %>-<%= fieldName %>');
-      <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
-      return cy.get('input#file_<%= fieldName %>');
       <%_ } else { _%>
       return cy.get('input#<%= entityFileName %>-<%= fieldName %>');
       <%_ } _%>
@@ -114,9 +142,6 @@ export default class <%= entityClass %>UpdatePage {
     static clear<%= fieldNameCapitalized %>Input() {
       return this.get<%= fieldNameCapitalized %>Input().clear();
     }
-      <%_ if (['byte[]', 'ByteBuffer'].includes(fieldType) { _%>
-    <%= closeBlockComment %>
-      <%_ } _%>
     <%_ } _%>
     <%_ }); _%>
     <%_ relationships.forEach((relationship) => {
