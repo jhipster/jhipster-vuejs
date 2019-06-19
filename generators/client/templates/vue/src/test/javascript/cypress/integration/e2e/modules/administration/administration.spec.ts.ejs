@@ -2,10 +2,13 @@
 import NavBarPage from '../../page-objects/navbar-page';
 import SignInPage from '../../page-objects/signin-page';
 
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
 describe('Administration', () => {
   before(() => {
     cy.server();
-    cy.route("POST", "/api/authenticate").as("authenticationRequest");
+    cy.route("GET", '/<%= baseApi %>account').as("authenticationRequest");
 
     cy.visit('/');
 <%_ if (authenticationType !== 'oauth2') { _%>

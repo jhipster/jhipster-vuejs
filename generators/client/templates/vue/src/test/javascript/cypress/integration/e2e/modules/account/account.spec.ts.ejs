@@ -20,6 +20,9 @@ import {
 } from '../../util/utils';
 <%_ } _%>
 
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
 describe('Account', () => {
 
 <%_ if (authenticationType !== 'oauth2') { _%>
@@ -63,7 +66,7 @@ describe('Account', () => {
     it('should login with admin account', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", '/<%= baseApi %>account').as("authenticationRequest");
 
         SignInPage.clearUserName();
         SignInPage.setUserName('admin');
@@ -87,7 +90,7 @@ describe('Account', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
     it('should be able to sign up', () => {
         cy.server();
-        cy.route("POST", "/api/register").as("registrationRequest");
+        cy.route("POST", "/<%= baseApi %>register").as("registrationRequest");
 
         cy.visit('/');
         NavBarPage.getRegisterPage();
@@ -103,7 +106,7 @@ describe('Account', () => {
 
     it('should load user management', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -120,7 +123,7 @@ describe('Account', () => {
 
     it('should activate the new registered user', () => {
         cy.server();
-        cy.route("PUT", "/api/users").as("activateUserRequest");
+        cy.route("PUT", "/<%= baseApi %>users").as("activateUserRequest");
   <%_ if (databaseType !== 'cassandra') { _%>
         getModifiedDateSortButton().click({ force: true });
   <%_ } _%>
@@ -135,7 +138,7 @@ describe('Account', () => {
 
     it('should not be able to sign up if login already taken', () => {
         cy.server();
-        cy.route("POST", "/api/register").as("registrationRequest");
+        cy.route("POST", "/<%= baseApi %>register").as("registrationRequest");
 
         cy.visit('/');
         NavBarPage.getRegisterPage();
@@ -151,7 +154,7 @@ describe('Account', () => {
 
     it('should not be able to sign up if email already taken', () => {
         cy.server();
-        cy.route("POST", "/api/register").as("registrationRequest");
+        cy.route("POST", "/<%= baseApi %>register").as("registrationRequest");
 
         RegisterPage.getTitle().should('equal', registerPageTitle);
 
@@ -166,7 +169,7 @@ describe('Account', () => {
 
     it('should be able to log in with new registered account', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -184,7 +187,7 @@ describe('Account', () => {
     // Why this test
     it('should login with admin account', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -199,7 +202,7 @@ describe('Account', () => {
 
     it('should fail to update password when using incorrect current password', () => {
         cy.server();
-        cy.route("POST", "/api/account/change-password").as("changePasswordRequest");
+        cy.route("POST", "/<%= baseApi %>account/change-password").as("changePasswordRequest");
 
         NavBarPage.getPasswordPage();
 
@@ -217,7 +220,7 @@ describe('Account', () => {
     // TODO: Why this test
     it('should login with admin account', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -232,7 +235,7 @@ describe('Account', () => {
 
     it('should be able to update password', () => {
         cy.server();
-        cy.route("POST", "/api/account/change-password").as("changePasswordRequest");
+        cy.route("POST", "/<%= baseApi %>account/change-password").as("changePasswordRequest");
 
         NavBarPage.getPasswordPage();
 
@@ -249,7 +252,7 @@ describe('Account', () => {
 
     it('should be able to log in with new password', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -270,7 +273,7 @@ describe('Account', () => {
 
     it('should login with user_test account', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -287,7 +290,7 @@ describe('Account', () => {
     // TODO: Why Post ?
     it('should be able to change user_test settings', () => {
         cy.server();
-        cy.route("POST", "/api/account").as("settingsModificationRequest");
+        cy.route("POST", "/<%= baseApi %>account").as("settingsModificationRequest");
 
         NavBarPage.getSettingsPage();
 
@@ -306,7 +309,7 @@ describe('Account', () => {
 
     it('should login with admin account', () => {
         cy.server();
-        cy.route("POST", "/api/authenticate").as("authenticationRequest");
+        cy.route("GET", "/<%= baseApi %>account").as("authenticationRequest");
 
         cy.visit('/');
         NavBarPage.getSignInPage();
@@ -321,7 +324,7 @@ describe('Account', () => {
 
     it('should not be able to change admin settings if email already exists', () => {
         cy.server();
-        cy.route("POST", "/api/account").as("settingsModificationRequest");
+        cy.route("POST", "/<%= baseApi %>account").as("settingsModificationRequest");
 
         NavBarPage.getSettingsPage();
         SettingsPage.getTitle().should('equal', settingsPageTitle);
@@ -348,8 +351,8 @@ describe('Account', () => {
 
     it('should edit details from previously created fake user', () => {
         cy.server();
-        cy.route("GET", "/api/users/user_test").as("userDetailRequest");
-        cy.route("PUT", "/api/users").as("userDetailModificationRequest");
+        cy.route("GET", "/<%= baseApi %>users/user_test").as("userDetailRequest");
+        cy.route("PUT", "/<%= baseApi %>users").as("userDetailModificationRequest");
 
         cy.visit('/admin/user-management');
         getUserEditButtonByLogin('user_test').click();
@@ -370,7 +373,7 @@ describe('Account', () => {
 
     it('should delete previously created fake user', () => {
         cy.server();
-        cy.route("DELETE", "/api/users/user_test").as("userDeleteRequest");
+        cy.route("DELETE", "/<%= baseApi %>users/user_test").as("userDeleteRequest");
 
         cy.visit('/admin/user-management');
 
