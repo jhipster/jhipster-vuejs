@@ -1,6 +1,8 @@
 
 export const getModifiedDateSortButton = () => cy.get('#modified-date-sort');
 
+export const getIdSortButton = () => cy.get('th').contains('ID');
+
 export const getUserDeactivatedButtonByLogin = (login: string) =>
     cy.get('table > tbody')
         .find('#' + login)
