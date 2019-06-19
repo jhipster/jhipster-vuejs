@@ -51,7 +51,7 @@ describe('Account', () => {
         cy.get('.alert-error').then($alert => {
           if ($alert.length) {
             // Keycloak
-            expect($alert.get(0).innerText)to.equal('Invalid username or password.');
+            expect($alert.get(0).innerText).to.equal('Invalid username or password.');
           } else {
             // Okta
             cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');

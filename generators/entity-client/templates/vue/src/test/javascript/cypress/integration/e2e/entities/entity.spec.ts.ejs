@@ -58,6 +58,7 @@ describe('<%= entityClass %> e2e test', () => {
     NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
     <%_ } else if (authenticationType === 'oauth2') {_%>
+    // very weird: but we need to first logout when disabling web security
     NavBarPage.autoSignOut();
     NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
