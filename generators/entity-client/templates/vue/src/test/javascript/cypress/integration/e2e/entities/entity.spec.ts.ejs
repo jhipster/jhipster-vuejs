@@ -74,7 +74,7 @@ describe('<%= entityClass %> e2e test', () => {
     Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION');
   });
 
-  <%_ } else if (authenticationType === 'session') _%>
+  <%_ } else if (authenticationType === 'session') { _%>
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN');
   });
