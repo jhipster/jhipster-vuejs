@@ -54,10 +54,12 @@ describe('<%= entityClass %> e2e test', () => {
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
     cy.visit('/');
-    NavBarPage.getSignInPage();
     <%_ if (authenticationType !== 'oauth2') { _%>
+    NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
     <%_ } else if (authenticationType === 'oauth2') {_%>
+    SignInPage.autoSignOut();
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
     <%_ } _%>
 
@@ -69,17 +71,6 @@ describe('<%= entityClass %> e2e test', () => {
     });
   });
 
-  <%_ if (authenticationType === 'oauth2') { _%>
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION');
-  });
-
-  <%_ } else if (authenticationType === 'session') { _%>
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN');
-  });
-
-  <%_ } // TODO: add for uaa _%>
   it('should load <%= entityClassPlural %>', () => {
     cy.server();
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');

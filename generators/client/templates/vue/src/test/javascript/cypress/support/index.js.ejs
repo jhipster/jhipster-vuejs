@@ -1,1 +1,13 @@
 import 'cypress-file-upload';
+
+<%_ if (authenticationType === 'oauth2') { _%>
+Cypress.Cookies.defaults({
+  whitelist: ['JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION']
+})
+
+<%_ } else if (authenticationType === 'session') { _%>
+Cypress.Cookies.defaults({
+  whitelist: ['JSESSIONID', 'XSRF-TOKEN']
+})
+
+<%_ } // TODO: add for uaa _%>
