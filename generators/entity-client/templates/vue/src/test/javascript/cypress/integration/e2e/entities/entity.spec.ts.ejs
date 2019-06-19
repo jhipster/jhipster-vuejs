@@ -174,7 +174,9 @@ describe('<%= entityClass %> e2e test', () => {
   });<%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
+    <%_ if (pagination === 'infinite-scroll') { _%>
     getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
 
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
@@ -188,7 +190,9 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
+    <%_ if (pagination === 'infinite-scroll') { _%>
     getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastEditButton();
     <%= entityClass %>UpdatePage.getFooter().should('exist');
     <%= entityClass %>UpdatePage.getSaveButton().should('exist');
@@ -248,7 +252,9 @@ describe('<%= entityClass %> e2e test', () => {
     cy.server();
     cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
+    <%_ if (pagination === 'infinite-scroll') { _%>
     getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
 
     cy.get('.modal').should('exist');
