@@ -26,11 +26,14 @@ describe('Account', () => {
     const registerPageTitle = 'register-title';
     const passwordPageTitle = 'password-title';
     const settingsPageTitle = 'settings-title';
-<%_ } _%>
     const loginPageTitle = 'login-title';
+<%_ } _%>
 
     before(() => {
         cy.visit('/');
+        <%_ if (authenticationType !== 'oauth2') { _%>
+            NavBarPage.autoSignOut();
+        <%_ } _%>
         NavBarPage.getSignInPage();
     })
 
@@ -48,7 +51,7 @@ describe('Account', () => {
         cy.get('.alert-error').then($alert => {
           if ($alert.length) {
             // Keycloak
-            $alert.invoke('text').should('equal', 'Invalid username or password.');
+            expect($alert.get(0).innerText)to.equal('Invalid username or password.');
           } else {
             // Okta
             cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');

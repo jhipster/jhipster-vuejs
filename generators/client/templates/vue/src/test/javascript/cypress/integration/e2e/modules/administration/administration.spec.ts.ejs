@@ -8,10 +8,12 @@ describe('Administration', () => {
     cy.route("POST", "/api/authenticate").as("authenticationRequest");
 
     cy.visit('/');
-    NavBarPage.getSignInPage();
 <%_ if (authenticationType !== 'oauth2') { _%>
+    NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
 <%_ } else if (authenticationType === 'oauth2') {_%>
+    NavBarPage.autoSignOut();
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
 <%_ } _%>
     cy.wait("@authenticationRequest");

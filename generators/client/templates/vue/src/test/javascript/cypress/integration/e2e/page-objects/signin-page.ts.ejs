@@ -22,7 +22,7 @@ export default class SignInPage extends BasePage {
   }
 
   static getLoginButton() {
-    return cy.get('button[type=submit]');
+    return cy.get('input[type=submit]');
   }
 
   static getTitle() {
