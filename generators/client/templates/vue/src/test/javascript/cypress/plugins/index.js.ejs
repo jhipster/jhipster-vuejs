@@ -44,7 +44,11 @@ module.exports = (on) => {
         if (browser.name === 'chrome') {
             // `args` is an araay of all the arguments
             // that will be passed to Chrome when it launchers
-            args.push('--disable-gpu', '--window-size=800,600')
+            args.push(
+                '--disable-gpu',
+                '--window-size=800,600'<%_ if (authenticationType !== 'oauth2') { _%>,
+                '--disable-web-security'
+                <%_ } _%>)
 
             // whatever you return here becomes the new args
             return args
