@@ -80,6 +80,7 @@ describe('Account', () => {
         NavBarPage.autoSignOut();
 <%_ } else { _%>
         // Keycloak credentials by default, change them to be able to use oauth2 with Okta
+        SignInPage.clearUserName();
         SignInPage.loginWithOAuth('admin', 'admin');
 
         // Success alert should appear in home page
