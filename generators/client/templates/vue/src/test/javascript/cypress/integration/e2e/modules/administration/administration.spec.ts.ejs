@@ -31,7 +31,7 @@ describe('Administration', () => {
 <%_ } _%>
 
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
-  it('should load gateway', async () => {
+  it('should load gateway', () => {
     NavBarPage.clickOnAdminMenuItem('gateway');
     cy.get('#gateway-page-heading')
       .invoke('text').should('to.not.have.lengthOf', 0);
