@@ -69,7 +69,7 @@ describe('<%= entityClass %> e2e test', () => {
     });
   });
 
-  <%_ if (authenticationType === 'oauth2' && authenticationType === 'session' && authenticationType === 'uaa') { _%>
+  <%_ if (authenticationType === 'oauth2' || authenticationType === 'session' || authenticationType === 'uaa') { _%>
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN');
   });
