@@ -58,7 +58,7 @@ describe('<%= entityClass %> e2e test', () => {
     NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
     <%_ } else if (authenticationType === 'oauth2') {_%>
-    SignInPage.autoSignOut();
+    NavBarPage.autoSignOut();
     NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
     <%_ } _%>
