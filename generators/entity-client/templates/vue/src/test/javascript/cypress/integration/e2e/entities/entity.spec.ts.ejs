@@ -190,10 +190,15 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>/*').as('getEntityRequest');
+
     <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
     getIdSortButton().click();
     <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastEditButton();
+    cy.wait('@getEntityRequest');
+
     <%= entityClass %>UpdatePage.getFooter().should('exist');
     <%= entityClass %>UpdatePage.getSaveButton().should('exist');
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);

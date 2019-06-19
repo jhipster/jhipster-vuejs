@@ -85,8 +85,11 @@ export default class <%= entityClass %>UpdatePage {
 
     static set<%= fieldNameCapitalized %>Input(<%= fieldName %>) {
       return this.clear<%= fieldNameCapitalized %>Input().then($input => {
-        $input.get(0).stepUp(datetimeToMinutes(<%= fieldName %>));
-      }).trigger('change');
+        const htmlElementInput = $input.get(0);
+        const currentDateInMinutes = htmlElementInput.value === '' ? 0 : datetimeToMinutes(htmlElementInput.value);
+        htmlElementInput.stepUp(datetimeToMinutes(<%= fieldName %>) - currentDateInMinutes);
+      })
+      .trigger('change', {force: true});
     }
 
     static clear<%= fieldNameCapitalized %>Input() {
