@@ -34,6 +34,18 @@ describe('Account', () => {
         NavBarPage.getSignInPage();
     })
 
+<%_ if (authenticationType === 'oauth2') { _%>
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION');
+  });
+
+<%_ } else if (authenticationType === 'session') _%>
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('JSESSIONID', 'XSRF-TOKEN');
+  });
+
+<%_ } // TODO: add for uaa _%>
+
     it('should fail to login with bad password', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
         SignInPage.getTitle().should('equal', loginPageTitle);
