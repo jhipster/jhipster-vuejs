@@ -11,7 +11,7 @@ describe('Administration', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
     NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
-<%_ } else if (authenticationType === 'oauth2') {_%>
+<%_ } else {_%>
     NavBarPage.autoSignOut();
     NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
