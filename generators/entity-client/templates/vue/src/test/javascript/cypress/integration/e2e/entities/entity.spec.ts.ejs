@@ -174,7 +174,7 @@ describe('<%= entityClass %> e2e test', () => {
   });<%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
-    <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
+    <%= entityClass %>ComponentsPage.clickOnFirstDetailsButton();
 
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
     <%= entityClass %>UpdatePage.getFooter().should('exist');
@@ -187,7 +187,7 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
-    <%= entityClass %>ComponentsPage.clickOnLastEditButton();
+    <%= entityClass %>ComponentsPage.clickOnFirstEditButton();
     <%= entityClass %>UpdatePage.getFooter().should('exist');
     <%= entityClass %>UpdatePage.getSaveButton().should('exist');
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
@@ -246,7 +246,7 @@ describe('<%= entityClass %> e2e test', () => {
     cy.server();
     cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
-    <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
+    <%= entityClass %>ComponentsPage.clickOnFirstDeleteButton();
 
     cy.get('.modal').should('exist');
 

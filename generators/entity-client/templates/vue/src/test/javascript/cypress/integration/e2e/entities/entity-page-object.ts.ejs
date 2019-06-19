@@ -49,24 +49,24 @@ export default class <%= entityClass %>ComponentsPage {
     return cy.get('.btn-info.details');
   }
 
-  static clickOnLastDetailsButton() {
-    return this.getDetailButtons().last().click();
+  static clickOnFirstDetailsButton() {
+    return this.getDetailButtons().first().click();
   }
 
   static getEditButtons() {
     return cy.get('.btn-primary.edit');
   }
 
-  static clickOnLastEditButton() {
-    return this.getEditButtons().last().click();
+  static clickOnFirstEditButton() {
+    return this.getEditButtons().first().click();
   }
 
   static getDeleteButtons() {
     return cy.get('div table .btn-danger');
   }
 
-  static clickOnLastDeleteButton() {
-    return this.getDeleteButtons().last().click();
+  static clickOnFirstDeleteButton() {
+    return this.getDeleteButtons().first().click();
   }
 
   static count<%= entityClass %>() {
