@@ -2,16 +2,21 @@
 import NavBarPage from '../../page-objects/navbar-page';
 import SignInPage from '../../page-objects/signin-page';
 
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
 describe('Administration', () => {
   before(() => {
     cy.server();
-    cy.route("POST", "/api/authenticate").as("authenticationRequest");
+    cy.route("GET", '/<%= baseApi %>account').as("authenticationRequest");
 
     cy.visit('/');
-    NavBarPage.getSignInPage();
 <%_ if (authenticationType !== 'oauth2') { _%>
+    NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
-<%_ } else if (authenticationType === 'oauth2') {_%>
+<%_ } else {_%>
+    NavBarPage.autoSignOut();
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
 <%_ } _%>
     cy.wait("@authenticationRequest");
@@ -29,7 +34,7 @@ describe('Administration', () => {
 <%_ } _%>
 
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
-  it('should load gateway', async () => {
+  it('should load gateway', () => {
     NavBarPage.clickOnAdminMenuItem('gateway');
     cy.get('#gateway-page-heading')
       .invoke('text').should('to.not.have.lengthOf', 0);

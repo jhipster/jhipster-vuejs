@@ -22,7 +22,11 @@ export default class SignInPage extends BasePage {
   }
 
   static getLoginButton() {
+<%_ if (authenticationType !== 'oauth2') { _%>
     return cy.get('button[type=submit]');
+<%_ } else {_%>
+    return cy.get('input[type=submit]');
+<%_ } _%>
   }
 
   static getTitle() {

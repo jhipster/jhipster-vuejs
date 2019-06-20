@@ -24,7 +24,7 @@ import <%= entityClass %>ComponentsPage from './<%= entityFileName %>.page-objec
 import { <%= entityClass %>DeleteDialog } from './<%= entityFileName %>.page-object';
 import <%= entityClass %>UpdatePage from './<%= entityFileName%>-update.page-object';
 import <%= entityClass %>DetailsPage from './<%= entityFileName%>-details.page-object';
-import { getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityParentPathAddition %>util/utils';
+import { getIdSortButton, getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityParentPathAddition %>util/utils';
 <%_ if (fieldsContainBlobOrImage) { _%>
 import path from 'path';
 <%_ } _%>
@@ -54,10 +54,13 @@ describe('<%= entityClass %> e2e test', () => {
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
     cy.visit('/');
-    NavBarPage.getSignInPage();
     <%_ if (authenticationType !== 'oauth2') { _%>
+    NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
-    <%_ } else if (authenticationType === 'oauth2') {_%>
+    <%_ } else {_%>
+    // very weird: but we need to first logout when disabling web security
+    NavBarPage.autoSignOut();
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
     <%_ } _%>
 
@@ -73,6 +76,7 @@ describe('<%= entityClass %> e2e test', () => {
     cy.server();
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
 
+    cy.visit('/');
     NavBarPage.getEntityPage('<%= entityStateName %>');
     cy.wait('@entitiesRequest');
 
@@ -98,7 +102,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ if (enableTranslation) { _%>
     <%= entityClass %>UpdatePage.getPageTitle().invoke('attr', 'id').should('match', /<%= i18nKeyPrefix %>.home.createOrEditLabel/);
     <%_ } else { _%>
-    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityClass %>')
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityAngularName %>')
     <%_ } _%>
   });
 
@@ -114,29 +118,23 @@ describe('<%= entityClass %> e2e test', () => {
       const fieldIsEnum = field.fieldIsEnum;
     _%>
     <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '5');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5').should('have.value', '5');
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2001-01-01');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01').should('have.value', '2001-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01T02:30');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('equal', '2001-01-01T02:30');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01T02:30').invoke('val').should('equal', '2001-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '12');
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S').should('have.value', '12');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
     <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
-    <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
+    <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input().should('be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>').invoke('val').should('match', /<%= fieldName %>/);
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('integration-test.png', 'image/png');
@@ -145,12 +143,10 @@ describe('<%= entityClass %> e2e test', () => {
     <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
 
     <%_ } else if (fieldType === 'UUID'){ _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade974');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade974/);
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade974').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade974/);
 
     <%_ } else { _%>
-    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>');
-    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /<%= fieldName %>/);
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>').invoke('val').should('match', /<%= fieldName %>/);
 
     <%_ } _%>
     <%_ }); _%>
@@ -178,6 +174,9 @@ describe('<%= entityClass %> e2e test', () => {
   });<%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
+    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+    getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
 
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
@@ -191,7 +190,15 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
   it('should load edit <%= entityClass %> page and fetch data', () => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>/*').as('getEntityRequest');
+
+    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+    getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastEditButton();
+    cy.wait('@getEntityRequest');
+
     <%= entityClass %>UpdatePage.getFooter().should('exist');
     <%= entityClass %>UpdatePage.getSaveButton().should('exist');
     <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
@@ -205,42 +212,34 @@ describe('<%= entityClass %> e2e test', () => {
     _%>
     <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('6');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '6');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('6').should('have.value', '6');
 
     <%_ } else if (fieldType === 'LocalDate') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01').should('have.value', '2019-01-01');
 
     <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01T02:30');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '2019-01-01T02:30');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01T02:30').should('have.value', '2019-01-01T02:30');
 
     <%_ } else if (fieldType === 'Duration') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('have.value', '14');
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S').should('have.value', '14');
 
     <%_ } else if (fieldType === 'Boolean') { _%>
       <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
-      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input().should('not.be.checked');
 
     <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('updated<%= fieldName %>');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /updated<%= fieldName %>/);
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('updated<%= fieldName %>').invoke('val').should('match', /updated<%= fieldName %>/);
 
     <%_ } else if (fieldType === 'UUID'){ _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade978');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade978/);
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade978').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade978/);
 
     <%_ } else if (!fieldIsEnum && !['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('modified');
-      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().invoke('val').should('match', /modified/);
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('modified').invoke('val').should('match', /modified/);
 
     <%_ } _%>
     <%_ }); _%>
@@ -258,6 +257,9 @@ describe('<%= entityClass %> e2e test', () => {
     cy.server();
     cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
+    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+    getIdSortButton().click();
+    <%_ } _%>
     <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
 
     cy.get('.modal').should('exist');

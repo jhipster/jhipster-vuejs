@@ -6,5 +6,7 @@
   "integrationFolder": "src/test/javascript/cypress/integration",
   "fixturesFolder": "src/test/javascript/cypress/fixtures",
   "pluginsFile": "src/test/javascript/cypress/plugins/index.js",
-  "screenshotsFolder": "src/test/javascript/cypress/screenshots"
+  "screenshotsFolder": "src/test/javascript/cypress/screenshots"<%_ if (authenticationType === 'oauth2') { _%>,
+  "chromeWebSecurity": false
+  <%_ } _%>
 }
