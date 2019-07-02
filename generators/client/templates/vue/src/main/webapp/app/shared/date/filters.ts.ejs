@@ -15,4 +15,10 @@ export function initFilters() {
         }
         return '';
     });
+    Vue.filter('formatMillis', function(value) {
+        if (value) {
+          return format(new Date(value), DATE_TIME_FORMAT);
+        }
+        return '';
+    });
 }
