@@ -1,0 +1,22 @@
+Cypress.Commands.add('loginWithAdmin', () => {
+    cy.request({
+        method: 'POST',
+        url: '/api/authenticate',
+        body: {
+            username: "admin",
+            password: "admin",
+            rememberMe: null
+        }
+    }).then((result) => {
+        const bearerToken = result.headers.authorization;
+        if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+            window.sessionStorage.setItem(
+                'jhi-authenticationToken',
+                bearerToken.slice(
+                    7,
+                    bearerToken.length
+                )
+            );
+        }
+    });
+})
