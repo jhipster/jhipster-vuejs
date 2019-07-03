@@ -54,7 +54,7 @@ const vueFiles = {
             templates: ['tsconfig.e2e.json']
         },
         {
-            condition: generator => generator.cypressTests,
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
             templates: ['cypress.json']
         }
     ],
@@ -402,7 +402,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.cypressTests,
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
             path: TEST_SRC_DIR,
             templates: [
                 'cypress/integration/e2e/modules/account/account.spec.ts',
@@ -418,7 +418,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.cypressTests && generator.authenticationType !== 'oauth2',
+            condition: generator => generator.e2eTestsFramework.includes('cypress') && generator.authenticationType !== 'oauth2',
             path: TEST_SRC_DIR,
             templates: [
                 'cypress/integration/e2e/page-objects/password-page.ts',

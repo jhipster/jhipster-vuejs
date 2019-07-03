@@ -115,7 +115,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.cypressTests,
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
             path: CLIENT_TEST_SRC_DIR,
             templates: [
                 {

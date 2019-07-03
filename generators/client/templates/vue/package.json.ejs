@@ -53,7 +53,7 @@ limitations under the License.
     "vuex": "3.1.0"
   },
   "devDependencies": {
-<%_ if (cypressTests) { _%>
+<%_ if (e2eTestsFramework.includes('cypress')) { _%>
     "@cypress/webpack-preprocessor": "4.1.0",
 <%_ } _%>
 <%_ if (protractorTests) { _%>
@@ -83,7 +83,7 @@ limitations under the License.
 <%_ } _%>
     "copy-webpack-plugin": "5.0.0",
     "css-loader": "2.1.0",
-<%_ if (cypressTests) { _%>
+<%_ if (e2eTestsFramework.includes('cypress')) { _%>
     "cypress": "3.3.1",
     "cypress-file-upload": "3.1.4",
 <%_ } _%>
@@ -170,7 +170,7 @@ limitations under the License.
 <%_ if (protractorTests) { _%>
     "e2e:protractor": "protractor src/test/javascript/protractor.conf.js",
     "postinstall": "webdriver-manager update --gecko false",
-<%_ } else if (cypressTests) { _%>
+<%_ } else if (e2eTestsFramework.includes('cypress')) { _%>
     "e2e:cypress": "cypress run --browser chrome",
 <%_ } _%>
     "jest": "jest --coverage --logHeapUsage --maxWorkers=2 --no-cache --config src/test/javascript/jest.conf.js",

@@ -75,11 +75,13 @@ module.exports = class extends ClientGenerator {
             askForClient: prompts.askForClient,
             askForClientTheme: mainPrompts.askForClientTheme,
             askForClientThemeVariant: mainPrompts.askForClientThemeVariant,
+            askForE2eTestsFramework: prompts.askForE2eTestsFramework,
 
             setSharedConfigOptions() {
                 this.configOptions.clientFramework = this.clientFramework;
                 this.configOptions.clientTheme = this.clientTheme;
                 this.configOptions.clientThemeVariant = this.clientThemeVariant;
+                this.configOptions.e2eTestsFramework = this.askForE2eTestsFramework;
             }
         };
     }
