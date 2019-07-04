@@ -405,7 +405,7 @@ const vueFiles = {
             condition: generator => generator.e2eTestsFramework.includes('cypress'),
             path: TEST_SRC_DIR,
             templates: [
-                'cypress/integration/e2e/modules/account/account.spec.ts',
+                'cypress/integration/e2e/modules/account/login.spec.ts',
                 'cypress/integration/e2e/modules/administration/administration.spec.ts',
                 'cypress/integration/e2e/util/utils.ts',
                 'cypress/integration/e2e/page-objects/base-component.ts',
@@ -421,6 +421,7 @@ const vueFiles = {
             condition: generator => generator.e2eTestsFramework.includes('cypress') && generator.authenticationType !== 'oauth2',
             path: TEST_SRC_DIR,
             templates: [
+                'cypress/integration/e2e/modules/account/account.spec.ts',
                 'cypress/integration/e2e/page-objects/password-page.ts',
                 'cypress/integration/e2e/page-objects/settings-page.ts',
                 'cypress/integration/e2e/page-objects/register-page.ts'
