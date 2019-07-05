@@ -11,25 +11,25 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const wp = require('@cypress/webpack-preprocessor')
+const wp = require('@cypress/webpack-preprocessor');
 
-module.exports = (on) => {
+module.exports = on => {
   const options = {
     webpackOptions: {
       resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: ['.ts', '.tsx', '.js']
       },
       module: {
         rules: [
           {
             test: /\.tsx?$/,
-            loader: "ts-loader",
+            loader: 'ts-loader',
             options: { transpileOnly: true }
           }
         ]
       }
-    },
-  }
+    }
+  };
   on('file:preprocessor', wp(options)),
   on('before:browser:launch', (browser = {}, args) => {
     // browser will look something like this
@@ -48,19 +48,20 @@ module.exports = (on) => {
         '--disable-gpu',
         '--window-size=800,600'<%_ if (authenticationType === 'oauth2') { _%>,
         '--disable-web-security'
-        <%_ } _%>)
+        <%_ } _%>
+      )
 
       // whatever you return here becomes the new args
-      return args
+      return args;
     }
 
     if (browser.name === 'electron') {
       // `args` is a `BrowserWindow` options object
       // https://electronjs.org/docs/api/browser-window#new-browserwindowoptions
-      args['fullscreen'] = true
+      args['fullscreen'] = true;
 
       // whatever you return here becomes the new args
-      return args
+      return args;
     }
-  })
-}
+  });
+};
