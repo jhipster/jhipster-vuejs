@@ -136,7 +136,7 @@ describe('Account Management', () => {
         getSuccessToast().should('exist');
     });
 
-    it('should not be able to change admin settings if email already exists', () => {
+    it('should not be able to change user settings if email already exists', () => {
         cy.server();
         cy.route("POST", "/<%= baseApi %>account").as("settingsModificationRequest");
 
@@ -179,7 +179,7 @@ describe('Account Management', () => {
 
     it('should edit details from fake user', () => {
         cy.server();
-        cy.route("GET", "/<%= baseApi %>users/user_test").as("userDetailRequest");
+        cy.route("GET", "/<%= baseApi %>users/user-edit-details").as("userDetailRequest");
         cy.route("PUT", "/<%= baseApi %>users").as("userDetailModificationRequest");
 
         cy.registerUserUsing('user-edit-details', 'user-edit-details@localhost.jh', 'user-edit-details');
@@ -203,9 +203,9 @@ describe('Account Management', () => {
             .should('equal', 'user-edit-details@localhost.jhipster');
     });
 
-    it('should delete previously created fake user', () => {
+    it('should be able to delete existing user', () => {
         cy.server();
-        cy.route("DELETE", "/<%= baseApi %>users/user_test").as("userDeleteRequest");
+        cy.route("DELETE", "/<%= baseApi %>users/user-to-delete").as("userDeleteRequest");
 
         cy.registerUserUsing('user-to-delete', 'user-to-delete@localhost.jh', 'user-to-delete');
 
