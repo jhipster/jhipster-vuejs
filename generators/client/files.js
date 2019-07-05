@@ -413,6 +413,7 @@ const vueFiles = {
                 'cypress/integration/e2e/page-objects/signin-page.ts',
                 'cypress/plugins/index.js',
                 'cypress/support/index.js',
+                'cypress/support/commands.ts',
                 // TODO: conditional adding
                 'cypress/fixtures/integration-test.png'
             ]
