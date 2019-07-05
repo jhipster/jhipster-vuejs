@@ -1,81 +1,64 @@
-/* tslint:disable no-unused-expression */
-import NavBarPage from '../../page-objects/navbar-page';
-import SignInPage from '../../page-objects/signin-page';
-
-<%_
-const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
-_%>
 describe('Administration', () => {
-  before(() => {
-    cy.server();
-    cy.route("GET", '/<%= baseApi %>account').as("authenticationRequest");
-
+  beforeEach(() => {
     cy.visit('/');
-<%_ if (authenticationType !== 'oauth2') { _%>
-    NavBarPage.getSignInPage();
-    SignInPage.autoSignInUsing('admin', 'admin');
-<%_ } else {_%>
-    NavBarPage.autoSignOut();
-    NavBarPage.getSignInPage();
-    SignInPage.loginWithOAuth('admin', 'admin');
-<%_ } _%>
-    cy.wait("@authenticationRequest");
+    cy.loginWithAdmin();
   });
 
 <%_ if (authenticationType !== 'oauth2') { _%>
   it('should load user management', () => {
-    NavBarPage.clickOnAdminMenuItem('user-management');
-    const heading = cy.get('#user-management-page-heading');
+    cy.clickOnAdminMenuItem('user-management');
 
     // Title should be equal to 'Users'
-    heading.should('exist');
-    heading.invoke('text').should('equal', 'Users');
+    cy.get('#user-management-page-heading')
+      .invoke('text')
+      .should('equal', 'Users');
   });
 <%_ } _%>
 
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
   it('should load gateway', () => {
-    NavBarPage.clickOnAdminMenuItem('gateway');
+    cy.clickOnAdminMenuItem('gateway');
     cy.get('#gateway-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 <%_ } _%>
 
+
   it('should load metrics', () => {
-    NavBarPage.clickOnAdminMenuItem('jhi-metrics');
+    cy.clickOnAdminMenuItem('jhi-metrics');
     cy.get('#metrics-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 
   it('should load health', () => {
-    NavBarPage.clickOnAdminMenuItem('jhi-health');
+    cy.clickOnAdminMenuItem('jhi-health');
     cy.get('#health-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 
   it('should load configuration', () => {
-    NavBarPage.clickOnAdminMenuItem('jhi-configuration');
+    cy.clickOnAdminMenuItem('jhi-configuration');
     cy.get('#configuration-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 
 <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
   it('should load audits', () => {
-    NavBarPage.clickOnAdminMenuItem('audits');
-
+    cy.clickOnAdminMenuItem('audits');
     cy.get('#audits-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 
 <%_ } _%>
   it('should load logs', () => {
-    NavBarPage.clickOnAdminMenuItem('logs');
-
+    cy.clickOnAdminMenuItem('logs');
     cy.get('#logs-page-heading')
-      .invoke('text').should('to.not.have.lengthOf', 0);
-  });
-
-  after(() => {
-    NavBarPage.autoSignOut();
+      .invoke('text')
+      .should('to.not.have.lengthOf', 0);
   });
 });
