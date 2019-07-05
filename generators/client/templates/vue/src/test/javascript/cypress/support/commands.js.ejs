@@ -2,6 +2,7 @@
 const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/<%= baseApi %>' : 'api/';
 _%>
 
+<%_ if (authenticationType !== 'oauth2') { _%>
 Cypress.Commands.add('loginUsing', (username: string, password: string) => {
   return cy
     .request({
@@ -20,6 +21,30 @@ Cypress.Commands.add('loginUsing', (username: string, password: string) => {
       }
     });
 });
+<%_ } else {_%>
+Cypress.Commands.add('loginUsing', (username: string, password: string) => {
+    cy.get('#account-menu')
+        .click()
+        .get(`.dropdown-menu`).then($dropDownMenu => {
+            if ($dropDownMenu.get(0).firstElementChild.id === 'logout') {
+                $dropDownMenu.get(0).firstElementChild.click();
+                cy.get('#account-menu')
+                    .click()
+                    .get(`.dropdown-menu`).then($dropDownMenu2 => {
+                        $dropDownMenu2.get(0).firstElementChild.click();
+                    });
+            }
+        });
+
+    cy.get('#username').then($usernameElement => {
+        if ($usernameElement.length) {
+            cy.get('#username').type(username);
+            cy.get('#password').type(password);
+            cy.get('input[type=submit]').click();
+        }
+    });
+});
+<%_ } _%>
 
 Cypress.Commands.add('loginWithAdmin', () => {
   return cy.loginUsing('admin', 'admin');

@@ -1,4 +1,3 @@
-<%_ if (authenticationType !== 'oauth2') { _%>
 import SignInPage from '../../page-objects/signin-page';
 import NavBarPage from '../../page-objects/navbar-page';
 
@@ -7,19 +6,40 @@ describe('Log In', () => {
 
   beforeEach(() => {
     cy.visit('/');
+<%_ if (authenticationType === 'oauth2') { _%>
+    cy.clearCookies();
+    NavBarPage.autoSignOut();
+<%_ } _%>
     NavBarPage.getSignInPage();
   });
 
   it('should fail to login with bad password', () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
     SignInPage.getTitle().should('equal', loginPageTitle);
     SignInPage.getUsernameElement().type('admin');
     SignInPage.getPasswordElement().type('foo');
 
     SignInPage.getLoginButton().click();
     SignInPage.getTitle().should('equal', loginPageTitle);
+<%_ } else {_%>
+    cy.get('#username').type('admin');
+    cy.get('#password').type('foo');
+    cy.get('input[type=submit]').click();
+
+    cy.get('.alert-error').then($alert => {
+      if ($alert.length) {
+        // Keycloak
+        expect($alert.get(0).innerText).to.equal('Invalid username or password.');
+      } else {
+        // Okta
+        cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');
+      }
+    });
+<%_ } _%>
   });
 
   it('should login with admin account', () => {
+<%_ if (authenticationType !== 'oauth2') { _%>
     cy.server();
     cy.route('GET', '/api/account').as('authenticationRequest');
 
@@ -33,7 +53,15 @@ describe('Log In', () => {
 
     SignInPage.getTitleElement().should('not.exist');
     NavBarPage.autoSignOut();
+<%_ } else {_%>
+    // Keycloak credentials by default, change them to be able to use oauth2 with Okta
+    cy.get('#username').type('admin');
+    cy.get('#password').type('admin');
+    cy.get('input[type=submit]').click();
+
+    // Success alert should appear in home page
+    cy.get('.alert-success').should('exist');
+<%_ } _%>
   });
 });
-<%_ } _%>
 
