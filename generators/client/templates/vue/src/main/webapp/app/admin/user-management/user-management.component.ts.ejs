@@ -97,6 +97,7 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends mi
 
   public deleteUser(): void {
     this.userManagementService().remove(this.removeId).then(res => {
+      this.closeDialog();
       <%_
       const headerAlert = `X-${angularAppName}-alert`.toLowerCase();
       const headerParams = `X-${angularAppName}-params`.toLowerCase();
@@ -115,6 +116,10 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends mi
 
   public prepareRemove(instance): void {
     this.removeId = instance.login;
+  }
+
+  public closeDialog() : void {
+    (<any>this.$refs.removeUser).hide();
   }
 
   public get username(): string {
