@@ -393,7 +393,6 @@ describe('Account', () => {
         userManagementPage = await navBarPage.getUserManagementPage();
 
         const deletePage: UserManagementDeletePage = await userManagementPage.getDeletePage('user_test');
-        await waitUntilDisplayed(deletePage.modal);
 
         await deletePage.okButton.click();
 
