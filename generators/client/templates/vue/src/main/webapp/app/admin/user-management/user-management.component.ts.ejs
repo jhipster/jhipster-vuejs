@@ -97,7 +97,6 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends mi
 
   public deleteUser(): void {
     this.userManagementService().remove(this.removeId).then(res => {
-      this.closeDialog();
       <%_
       const headerAlert = `X-${angularAppName}-alert`.toLowerCase();
       const headerParams = `X-${angularAppName}-params`.toLowerCase();
@@ -111,6 +110,7 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends mi
       this.getAlertFromStore();
       this.removeId = null;
       this.loadAll();
+      this.closeDialog();
     });
   }
 
