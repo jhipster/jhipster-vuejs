@@ -9,14 +9,12 @@ const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? 'se
 _%>
 
 const baseApiUrl = '<%= baseApi + entityApiUrl %>';
-<%_
-if (searchEngine === 'elasticsearch') { _%>
+<%_ if (searchEngine === 'elasticsearch') { _%>
 const baseSearchApiUrl = '<%= baseApi %>_search/<%= entityApiUrl %>?query=';
 <%_ } _%>
 
 export default class <%= entityAngularName %>Service {
-  <%_
-  if (searchEngine === 'elasticsearch') { _%>
+  <%_ if (searchEngine === 'elasticsearch') { _%>
   public search(query<% if (pagination !== 'no') { %>, paginationQuery<% } %>) : Promise<any> {
     return axios.get(`${baseSearchApiUrl}${query}<% if (pagination !== 'no') { %>&${buildPaginationQueryOpts(paginationQuery)}<% } %>`).data;
   }
@@ -31,8 +29,6 @@ export default class <%= entityAngularName %>Service {
     return axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>);
     });
   }
-  <%_
-  if (!readOnly) { _%>
 
   public delete(id: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %>) : Promise<any> {
     return axios.delete(`${baseApiUrl}/${id}`);
@@ -48,5 +44,4 @@ export default class <%= entityAngularName %>Service {
     return axios.put(`${baseApiUrl}`, entity).data;
     });
   }
-  <%_ } _%>
 }
