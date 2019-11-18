@@ -9,59 +9,43 @@ const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? 'se
 _%>
 
 const baseApiUrl = '<%= baseApi + entityApiUrl %>';
-<%_ if (searchEngine === 'elasticsearch') { _%>
+<%_
+if (searchEngine === 'elasticsearch') { _%>
 const baseSearchApiUrl = '<%= baseApi %>_search/<%= entityApiUrl %>?query=';
 <%_ } _%>
 
 export default class <%= entityAngularName %>Service {
-  <%_ if (searchEngine === 'elasticsearch') { _%>
+  <%_
+  if (searchEngine === 'elasticsearch') { _%>
   public search(query<% if (pagination !== 'no') { %>, paginationQuery<% } %>) : Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      axios.get(`${baseSearchApiUrl}${query}<% if (pagination !== 'no') { %>&${buildPaginationQueryOpts(paginationQuery)}<% } %>`).then(function (res) {
-        resolve(<% if (pagination !== 'no') { %>res<% } else { %>res.data<% } %>);
-      }).catch(err => { reject(err); });
-    });
+    return axios.get(`${baseSearchApiUrl}${query}<% if (pagination !== 'no') { %>&${buildPaginationQueryOpts(paginationQuery)}<% } %>`).data;
   }
   <%_ } _%>
 
   public find(id: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %>) : Promise<I<%= entityAngularName %>> {
-    return new Promise<I<%= entityAngularName %>>((resolve, reject) => {
-      axios.get(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res.data);
-      }).catch(err => { reject(err); });
+    return axios.get(`${baseApiUrl}/${id}`).data;
     });
   }
 
   public retrieve(<% if (pagination !== 'no') { %>paginationQuery?: any<% } %>) : Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
-        resolve(res);
-      }).catch(err => { reject(err); });
+    return axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>);
     });
   }
-  <%_ if (!readOnly) { _%>
+  <%_
+  if (!readOnly) { _%>
 
   public delete(id: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %>) : Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      axios.delete(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res);
-      }).catch(err => { reject(err); });
+    return axios.delete(`${baseApiUrl}/${id}`);
     });
   }
 
   public create(entity: I<%= entityAngularName %>) : Promise<I<%= entityAngularName %>> {
-    return new Promise<I<%= entityAngularName %>>((resolve, reject) => {
-      axios.post(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      }).catch(err => { reject(err); });
+    return axios.post(`${baseApiUrl}`, entity).data;
     });
   }
 
   public update(entity: I<%= entityAngularName %>) : Promise<I<%= entityAngularName %>> {
-    return new Promise<I<%= entityAngularName %>>((resolve, reject) => {
-      axios.put(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      }).catch(err => { reject(err); });
+    return axios.put(`${baseApiUrl}`, entity).data;
     });
   }
   <%_ } _%>
