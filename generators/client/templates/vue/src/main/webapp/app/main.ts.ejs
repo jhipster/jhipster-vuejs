@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.common with an alias.
 import Vue from 'vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import InfiniteLoading from 'vue-infinite-loading';
 import App from './app.vue';
 import Vue2Filters from 'vue2-filters';
 import router from './router';
@@ -45,6 +46,7 @@ Vue.use(Vue2Filters)
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('jhi-item-count', JhiItemCountComponent);
 Vue.component('jhi-sort-indicator', JhiSortIndicatorComponent);
+Vue.component('infinite-loading', InfiniteLoading);
 
 <%_ if (enableTranslation) { _%>
 const i18n = config.initI18N(Vue);
