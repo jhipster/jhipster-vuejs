@@ -98,8 +98,9 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
         <%_ if (pagination === 'infinite-scroll') { _%>
         if(this.infiniteLoadingState != null) {
           this.infiniteLoadingState.loaded();
-          if(this.page == this.links['last'])
+          if(this.page >= this.links['last']){
             this.infiniteLoadingState.complete();
+          }
         }
         <%_ } _%>
       }, err => {
@@ -125,8 +126,9 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
       <%_ if (pagination === 'infinite-scroll') { _%>
       if(this.infiniteLoadingState != null) {
         this.infiniteLoadingState.loaded();
-        if(this.page == this.links['last'])
+        if(this.page >= this.links['last']){
           this.infiniteLoadingState.complete();
+        }
       }
       <%_ } _%>      
     }, err => {
@@ -171,8 +173,9 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
   <%_ if (pagination === 'infinite-scroll') { _%>
   public loadPage($state): void {
     this.infiniteLoadingState = $state;
-    if (this.page >= this.links['last']) 
+    if (this.page >= this.links['last']){ 
       this.infiniteLoadingState.complete();
+    }
     if (this.isFetching) {
       return;
     } else {
