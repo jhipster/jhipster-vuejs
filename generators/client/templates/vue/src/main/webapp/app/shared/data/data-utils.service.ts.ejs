@@ -170,7 +170,7 @@ export default class JhiDataUtils extends Vue {
       );
       let page = queryString.page;
       if (typeof page  === 'string') {
-        page = parseInt(page);
+        page = parseInt(page, 10);
       }
       const name = section[1].replace(/rel="(.*)"/, '$1').trim();
       links[name] = page;
