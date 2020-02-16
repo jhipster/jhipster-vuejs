@@ -166,7 +166,7 @@
                     </td>
                 </tr>
                 </tbody>
-                <%_ } else if (pagination === 'infinite-scroll') { _%>
+                <%_ } if (pagination === 'infinite-scroll') { _%>
                 <infinite-loading
                     ref="infiniteLoading"
                     v-if="links != {} && page < links['last']"
