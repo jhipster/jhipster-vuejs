@@ -166,6 +166,7 @@
                     </td>
                 </tr>
                 </tbody>
+                <%_ if (databaseType !== 'cassandra') { _%>
                 <%_ if (pagination === 'infinite-scroll') { _%>
                 <infinite-loading
                     ref="infiniteLoading"
@@ -177,6 +178,7 @@
                     :distance='20'>
                     <template slot="no-more">No more data</template>
                 </infinite-loading>
+                <%_ } _%>
                 <%_ } _%>
             </table>
         </div>
