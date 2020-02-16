@@ -10,7 +10,7 @@ import JhiDataUtils from '@/shared/data/data-utils.service';
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service';
 
 @Component
-export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils, Vue2Filters.mixin, AlertMixin)<% } else { %> mixins(Vue2Filters.mixin, AlertMixin)<% } %> {
+export default class <%= entityAngularName %> extends <% if (fieldsContainBlob || pagination === 'infinite-scroll') { %>mixins(JhiDataUtils, Vue2Filters.mixin, AlertMixin)<% } else { %> mixins(Vue2Filters.mixin, AlertMixin)<% } %> {
   @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service: () => <%= entityAngularName %>Service;
   <%_ if (searchEngine === 'elasticsearch') { _%>
   public currentSearch = '';
@@ -88,7 +88,7 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
         for (let i = 0; i < res.data.length; i++) {
           this.<%= entityInstancePlural %>.push(res.data[i]);
         }
-        this.links = this.parseLinks(res.headers.link);
+        this.links = this.parseLinks(res.headers['link']);
         <%_ } _%>
         <%_ if (pagination !== 'no') { _%>
         this.totalItems = Number(res.headers['x-total-count']);
@@ -96,9 +96,9 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
         <%_ } _%>
         this.isFetching = false;
         <%_ if (pagination === 'infinite-scroll') { _%>
-        if(this.infiniteLoadingState != null) {
+        if(this.infiniteLoadingState !== null) {
           this.infiniteLoadingState.loaded();
-          if(this.page >= this.links['last']){
+          if(this.links != {} && this.page >= this.links['last']){
             this.infiniteLoadingState.complete();
           }
         }
@@ -116,7 +116,7 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
       for (let i = 0; i < res.data.length; i++) {
         this.<%= entityInstancePlural %>.push(res.data[i]);
       }
-      this.links = this.parseLinks(res.headers.link);
+      this.links = this.parseLinks(res.headers['link']);
       <%_ } _%>
       <%_ if (pagination !== 'no') { _%>
       this.totalItems = Number(res.headers['x-total-count']);
@@ -124,9 +124,9 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
       <%_ } _%>
       this.isFetching = false;
       <%_ if (pagination === 'infinite-scroll') { _%>
-      if(this.infiniteLoadingState != null) {
+      if(this.infiniteLoadingState !== null) {
         this.infiniteLoadingState.loaded();
-        if(this.page >= this.links['last']){
+        if(this.links != {} && this.page >= this.links['last']){
           this.infiniteLoadingState.complete();
         }
       }
