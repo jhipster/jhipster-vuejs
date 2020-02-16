@@ -166,6 +166,18 @@
                     </td>
                 </tr>
                 </tbody>
+                <%_ } else if (pagination === 'infinite-scroll') { _%>
+                <infinite-loading
+                    ref="infiniteLoading"
+                    v-if="<%= entityInstancePlural %> && <%= entityInstancePlural %>.length > 0 && links != {} && page < links['last']"
+                    :identifier="infiniteId"
+                    slot="append"
+                    @infinite="loadPage"
+                    force-use-infinite-wrapper=".el-table__body-wrapper"
+                    :distance='20'>
+                    <template slot="no-more">No more data</template>
+                </infinite-loading>
+                <%_ } _%>
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
