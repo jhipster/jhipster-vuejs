@@ -154,25 +154,25 @@ export default class JhiDataUtils extends Vue {
     }
 
     // Split parts by comma
-    var parts = header.split(',');
-    var links = {};
+    const parts = header.split(',');
+    let links = {};
     // Parse each part into a named link
     parts.forEach((p) => {
-      var section = p.split('>;');
+      const section = p.split('>;');
       if (section.length !== 2) {
         throw new Error('section could not be split on ">;"');
       }
-      var url = section[0].replace(/<(.*)/, '$1').trim();
-      var queryString = {page:null};
+      const url = section[0].replace(/<(.*)/, '$1').trim();
+      let queryString = {page:null};
       url.replace(
         new RegExp('([^?=&]+)(=([^&]*))?', 'g'),
         function($0, $1, $2, $3) { queryString[$1] = $3; }
       );
-      var page = queryString.page;
+      let page = queryString.page;
       if (typeof page  == 'string') {
         page = parseInt(page);
       }
-      var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+      const name = section[1].replace(/rel="(.*)"/, '$1').trim();
       links[name] = page;
     });
     return links;
