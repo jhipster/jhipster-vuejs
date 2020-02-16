@@ -155,7 +155,7 @@ export default class JhiDataUtils extends Vue {
 
     // Split parts by comma
     const parts = header.split(',');
-    let links = {};
+    const links = {};
     // Parse each part into a named link
     parts.forEach((p) => {
       const section = p.split('>;');
@@ -163,13 +163,13 @@ export default class JhiDataUtils extends Vue {
         throw new Error('section could not be split on ">;"');
       }
       const url = section[0].replace(/<(.*)/, '$1').trim();
-      let queryString = {page:null};
+      const queryString = {page:null};
       url.replace(
         new RegExp('([^?=&]+)(=([^&]*))?', 'g'),
         function($0, $1, $2, $3) { queryString[$1] = $3; }
       );
       let page = queryString.page;
-      if (typeof page  == 'string') {
+      if (typeof page  === 'string') {
         page = parseInt(page);
       }
       const name = section[1].replace(/rel="(.*)"/, '$1').trim();
