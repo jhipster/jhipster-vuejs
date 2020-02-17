@@ -67,6 +67,15 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
     this.retrieveAll<%= entityAngularName %>s();
   }
 
+  <%_ if (pagination === 'infinite-scroll') { _%>
+  public reset(): void {
+    this.page = 0;
+    this.infiniteId += 1;
+    this.<%= entityInstancePlural %> = [];
+    this.retrieveAll<%= entityAngularName %>s();
+  }
+  <%_ } _%>
+
   public retrieveAll<%= entityAngularName %>s() :void {
     this.isFetching = true;
     <% if (pagination !== 'no') { %>
@@ -161,17 +170,8 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
   }
 
   <%_ } _%>
-  <%_ if (pagination === 'pagination') { _%>
-  public loadPage(page: number) : void {
-    if (page !== this.previousPage) {
-      this.previousPage = page;
-      this.transition();
-    }
-  }
-
-  <%_ } _%>
   <%_ if (pagination === 'infinite-scroll') { _%>
-  public loadPage($state): void {
+  public loadMore($state): void {
     this.infiniteLoadingState = $state;
     if (this.page >= this.links['last']){ 
       this.infiniteLoadingState.complete();
@@ -186,10 +186,6 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
 
   <%_ } _%>
   <%_ if (pagination !== 'no') { _%>
-  public transition() : void {
-    this.retrieveAll<%= entityAngularName %>s();
-  }
-
   public sort() : Array<any> {
     const result = [this.propOrder + ',' + (this.reverse ? 'asc' : 'desc')];
     if (this.propOrder !== 'id') {
@@ -198,12 +194,23 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
     return result;
   }
 
+  public loadPage(page: number) : void {
+    if (page !== this.previousPage) {
+      this.previousPage = page;
+      this.transition();
+    }
+  }
+
+  public transition() : void {
+    this.retrieveAll<%= entityAngularName %>s();
+  }
+
   public changeOrder(propOrder) : void {
     this.propOrder = propOrder;
     this.reverse = !this.reverse;
     this.transition();
   }
-
+  
   <%_ } _%>
   public closeDialog() : void {
     (<any>this.$refs.removeEntity).hide();

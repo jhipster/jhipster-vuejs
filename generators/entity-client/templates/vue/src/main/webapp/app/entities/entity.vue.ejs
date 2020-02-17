@@ -173,7 +173,7 @@
                     v-if="links !== {} && page < links['last']"
                     :identifier="infiniteId"
                     slot="append"
-                    @infinite="loadPage"
+                    @infinite="loadMore"
                     force-use-infinite-wrapper=".el-table__body-wrapper"
                     :distance='20'>
                     <template slot="no-more">No more data</template>
