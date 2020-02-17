@@ -99,9 +99,13 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
           for (let i = 0; i < res.data.length; i++) {
             this.<%= entityInstancePlural %>.push(res.data[i]);
           }
+<<<<<<< HEAD
           if(res.headers && res.headers['link']){
             this.links = this.parseLinks(res.headers['link']);
           }
+=======
+          this.links = this.parseLinks(res.headers['link']);
+>>>>>>> branch 'feature/infinite_scroll' of https://github.com/skmaingi/jhipster-vuejs.git
         }
         <%_ } _%>
         <%_ if (pagination !== 'no') { _%>
@@ -131,9 +135,13 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob |
         for (let i = 0; i < res.data.length; i++) {
           this.<%= entityInstancePlural %>.push(res.data[i]);
         }
+<<<<<<< HEAD
         if(res.headers && res.headers['link']){
           this.links = this.parseLinks(res.headers['link']);
         }
+=======
+        this.links = this.parseLinks(res.headers['link']);
+>>>>>>> branch 'feature/infinite_scroll' of https://github.com/skmaingi/jhipster-vuejs.git
       }
       <%_ } _%>
       <%_ if (pagination !== 'no') { _%>
