@@ -1,4 +1,5 @@
 import axios from 'axios';
+import buildQueryParams from '@/shared/query/params';
 <% if (pagination !== 'no') { %>
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 <% } %>
@@ -39,6 +40,15 @@ export default class <%= entityAngularName %>Service {
       }).catch(err => { reject(err); });
     });
   }
+
+  public query(queryParams?: any<% if (pagination !== 'no') { %>, paginationQuery?: any<% } %>) : Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      axios.get(`${baseApiUrl}?${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `&${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
+        resolve(res);
+      }).catch(err => { reject(err); });
+    });
+  }
+
   <%_
   if (!readOnly) { _%>
 

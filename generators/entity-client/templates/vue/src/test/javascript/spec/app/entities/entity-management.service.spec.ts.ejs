@@ -262,6 +262,42 @@ describe('Service Tests', () => {
           });
       });
 
+      it('should return a filtered list of <%= entityAngularName %>', async () => {
+        const returnedFromService = Object.assign({
+    <%_ fields.forEach((field) => {
+        const fieldType = field.fieldType; _%>
+        <%_ if (fieldType === 'Boolean') { _%>
+          <%= field.fieldName%>: true,
+        <%_ } else if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal', 'Duration'].includes(fieldType)) { _%>
+          <%= field.fieldName%>: 1,
+        <%_ } else if (fieldType === 'String' || fieldType === 'UUID') { _%>
+          <%= field.fieldName%>: 'BBBBBB',
+        <%_ } else if (['LocalDate'].includes(fieldType)) { _%>
+          <%= field.fieldName%>: format(currentDate, DATE_FORMAT),
+        <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+          <%= field.fieldName%>: format(currentDate, DATE_TIME_FORMAT),
+        <%_ } else { // (fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent === 'any' || (fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent === 'image' || fieldType === 'LocalDate' _%>
+          <%= field.fieldName%>: 'BBBBBB',
+        <%_ } _%>
+    <%_ }) _%>
+        }, elemDefault);
+        const queryParams = [];
+        const expected = Object.assign({
+    <%_ fields.forEach((field) => {
+        const fieldType = field.fieldType; _%>
+        <%_ if (['LocalDate'].includes(fieldType)) { _%>
+          <%= field.fieldName%>: currentDate,
+        <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+          <%= field.fieldName%>: currentDate,
+        <%_ } _%>
+    <%_ }) _%>
+        }, returnedFromService);
+        mockedAxios.get.mockReturnValue(Promise.resolve([returnedFromService]));
+        return service.query(queryParams<% if (pagination !== 'no') { %>, { sort: {}, page: 0, size: 10 }<% } %>).then((res) => {
+          expect(res).toContainEqual(expected);
+        });
+      });
+
 <%_ if (!readOnly) { _%>
       it('should delete a <%= entityAngularName %>', async () => {
           mockedAxios.delete.mockReturnValue(Promise.resolve({ok: true}));
