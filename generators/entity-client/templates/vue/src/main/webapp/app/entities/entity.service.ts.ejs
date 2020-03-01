@@ -33,17 +33,17 @@ export default class <%= entityAngularName %>Service {
     });
   }
 
-  public retrieve(<% if (pagination !== 'no') { %>paginationQuery?: any<% } %>) : Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
-        resolve(res);
+  public query(queryParams?: any<% if (pagination !== 'no') { %>, paginationQuery?: any<% } %>) : Promise<I<%= entityAngularName %>> {
+    return new Promise<I<%= entityAngularName %>>((resolve, reject) => {
+      axios.get(`${baseApiUrl}?${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `&${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
+        resolve(res.data);
       }).catch(err => { reject(err); });
     });
   }
 
-  public query(queryParams?: any<% if (pagination !== 'no') { %>, paginationQuery?: any<% } %>) : Promise<any> {
+  public retrieve(<% if (pagination !== 'no') { %>paginationQuery?: any<% } %>) : Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      axios.get(`${baseApiUrl}?${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `&${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
+      axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
         resolve(res);
       }).catch(err => { reject(err); });
     });
