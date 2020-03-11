@@ -35,7 +35,11 @@ export default class <%= entityAngularName %>Service {
 
   public query(queryParams?: any<% if (pagination !== 'no') { %>, paginationQuery?: any<% } %>) : Promise<I<%= entityAngularName %>[]> {
     return new Promise<I<%= entityAngularName %>[]>((resolve, reject) => {
-      axios.get(`${baseApiUrl}?${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `&${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(function (res) {
+      let queryString = `${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `${buildPaginationQueryOpts(paginationQuery)}` <% } %>
+      if (queryString.length > 0) {
+        queryString = `?${queryString}`
+      }
+      axios.get(`${baseApiUrl}${queryString}`).then(function (res) {
         resolve(res.data);
       }).catch(err => { reject(err); });
     });
