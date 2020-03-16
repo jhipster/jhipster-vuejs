@@ -8,28 +8,52 @@ import {Authority} from '@/shared/security/authority'
 export default class UserManagementService {
 
   public get(userId: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %>): Promise<any> {
+    <%_ if (authenticationType === 'uaa') { _%>
+    return axios.get(`services/uaa/api/users/${userId}`);
+    <%_ } else { _%>
     return axios.get(`api/users/${userId}`);
+    <%_ } _%>
   }
 
   public create(user): Promise<any> {
+    <%_ if (authenticationType === 'uaa') { _%>
+    return axios.post('services/uaa/api/users', user);
+    <%_ } else { _%>
     return axios.post('api/users', user);
+    <%_ } _%>
   }
 
   public update(user): Promise<any> {
+    <%_ if (authenticationType === 'uaa') { _%>
+    return axios.put('services/uaa/api/users', user);
+    <%_ } else { _%>
     return axios.put('api/users', user);
+    <%_ } _%>
   }
 
   public remove(userId: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %>): Promise<any> {
+    <%_ if (authenticationType === 'uaa') { _%>
+    return axios.delete(`services/uaa/api/users/${userId}`);
+    <%_ } else { _%>
     return axios.delete(`api/users/${userId}`);
+    <%_ } _%>
   }
 
   public retrieve(<%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>req?: any <%_ } _%>): Promise<any> {
+    <%_ if (authenticationType === 'uaa') { _%>
+    return axios.get(`services/uaa/api/users?${buildPaginationQueryOpts(req)}`);
+    <%_ } else { _%>
     return axios.get(`api/users<%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>?${buildPaginationQueryOpts(req)}<%_ } _%>`);
+    <%_ } _%>
   }
 
   public retrieveAuthorities(): Promise<any> {
     <%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
-    return axios.get('<%- apiUaaPath %>api/users/authorities');
+      <%_ if (authenticationType === 'uaa') { _%>
+      return axios.get('services/uaa/api/users/authorities');
+      <%_ } else { _%>
+      return axios.get('<%- apiUaaPath %>api/users/authorities');
+      <%_ } _%>
     <%_ } else { _%>
     return Promise.resolve([Authority.USER, Authority.ADMIN]);
     <%_ } _%>

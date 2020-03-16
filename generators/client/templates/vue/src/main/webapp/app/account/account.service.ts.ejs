@@ -46,7 +46,11 @@ export default class AccountService {
 
   public retrieveAccount(): void {
     this.store.commit('authenticate');
+    <%_ if (authenticationType === 'uaa') { _%>
+    axios.get('services/uaa/api/account')
+    <%_ } else { _%>
     axios.get('api/account').then((response) => {
+    <%_ } _%>
       const account = response.data;
       if (account) {
         this.store.commit('authenticated', account);

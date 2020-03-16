@@ -25,7 +25,7 @@ export default class LoginService {
   }
   <%_ } _%>
 
-  <%_ if (authenticationType !== 'jwt') { _%>
+  <%_ if (authenticationType !== 'jwt' && authenticationType !== 'uaa') { _%>
   public logout() : AxiosPromise<any> {
     return axios.post('api/logout');
   }

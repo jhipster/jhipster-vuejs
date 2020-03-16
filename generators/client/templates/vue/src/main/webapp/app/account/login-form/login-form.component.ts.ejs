@@ -18,10 +18,14 @@ export default class LoginForm extends Vue {
   public rememberMe: boolean = null;
 
   public doLogin(): void {
-    <%_ if (authenticationType === 'jwt') { _%>
+    <%_ if (authenticationType === 'jwt' || authenticationType === 'uaa') { _%>
     const data = { username: this.login, password: this.password, rememberMe: this.rememberMe };
     axios
+      <%_ if (authenticationType === 'uaa') { _%>
+      .post('auth/login', data)
+      <%_ } else { _%>
       .post('api/authenticate', data)
+      <%_ } _%>
       .then((result) => {
         const bearerToken = result.headers.authorization;
         if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {

@@ -43,7 +43,7 @@ export default class JhiNavbar extends Vue {
   <%_ } _%>
 
   public logout() : void {
-    <%_ if (authenticationType !== 'jwt') { _%>
+    <%_ if (authenticationType !== 'jwt' && authenticationType !== 'uaa') { _%>
     this.loginService().logout().then(response => {
       this.$store.commit('logout');
       this.$router.push('/');

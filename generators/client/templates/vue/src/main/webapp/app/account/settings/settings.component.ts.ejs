@@ -37,7 +37,11 @@ export default class Settings extends Vue {
     this.error = null;
     this.errorEmailExists = null;
     axios
+      <%_ if (authenticationType === 'uaa') { _%>
+      .post('services/uaa/api/account', this.settingsAccount)
+      <%_ } else { _%>
       .post('api/account', this.settingsAccount)
+      <%_ } _%>
       .then(() => {
         this.error = null;
         this.success = 'OK';
