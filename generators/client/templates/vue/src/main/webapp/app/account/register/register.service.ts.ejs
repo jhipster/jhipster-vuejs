@@ -2,10 +2,6 @@ import axios from 'axios';
 
 export default class RegisterService {
   public processRegistration(account: any): Promise<any> {
-    <%_ if (authenticationType === 'uaa') { _%>
-    return axios.post('services/uaa/api/register', account);
-    <%_ } else { _%>
-    return axios.post('api/register', account);
-    <%_ } _%>
+    return axios.post('<%- apiUaaPath %>api/register', account);
   }
 }

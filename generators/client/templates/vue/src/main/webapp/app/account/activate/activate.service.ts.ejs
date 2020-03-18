@@ -8,10 +8,6 @@ export default class ActivateService {
   }
 
   public activateAccount(key: string): Promise<any> {
-    <%_ if (authenticationType === 'uaa') { _%>
-    return this.axios.get(`services/uaa/api/activate?key=${key}`);
-    <%_ } else { _%>
-    return this.axios.get(`api/activate?key=${key}`);
-    <%_ } _%>
+    return this.axios.get(`<%- apiUaaPath %>api/activate?key=${key}`);
   }
 }

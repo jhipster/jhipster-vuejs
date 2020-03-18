@@ -12,11 +12,7 @@ export default class Sessions extends Vue {
   }
 
   public retrieveSessions(): void {
-    <%_ if (authenticationType === 'uaa') { _%>
-    axios.get('services/uaa/api/account/sessions/').then(response => {
-    <%_ } else { _%>
-    axios.get('api/account/sessions/').then(response => {
-    <%_ } _%>
+    axios.get('<%- apiUaaPath %>api/account/sessions/').then(response => {
       this.error = null;
       this.sessions = response.data;
     });
@@ -24,11 +20,7 @@ export default class Sessions extends Vue {
 
   public invalidate(session): void {
     axios
-      <%_ if (authenticationType === 'uaa') { _%>
-      .delete('services/uaa/api/account/sessions/' + session)
-      <%_ } else { _%>
-      .delete('api/account/sessions/' + session)
-      <%_ } _%>
+      .delete('<%- apiUaaPath %>api/account/sessions/' + session)
       .then(() => {
         this.error = null;
         this.success = 'OK';
