@@ -73,6 +73,20 @@ limitations under the License.
     "@vue/cli-service": "4.3.1",
     "@vue/test-utils": "1.0.3",
     "autoprefixer": "9.8.0",
+    "@vue/test-utils": "1.0.0-beta.33",
+    "autoprefixer": "9.7.6",
+    <!-- "@types/sinon": "7.0.12",
+    "@types/vuelidate": "0.7.5",
+    "@typescript-eslint/eslint-plugin": "2.26.0",
+    "@typescript-eslint/parser": "2.26.0",
+    "@vue/cli-plugin-eslint": "4.3.0",
+    "@vue/cli-plugin-typescript": "4.3.0",
+    "@vue/cli-service": "4.3.0",
+    "@vue/eslint-config-prettier": "6.0.0",
+    "@vue/eslint-config-typescript": "5.0.2",
+    "@vue/test-utils": "1.0.0-beta.30",
+    "autoprefixer": "9.4.9",
+    "base-href-webpack-plugin": "2.0.0", -->
     "browser-sync": "2.26.7",
     "browser-sync-webpack-plugin": "2.2.2",
 <%_ if (protractorTests) { _%>
@@ -130,6 +144,13 @@ limitations under the License.
     "tslint-eslint-rules": "5.4.0",
     "tslint-loader": "3.6.0",
     "typescript": "3.9.3",
+    "typescript": "3.8.3",
+    <!-- "tslib": "1.9.3",
+    "eslint": "6.7.2",
+    "eslint-plugin-prettier": "3.1.1",
+    "eslint-plugin-vue": "6.2.2",
+    "typescript": "3.2.4", -->
+    "uglifyjs-webpack-plugin": "2.2.0",
     "url-loader": "4.1.0",
     "vue-jest": "3.0.5",
     "vue-loader": "15.9.2",
@@ -154,7 +175,7 @@ limitations under the License.
   <%_ } _%>
   "scripts": {
     "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,js,ts,tsx,css,scss}\"",
-    "lint": "tslint --project tsconfig.json -e 'node_modules/**'",
+    "lint": "vue-cli-service lint",
     "lint:fix": "<%= clientPackageManager %> run lint <%= optionsForwarder %>--fix",
     "cleanup": "rimraf <%= DIST_DIR %>",
     "clean-www": "rimraf <%= DIST_DIR %>app/{src,<%= BUILD_DIR %>}",
