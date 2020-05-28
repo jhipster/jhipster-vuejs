@@ -148,3 +148,32 @@ Cypress.Commands.add('cleanUsers', () => {
   cy.logout();
 });
 <%_ } _%>
+
+<%_ if (authenticationType === 'oauth2') { _%>
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      logout(): void;
+      loginUsing(username: string, password: string): Cypress.Chainable;
+      loginWithAdmin(): Cypress.Chainable;
+    }
+  }
+}
+<%_ } else { _%>
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      logout(): void;
+      loginUsing(username: string, password: string): Cypress.Chainable;
+      loginWithAdmin(): Cypress.Chainable;
+      cleanUsers(): Cypress.Chainable;
+      registerUserUsing(login: string, email: string, password: string): Cypress.Chainable;
+      createAndActivateUserUsing(login: string, email: string, password: string, firstName?: string, lastName?: string): Cypress.Chainable;
+    }
+  }
+}
+<%_ } _%>
+
+
+// Convert this to a module instead of script (allows import/export)
+export {};

@@ -1,12 +1,15 @@
+import NavBarPage from '../../page-objects/navbar-page';
+
 describe('Administration', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.loginWithAdmin();
+    cy.reload();
   });
 
 <%_ if (authenticationType !== 'oauth2') { _%>
   it('should load user management', () => {
-    cy.clickOnAdminMenuItem('user-management');
+    NavBarPage.clickOnAdminMenuItem('user-management');
 
     // Title should be equal to 'Users'
     cy.get('#user-management-page-heading')
@@ -17,7 +20,7 @@ describe('Administration', () => {
 
 <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
   it('should load gateway', () => {
-    cy.clickOnAdminMenuItem('gateway');
+    NavBarPage.clickOnAdminMenuItem('gateway');
     cy.get('#gateway-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);
@@ -26,21 +29,21 @@ describe('Administration', () => {
 
 
   it('should load metrics', () => {
-    cy.clickOnAdminMenuItem('jhi-metrics');
+    NavBarPage.clickOnAdminMenuItem('jhi-metrics');
     cy.get('#metrics-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);
   });
 
   it('should load health', () => {
-    cy.clickOnAdminMenuItem('jhi-health');
+    NavBarPage.clickOnAdminMenuItem('jhi-health');
     cy.get('#health-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);
   });
 
   it('should load configuration', () => {
-    cy.clickOnAdminMenuItem('jhi-configuration');
+    NavBarPage.clickOnAdminMenuItem('jhi-configuration');
     cy.get('#configuration-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);
@@ -48,7 +51,7 @@ describe('Administration', () => {
 
 <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
   it('should load audits', () => {
-    cy.clickOnAdminMenuItem('audits');
+    NavBarPage.clickOnAdminMenuItem('audits');
     cy.get('#audits-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);
@@ -56,7 +59,7 @@ describe('Administration', () => {
 
 <%_ } _%>
   it('should load logs', () => {
-    cy.clickOnAdminMenuItem('logs');
+    NavBarPage.clickOnAdminMenuItem('logs');
     cy.get('#logs-page-heading')
       .invoke('text')
       .should('to.not.have.lengthOf', 0);

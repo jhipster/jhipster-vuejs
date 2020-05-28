@@ -5,7 +5,11 @@ describe('Log In', () => {
   const loginPageTitle = 'login-title';
 
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/', {
+      onBeforeLoad: (win) => {
+        win.sessionStorage.clear()
+      }
+    })
 <%_ if (authenticationType === 'oauth2') { _%>
     cy.clearCookies();
     NavBarPage.autoSignOut();

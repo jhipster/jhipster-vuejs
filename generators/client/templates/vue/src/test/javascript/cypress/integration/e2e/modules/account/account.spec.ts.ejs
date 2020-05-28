@@ -214,9 +214,7 @@ describe('Account Management', () => {
 
         getUserDeleteButtonByLogin('user-to-delete').click();
         cy.get('.modal').should('exist');
-        cy.get('button')
-            .contains('OK')
-            .click();
+        cy.get('#confirm-delete-user').click();
         cy.wait('@userDeleteRequest');
 
         // Delete modal should disappear
