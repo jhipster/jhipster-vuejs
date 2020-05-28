@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
+ Copyright 2013-2020 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -31,6 +31,7 @@ eg $input-color: red;
 @import "~bootswatch/dist/<%= clientTheme %>/variables";
 <%_ } _%>
 @import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/src/index.scss';
 <%_ if (clientTheme !== 'none') { _%>
 @import "~bootswatch/dist/<%= clientTheme %>/bootswatch";
 /* Dirty fix on navbar active link with bootswatch theme */

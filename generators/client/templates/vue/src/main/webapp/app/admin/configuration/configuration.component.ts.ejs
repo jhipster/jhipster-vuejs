@@ -1,8 +1,10 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import ConfigurationService from './configuration.service';
 
-@Component
+@Component({
+  mixins: [Vue2Filters.mixin]
+})
 export default class <%=jhiPrefixCapitalized%>Configuration extends Vue {
   public orderProp = 'prefix';
   public reverse = false;
@@ -10,7 +12,7 @@ export default class <%=jhiPrefixCapitalized%>Configuration extends Vue {
   public configuration: any = false;
   public configKeys: any[] = [];
   public filtered = '';
-  @Inject('configurationService') private configurationService : () => ConfigurationService;
+  @Inject('configurationService') private configurationService: () => ConfigurationService;
 
   public mounted(): void {
     this.init();

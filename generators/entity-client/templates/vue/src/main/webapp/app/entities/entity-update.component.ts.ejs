@@ -3,39 +3,41 @@ import { Component,<% if (!fieldsContainBlob) { %> Vue,<% } %> Inject } from 'vu
   import { mixins } from 'vue-class-component';
   import JhiDataUtils from '@/shared/data/data-utils.service';
 <% } %>
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
 <%_
-    let include = false;
+    let dateFnsIncluded = false;
     for (idx in fields) {
-    const fieldName = fields[ idx ].fieldName;
-    const fieldType = fields[idx].fieldType;
-    if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !include) {
-        include = true;
-        _%>
+        const fieldName = fields[ idx ].fieldName;
+        const fieldType = fields[idx].fieldType;
+        if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !dateFnsIncluded) {
+            dateFnsIncluded = true;
+_%>
 import format from 'date-fns/format';
-import parse from 'date-fns/parse'
-import { DATE_TIME_LONG_FORMAT, INSTANT_FORMAT, ZONED_DATE_TIME_FORMAT } from '@/shared/date/filters';
+import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
+import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
     <%_ } } _%>
 
 <%_
     const importEntitiesSeen = [entityAngularName];
     let hasManyToMany = false;
     for (idx in relationships) {
-    const otherEntityAngularName = relationships[idx].otherEntityAngularName;
-    const otherEntityFileName = relationships[idx].otherEntityFileName;
-    const otherEntityFolderName = relationships[idx].otherEntityFileName;
-    const otherEntityModelName = relationships[idx].otherEntityModelName;
-    if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) {
-      hasManyToMany = true;
-    }
+      if (!relationships[idx].otherEntityIsEmbedded) {
+        const otherEntityAngularName = relationships[idx].otherEntityAngularName;
+        const otherEntityFileName = relationships[idx].otherEntityFileName;
+        const otherEntityFolderName = relationships[idx].otherEntityFileName;
+        const otherEntityModelName = relationships[idx].otherEntityModelName;
+        if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) {
+          hasManyToMany = true;
+        }
 _%>
-  <% if (otherEntityAngularName === 'User' && authenticationType !== "oauth2") { %>
+  <% if (otherEntityAngularName === 'User' && authenticationType !== 'oauth2') { %>
 import UserService from '@/admin/user-management/user-management.service';
   <% } else if (otherEntityAngularName !== 'User' && !importEntitiesSeen.includes(otherEntityAngularName)) { %>
 import <%= otherEntityAngularName %>Service from '../<%= otherEntityFolderName %>/<%= otherEntityFileName %>.service';
 import { I<%= otherEntityAngularName %> } from '@/shared/model/<%= otherEntityModelName %>.model';
   <% } %>
-<%_ importEntitiesSeen.push(otherEntityAngularName); } _%>
+<%_ importEntitiesSeen.push(otherEntityAngularName); } } _%>
 import AlertService from '@/shared/alert/alert.service';
 import { I<%= entityAngularName %>, <%= entityAngularName %> } from '@/shared/model/<%= entityModelFileName %>.model';
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service';
@@ -58,7 +60,13 @@ const validations: any = {
       maxLength: maxLength(<%= fields[idx].fieldValidateRulesMaxlength %>),
     <%_ } _%>
     <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal', 'Duration'].includes(fieldType)) { _%>
-    numeric
+    numeric,
+    <%_ if (fields[idx].fieldValidateRules.includes('min')) { _%>
+      min: minValue(<%= fields[idx].fieldValidateRulesMin %>),
+    <%_ } _%>
+    <%_ if (fields[idx].fieldValidateRules.includes('max')) { _%>
+      max: maxValue(<%= fields[idx].fieldValidateRulesMax %>),
+    <%_ } _%>
     <%_ } _%>
 
     <%_ } _%>
@@ -80,23 +88,24 @@ const validations: any = {
 })
 export default class <%= entityAngularName %>Update extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils)<% } else { %>Vue<% } %> {
   @Inject('alertService') private alertService: () => AlertService;
-  @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service : () => <%= entityAngularName %>Service;
+  @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service: () => <%= entityAngularName %>Service;
   public <%= entityInstance %>: I<%= entityAngularName %> = new <%= entityAngularName %>();
   <%_
     const entitiesSeen = [entityAngularName];
     for (idx in relationships) {
-    const otherEntityName = relationships[idx].otherEntityName;
-    const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
-    const otherEntityAngularName = relationships[idx].otherEntityAngularName;
-    if (!(otherEntityAngularName === 'User' && authenticationType === "oauth2")) {
+      if (!relationships[idx].otherEntityIsEmbedded) {
+        const otherEntityName = relationships[idx].otherEntityName;
+        const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
+        const otherEntityAngularName = relationships[idx].otherEntityAngularName;
+        if (!(otherEntityAngularName === 'User' && authenticationType === "oauth2")) {
   _%>
   <%_ if (!entitiesSeen.includes(otherEntityAngularName)) { %>
-  @Inject('<%= otherEntityName %>Service') private <%= otherEntityName %>Service : () => <%= otherEntityAngularName %>Service;
+  @Inject('<%= otherEntityName %>Service') private <%= otherEntityName %>Service: () => <%= otherEntityAngularName %>Service;
   <%_ } _%>
   <%_ if (!entitiesSeen.includes(otherEntityNamePlural)) { %>
   public <%= otherEntityNamePlural %> : <% if (otherEntityAngularName === 'User') { %>Array<any><%_ } else { _%>I<%= otherEntityAngularName %>[]<%_ } _%> = [];
   <%_ } _%>
-  <%_ entitiesSeen.push(otherEntityAngularName);entitiesSeen.push(otherEntityNamePlural); } } _%>
+  <%_ entitiesSeen.push(otherEntityAngularName);entitiesSeen.push(otherEntityNamePlural); } } } _%>
   public isSaving = false;
 
   beforeRouteEnter(to, from, next) {
@@ -155,13 +164,13 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
   }
 
   <%_
-    let included = false;
+    let dateFunctionIncluded = false;
     for (idx in fields) {
-    const fieldName = fields[ idx ].fieldName;
-    const fieldType = fields[idx].fieldType;
-    if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !included) {
-        included = true;
-        _%>
+        const fieldName = fields[ idx ].fieldName;
+        const fieldType = fields[idx].fieldType;
+        if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType) && !dateFunctionIncluded) {
+            dateFunctionIncluded = true;
+  _%>
     public convertDateTimeFromServer(date: Date): string {
       if (date) {
         return format(date, DATE_TIME_LONG_FORMAT);
@@ -188,6 +197,14 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
 
   public retrieve<%= entityAngularName %>(<%= entityInstance %>Id) : void {
     this.<%= entityInstance %>Service().find(<%= entityInstance %>Id).then((res) => {
+<%_
+        for (idx in fields) {
+            const fieldName = fields[idx].fieldName;
+            const fieldType = fields[idx].fieldType;
+            if ([ 'Instant', 'ZonedDateTime' ].includes(fieldType)) {
+_%>
+      res.<%= fieldName %> = new Date(res.<%= fieldName %>);
+<%_ } } _%>
       this.<%= entityInstance %> = res;
     });
   }
@@ -215,15 +232,16 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
   public initRelationships() : void {
     <%_
         for (idx in relationships) {
-        const otherEntityName = relationships[idx].otherEntityName;
-        const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
-        const otherEntityAngularName = relationships[idx].otherEntityAngularName;
-        if (!(otherEntityAngularName === 'User' && authenticationType === "oauth2")) {
+          if (!relationships[idx].otherEntityIsEmbedded) {
+          const otherEntityName = relationships[idx].otherEntityName;
+          const otherEntityNamePlural = relationships[idx].otherEntityNamePlural;
+          const otherEntityAngularName = relationships[idx].otherEntityAngularName;
+          if (!(otherEntityAngularName === 'User' && authenticationType === "oauth2")) {
     _%>
     this.<%= otherEntityName %>Service().retrieve().then((res) => {
       this.<%= otherEntityNamePlural %> = res.data;
     });
-    <%_ } } _%>
+    <%_ } } } _%>
   }
 
   <%_ if (hasManyToMany) { _%>

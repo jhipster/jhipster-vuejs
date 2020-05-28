@@ -1,6 +1,9 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 
-@Component
+@Component({
+  mixins: [Vue2Filters.mixin]
+})
 export default class <%=jhiPrefixCapitalized%>MetricsModal extends Vue {
   @Prop()
   threadDump!: any

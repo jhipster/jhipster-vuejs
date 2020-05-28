@@ -5,7 +5,6 @@ const config = require('../config');
 const merge = require('webpack-merge');
 const path = require('path');
 const baseWebpackConfig = require('./webpack.common');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const portfinder = require('portfinder');
 const jhiUtils = require('./utils.js');
@@ -45,10 +44,19 @@ module.exports = merge(baseWebpackConfig, {
           '/login',<% } %>
           '/auth'
         ],
-        target: 'http://127.0.0.1:8080',
+        target: 'http://127.0.0.1:<%= serverPort %>',
         secure: false,
         headers: { host: 'localhost:9000' }
+      },
+      <%_ if (websocket === 'spring-websocket') { _%>
+      {
+        context: [
+          '/websocket'
+        ],
+        target: 'ws://127.0.0.1:<%= serverPort %>',
+        ws: true
       }
+      <%_ } _%>
     ],
     watchOptions: {
       ignored: /node_modules/
@@ -67,24 +75,27 @@ module.exports = merge(baseWebpackConfig, {
         host: 'localhost',
         port: 9000,
         proxy: {
-          target: 'http://localhost:9060'
+          target: 'http://localhost:9060',
+          <%_ if (websocket === 'spring-websocket') { _%>
+          ws: true,
+          <%_ } _%>
         },
         socket: {
           clients: {
             heartbeatTimeout: 60000
           }
         }
+        /*
+        ,ghostMode: { // uncomment this part to disable BrowserSync ghostMode; https://github.com/jhipster/generator-jhipster/issues/11116
+          clicks: false,
+          location: false,
+          forms: false,
+          scroll: false
+        } */
       },
       {
         reload: false
       }
-    ),
-    // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      template: 'src/main/webapp/index.html',
-      chunks: ['vendors', 'main', 'global'],
-      chunksSortMode: 'manual',
-      inject: true
-    })
+    )
   ]
 });

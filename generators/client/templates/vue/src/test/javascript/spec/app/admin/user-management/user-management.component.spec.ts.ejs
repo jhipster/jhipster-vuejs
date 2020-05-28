@@ -1,5 +1,5 @@
 <%_
-const tsKeyId = generateTestEntityId(pkType, prodDatabaseType);
+const tsKeyId = generateTestEntityId(pkType);
 _%>
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
@@ -22,6 +22,7 @@ const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-alert', {});
 localVue.component('router-link', {});
+localVue.component('jhi-sort-indicator', {});
 localVue.directive('b-modal', {});
 
 jest.mock('axios', () => ({
@@ -65,10 +66,6 @@ describe('UserManagement Component', () => {
     userManagement = wrapper.vm;
   });
 
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
-
   describe('OnInit', () => {
     it('Should call load all on init', async () => {
       // WHEN
@@ -76,7 +73,7 @@ describe('UserManagement Component', () => {
       await userManagement.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users<%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>?sort=id,desc&page=0&size=20<%_ } _%>`);
     });
   });
 
@@ -91,7 +88,7 @@ describe('UserManagement Component', () => {
 
       // THEN
       expect(mockedAxios.put).toHaveBeenCalledWith(`api/users`, { id: <%- tsKeyId %>, activated: true });
-      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users<%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>?sort=id,desc&page=0&size=20<%_ } _%>`);
     });
   });
 
@@ -106,10 +103,11 @@ describe('UserManagement Component', () => {
       await userManagement.$nextTick();
 
       // THEN
-      expect(mockedAxios.delete).toHaveBeenCalledWith(`api/users/<%- tsKeyId %>`);
-      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
+      expect(mockedAxios.delete).toHaveBeenCalledWith('api/users/' + <%- tsKeyId %>);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users<%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>?sort=id,desc&page=0&size=20<%_ } _%>`);
     });
   });
+<%_ if (databaseType !== 'cassandra') { _%>
 
   describe('change order', () => {
     it('should change order and invert reverse', () => {
@@ -121,4 +119,5 @@ describe('UserManagement Component', () => {
       expect(userManagement.reverse).toBe(true);
     });
   });
+<%_ } _%>
 });

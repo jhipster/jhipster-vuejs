@@ -13,6 +13,7 @@ const CLIENT_WEBPACK_DIR = constants.CLIENT_WEBPACK_DIR;
 const expectedFiles = {
     i18n: [
         `${CLIENT_MAIN_SRC_DIR}app/locale/translation.service.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/shared/config/store/translation-store.ts`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/activate.json`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/audits.json`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/configuration.json`,
@@ -129,7 +130,6 @@ const expectedFiles = {
         `${CLIENT_SPEC_SRC_DIR}app/admin/audits/audits.component.spec.ts`,
         // `${CLIENT_SPEC_SRC_DIR}app/admin/audits/audits.service.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/configuration/configuration.component.spec.ts`,
-        `${CLIENT_SPEC_SRC_DIR}app/admin/docs/docs.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/health/health.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/health/health-modal.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/admin/health/health.service.spec.ts`,
@@ -152,7 +152,6 @@ const expectedFiles = {
 
         `${CLIENT_SPEC_SRC_DIR}app/core/error/error.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/core/home/home.component.spec.ts`,
-        `${CLIENT_SPEC_SRC_DIR}app/core/jhi-footer/jhi-footer.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/core/jhi-navbar/jhi-navbar.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/core/ribbon/ribbon.component.spec.ts`,
         `${CLIENT_SPEC_SRC_DIR}app/shared/alert/alert.service.spec.ts`,
@@ -168,6 +167,8 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/shared/date/filters.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/config/config.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/config/config-bootstrap-vue.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/shared/config/store/account-store.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/shared/config/store/alert-store.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/jhi-item-count.vue`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/jhi-item-count.component.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/model/user.model.ts`,
@@ -197,7 +198,7 @@ const expectedFiles = {
     protractor: [
         `${CLIENT_TEST_SRC_DIR}e2e/modules/account/account.spec.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/modules/administration/administration.spec.ts`,
-        `${CLIENT_TEST_SRC_DIR}e2e/page-objects/base-component.ts`,
+        `${CLIENT_TEST_SRC_DIR}e2e/page-objects/alert-page.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/page-objects/navbar-page.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/page-objects/password-page.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/page-objects/register-page.ts`,

@@ -1,10 +1,13 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
+import { mixins } from 'vue-class-component';
+import Vue2Filters from 'vue2-filters';
 import UserManagementService from './user-management.service';
-import AlertService from '@/shared/alert/alert.service';
+import AlertMixin from '@/shared/alert/alert.mixin';
 
-@Component
-export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
+@Component({
+  mixins: [Vue2Filters.mixin]
+})
+export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends mixins(AlertMixin) {
   @Inject('userService') private userManagementService: () => UserManagementService;
   public error = '';
   public success = '';
@@ -12,28 +15,11 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends Vu
   public itemsPerPage = 20;
   public queryCount: number = null;
   public page = 1;
-  public previousPage: number = null;
+  public previousPage = 1;
   public propOrder = 'id';
   public reverse = false;
   public totalItems = 0;
-  public removeId: number = null;
-
-  public dismissCountDown: number = this.$store.getters.dismissCountDown;
-  public dismissSecs: number = this.$store.getters.dismissSecs;
-  public alertType: string = this.$store.getters.alertType;
-  public alertMessage: any = this.$store.getters.alertMessage;
-
-  public getAlertFromStore() {
-    this.dismissCountDown = this.$store.getters.dismissCountDown;
-    this.dismissSecs = this.$store.getters.dismissSecs;
-    this.alertType = this.$store.getters.alertType;
-    this.alertMessage = this.$store.getters.alertMessage;
-  }
-
-  public countDownChanged(dismissCountDown: number) {
-    this.alertService().countDownChanged(dismissCountDown);
-    this.getAlertFromStore();
-  }
+  public removeId: <% if (pkType === 'String' || pkType === 'UUID') { %>string<% } else { %>number<% } %> = null;
 
   public mounted(): void {
     this.loadAll();
@@ -90,6 +76,7 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends Vu
   public changeOrder(propOrder: string): void {
     this.propOrder = propOrder;
     this.reverse = !this.reverse;
+    this.transition();
   }
   <%_ } _%>
 
@@ -100,7 +87,7 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends Vu
       const headerParams = `X-${angularAppName}-params`.toLowerCase();
       if (enableTranslation) {
       _%>
-      const message = this.$t(res.headers['<%=headerAlert%>'], { param: res.headers['<%=headerParams%>'] });
+      const message = this.$t(res.headers['<%=headerAlert%>'], { param: decodeURIComponent(res.headers['<%=headerParams%>'].replace(/\+/g, ' ')) });
       <%_ } else {_%>
       const message = res.headers['<%=headerAlert%>'];
       <%_ } _%>
@@ -108,11 +95,19 @@ export default class <%=jhiPrefixCapitalized%>UserManagementComponent extends Vu
       this.getAlertFromStore();
       this.removeId = null;
       this.loadAll();
+      this.closeDialog();
     });
   }
 
   public prepareRemove(instance): void {
     this.removeId = instance.login;
+    if (<any>this.$refs.removeUser) {
+      (<any>this.$refs.removeUser).show();
+    }
+  }
+
+  public closeDialog() : void {
+    (<any>this.$refs.removeUser).hide();
   }
 
   public get username(): string {

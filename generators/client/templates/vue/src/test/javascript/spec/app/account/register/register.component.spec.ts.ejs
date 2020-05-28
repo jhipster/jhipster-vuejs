@@ -46,10 +46,6 @@ describe('Register Component', () => {
     register = wrapper.vm;
   });
 
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
-
   it('should set all default values correctly', () => {
     expect(register.success).toBe(false);
     expect(register.doNotMatch).toBe('');
@@ -64,7 +60,7 @@ describe('Register Component', () => {
 
   it('should open login modal when asked to', () => {
     let called = false;
-    register.$root.$on('bv::show::modal', function() {
+    register.$root.$on('bv::show::modal', () => {
       called = true;
     });
     register.openLogin();
@@ -103,6 +99,7 @@ describe('Register Component', () => {
     await register.$nextTick();
 
     expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {'email': 'jhi@pster.net', 'langKey': '<%= nativeLanguage %>', 'login': 'jhi', 'password': 'jhipster'});
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
@@ -119,6 +116,7 @@ describe('Register Component', () => {
     await register.$nextTick();
 
     expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {'email': 'jhi@pster.net', 'langKey': '<%= nativeLanguage %>', 'login': 'jhi', 'password': 'jhipster'});
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
@@ -135,6 +133,7 @@ describe('Register Component', () => {
     await register.$nextTick();
 
     expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {'email': 'jhi@pster.net', 'langKey': '<%= nativeLanguage %>', 'login': 'jhi', 'password': 'jhipster'});
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.errorEmailExists).toBe(null);

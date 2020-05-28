@@ -1,50 +1,40 @@
-<% if (fieldsContainBlob) { %>
 import { mixins } from 'vue-class-component';
-<% } %>
-import { Component, Inject<% if (!fieldsContainBlob) { %>, Vue<% } %> } from 'vue-property-decorator';
+
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import { I<%= entityAngularName %> } from '@/shared/model/<%= entityModelFileName %>.model';
-import AlertService from '@/shared/alert/alert.service';
-<% if (fieldsContainBlob) { %>
+import AlertMixin from '@/shared/alert/alert.mixin';
+<% if (fieldsContainBlob || pagination === 'infinite-scroll') { %>
 import JhiDataUtils from '@/shared/data/data-utils.service';
 <% } %>
 import <%= entityAngularName %>Service from './<%= entityFileName %>.service';
 
-@Component
-export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) { %>mixins(JhiDataUtils)<% } else { %> Vue<% } %> {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service : () => <%= entityAngularName %>Service;
+@Component({
+  mixins: [Vue2Filters.mixin]
+})
+export default class <%= entityAngularName %> extends <% if (fieldsContainBlob || pagination === 'infinite-scroll') { %>mixins(JhiDataUtils, AlertMixin)<% } else { %> mixins(AlertMixin)<% } %> {
+  @Inject('<%= entityInstance %>Service') private <%= entityInstance %>Service: () => <%= entityAngularName %>Service;
   <%_ if (searchEngine === 'elasticsearch') { _%>
   public currentSearch = '';
   <%_ } _%>
-  private removeId: <% if (pkType === 'String') { %>string<% } else { %>number<% } %> = null;
+  private removeId: <% if (pkType === 'String'  || pkType === 'UUID') { %>string<% } else { %>number<% } %> = null;
   <%_ if (pagination !== 'no') { _%>
   public itemsPerPage = 20;
   public queryCount: number = null;
   public page = 1;
-  public previousPage: number = null;
+  public previousPage = 1;
   public propOrder = 'id';
   public reverse = <%_ if (pagination === 'infinite-scroll') { _%>true<%_ } else { _%>false<%_ } _%>;
   public totalItems = 0;
   <%_ } _%>
+  <%_ if (pagination === 'infinite-scroll') { _%>
+  public infiniteId = +new Date();
+  public links = {};
+  <%_ } _%>
+    
   public <%= entityInstancePlural %>: I<%= entityAngularName %>[] = [];
 
   public isFetching = false;
-  public dismissCountDown: number = this.$store.getters.dismissCountDown;
-  public dismissSecs: number = this.$store.getters.dismissSecs;
-  public alertType: string = this.$store.getters.alertType;
-  public alertMessage: any = this.$store.getters.alertMessage;
-
-  public getAlertFromStore() {
-    this.dismissCountDown = this.$store.getters.dismissCountDown;
-    this.dismissSecs = this.$store.getters.dismissSecs;
-    this.alertType = this.$store.getters.alertType;
-    this.alertMessage = this.$store.getters.alertMessage;
-  }
-
-  public countDownChanged(dismissCountDown: number) {
-    this.alertService().countDownChanged(dismissCountDown);
-    this.getAlertFromStore();
-  }
 
   public mounted(): void {
     this.retrieveAll<%= entityAngularName %>s();
@@ -67,8 +57,22 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
     <%_ if (pagination !== 'no') { _%>
     this.page = 1;
     <%_ } _%>
+    <%_ if (pagination === 'infinite-scroll') { _%>
+    this.links = {};
+    this.infiniteId += 1;
+    this.<%= entityInstancePlural %> = [];
+    <%_ } _%>
     this.retrieveAll<%= entityAngularName %>s();
   }
+
+  <%_ if (pagination === 'infinite-scroll') { _%>
+  public reset(): void {
+    this.page = 1;
+    this.infiniteId += 1;
+    this.<%= entityInstancePlural %> = [];
+    this.retrieveAll<%= entityAngularName %>s();
+  }
+  <%_ } _%>
 
   public retrieveAll<%= entityAngularName %>s() :void {
     this.isFetching = true;
@@ -81,12 +85,33 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
     <%_ if (searchEngine === 'elasticsearch') { _%>
     if (this.currentSearch) {
       this.<%= entityInstance %>Service().search(this.currentSearch<%_ if (pagination !== 'no') { _%>, paginationQuery<%_ } _%>).then(res => {
-        this.<%= entityInstancePlural %> = <%_ if (pagination !== 'no') { _%>res.data<%_ } else { _%>res<%_ } _%>;
+        <%_ if (pagination === 'no') { _%>
+        this.<%= entityInstancePlural %> = res;
+        <%_ } else if (pagination !== 'infinite-scroll') { _%>
+        this.<%= entityInstancePlural %> = res.data;
+        <%_ } else if (pagination === 'infinite-scroll') { _%>
+        if (res.data && res.data.length > 0) {
+          for (let i = 0; i < res.data.length; i++) {
+            this.<%= entityInstancePlural %>.push(res.data[i]);
+          }
+          if (res.headers && res.headers['link']) {
+            this.links = this.parseLinks(res.headers['link']);
+          }
+        }
+        <%_ } _%>
         <%_ if (pagination !== 'no') { _%>
         this.totalItems = Number(res.headers['x-total-count']);
         this.queryCount = this.totalItems;
         <%_ } _%>
         this.isFetching = false;
+        <%_ if (pagination === 'infinite-scroll') { _%>
+        if ((<any>this.$refs.infiniteLoading)) {
+          (<any>this.$refs.infiniteLoading).stateChanger.loaded();
+          if (this.links !== {} && this.page > this.links['last']) {
+            (<any>this.$refs.infiniteLoading).stateChanger.complete();
+          }
+        }
+        <%_ } _%>
       }, err => {
         this.isFetching = false;
       });
@@ -94,19 +119,42 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
     }
     <%_ } _%>
     this.<%= entityInstance %>Service().retrieve(<%_ if (pagination !== 'no') { _%>paginationQuery<%_ } _%>).then(res => {
+      <%_ if (pagination !== 'infinite-scroll') { _%>
       this.<%= entityInstancePlural %> = res.data;
+      <%_ } else { _%>
+      if (res.data && res.data.length > 0) {
+        for (let i = 0; i < res.data.length; i++) {
+          this.<%= entityInstancePlural %>.push(res.data[i]);
+        }
+        if (res.headers && res.headers['link']) {
+          this.links = this.parseLinks(res.headers['link']);
+        }
+      }
+      <%_ } _%>
       <%_ if (pagination !== 'no') { _%>
       this.totalItems = Number(res.headers['x-total-count']);
       this.queryCount = this.totalItems;
       <%_ } _%>
       this.isFetching = false;
+      <%_ if (pagination === 'infinite-scroll') { _%>
+      if ((<any>this.$refs.infiniteLoading)) {
+        (<any>this.$refs.infiniteLoading).stateChanger.loaded();
+        if (this.links !== {} && this.page > this.links['last']) {
+          (<any>this.$refs.infiniteLoading).stateChanger.complete();
+        }
+      }
+      <%_ } _%>
     }, err => {
       this.isFetching = false;
     });
   }
 
+  <%_ if (!readOnly) { _%>
   public prepareRemove(instance: I<%= entityAngularName %>) : void {
     this.removeId = instance.id;
+    if (<any>this.$refs.removeEntity) {
+      (<any>this.$refs.removeEntity).show();
+    }
   }
 
   public remove<%= entityAngularName %>() : void {
@@ -118,13 +166,26 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
       <%_ } _%>
       this.alertService().showAlert(message, 'danger');
       this.getAlertFromStore();
-
       this.removeId = null;
+      <%_ if (pagination === 'infinite-scroll') { _%>
+      this.reset();
+      <%_ } else {_%>
       this.retrieveAll<%= entityAngularName %>s();
+      <%_ } _%>
       this.closeDialog();
     });
   }
 
+  <%_ } _%>
+  <%_ if (pagination === 'infinite-scroll') { _%>
+  public loadMore($state): void {
+    if (!this.isFetching) {
+      this.page++;
+      this.transition();
+    }
+  }
+
+  <%_ } _%>
   <%_ if (pagination !== 'no') { _%>
   public sort() : Array<any> {
     const result = [this.propOrder + ',' + (this.reverse ? 'asc' : 'desc')];
@@ -148,6 +209,12 @@ export default class <%= entityAngularName %> extends <% if (fieldsContainBlob) 
   public changeOrder(propOrder) : void {
     this.propOrder = propOrder;
     this.reverse = !this.reverse;
+    <%_ if (pagination !== 'infinite-scroll') { _%>
+    this.transition();
+    <%_ } else { _%>
+    this.reset();
+    <%_ } _%>
+    
   }
 
   <%_ } _%>

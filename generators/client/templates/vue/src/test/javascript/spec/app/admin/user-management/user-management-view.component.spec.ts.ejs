@@ -1,5 +1,5 @@
 <%_
-const tsKeyId = generateTestEntityId(pkType, prodDatabaseType);
+const tsKeyId = generateTestEntityId(pkType);
 _%>
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import * as config from '@/shared/config/config';
 import UserManagementView from '@/admin/user-management/user-management-view.vue';
 import UserManagementViewClass from '@/admin/user-management/user-management-view.component';
 import UserManagementService from '@/admin/user-management/user-management.service';
+import {Authority} from '@/shared/security/authority';
 
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
@@ -36,10 +37,6 @@ describe('UserManagementView Component', () => {
     userManagementView = wrapper.vm;
   });
 
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
-
   describe('OnInit', () => {
     it('Should call load all on init', async () => {
       // GIVEN
@@ -51,7 +48,7 @@ describe('UserManagementView Component', () => {
         email: 'first@last.com',
         activated: true,
         langKey: 'en',
-        authorities: ['ROLE_USER'],
+        authorities: [Authority.USER],
         createdBy: 'admin',
         createdDate: null,
         lastModifiedBy: null,
@@ -65,7 +62,7 @@ describe('UserManagementView Component', () => {
       await userManagementView.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users/<%- tsKeyId %>`);
+      expect(mockedAxios.get).toHaveBeenCalledWith('api/users/' + <%- tsKeyId %>);
       expect(userManagementView.user).toEqual(userData);
     });
   });

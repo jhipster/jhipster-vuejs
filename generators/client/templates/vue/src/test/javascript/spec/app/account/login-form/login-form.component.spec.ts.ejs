@@ -57,10 +57,6 @@ describe('LoginForm Component', () => {
     loginForm = wrapper.vm;
   });
 
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
-
   <%_ if (authenticationType === 'jwt') { _%>
   it('should not store token if authentication is KO', async () => {
     // GIVEN
@@ -79,7 +75,7 @@ describe('LoginForm Component', () => {
       password: 'pwd',
       rememberMe: true
     });
-
+    await loginForm.$nextTick();
     expect(loginForm.authenticationError).toBeTruthy();
   });
 
@@ -103,7 +99,30 @@ describe('LoginForm Component', () => {
     });
 
     expect(loginForm.authenticationError).toBeFalsy();
-    expect(localStorage.getItem('jhi-authenticationToken')).toEqual(jwtSecret);
+    expect(localStorage.getItem('<%=jhiPrefixDashed %>-authenticationToken')).toEqual(jwtSecret);
+  });
+
+  it('should store token if authentication is OK in session', async () => {
+    // GIVEN
+    loginForm.login = 'login';
+    loginForm.password = 'pwd';
+    loginForm.rememberMe = false;
+    const jwtSecret = 'jwt-secret';
+    mockedAxios.post.mockReturnValue(Promise.resolve({ headers: { authorization: 'Bearer ' + jwtSecret } }));
+
+    // WHEN
+    loginForm.doLogin();
+    await loginForm.$nextTick();
+
+    // THEN
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/authenticate', {
+      username: 'login',
+      password: 'pwd',
+      rememberMe: false
+    });
+
+    expect(loginForm.authenticationError).toBeFalsy();
+    expect(sessionStorage.getItem('<%=jhiPrefixDashed %>-authenticationToken')).toEqual(jwtSecret);
   });
   <%_ } else { _%>
   it('should authentication be KO', async () => {
@@ -121,7 +140,7 @@ describe('LoginForm Component', () => {
     expect(mockedAxios.post).toHaveBeenCalledWith('api/authentication',
       'username=login&password=pwd&remember-me=true&submit=Login',
       { "headers": { "Content-Type": "application/x-www-form-urlencoded" } });
-
+    await loginForm.$nextTick();
     expect(loginForm.authenticationError).toBeTruthy();
   });
 

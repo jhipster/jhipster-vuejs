@@ -1,10 +1,5 @@
-# JHipster-vuejs
-[![NPM version][npm-image]][npm-url] [![Azure DevOps Build Status][azure-devops-image]][azure-devops-url-main] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Downloads][npmcharts-image]][npmcharts-url]
-> ## ⚠️ Status: in development
-> JHipster-vuejs, a Vue.js blueprint for JHipster. It will use [Vue.js](https://vuejs.org/) as the frontend library.
-
 <div align="center">
-  <a href="http://www.jhipster.tech/">
+  <a href="https://www.jhipster.tech/">
     <img src="https://github.com/jhipster/jhipster-artwork/blob/master/logos/JHipster%20RGB-small100x25px.png?raw=true">
   </a>
   <a href="https://vuejs.org/">
@@ -12,13 +7,17 @@
   </a>
 </div>
 
+[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Downloads][npmcharts-image]][npmcharts-url]
+
+[![Generator Build Status][github-actions-generator-image]][github-actions-url] [![Vue.js Build Status][github-actions-vuejs-image]][github-actions-url]
+
 # Introduction
 
-This is a [JHipster](http://www.jhipster.tech/) blueprint.
+This is a [JHipster](https://www.jhipster.tech/) blueprint.
 
 # Prerequisites
 
-As this is a [JHipster](http://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
+As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
 
 - [Installing JHipster](https://www.jhipster.tech/installation/)
 
@@ -58,7 +57,15 @@ yarn global upgrade generator-jhipster-vuejs
 To use this blueprint, run 
 
 ```bash
-jhipster --blueprint vuejs
+jhipster --blueprints vuejs
+```
+
+## Create a new component page
+
+To create a new Vue.js empty page, run
+
+```bash
+jhipster --blueprint vuejs page
 ```
 
 
@@ -96,7 +103,7 @@ Then, about **jhipster-vuejs** :
 mkdir my-app
 cd my-app
 npm link generator-jhipster-vuejs
-jhipster -d --blueprint vuejs
+jhipster -d --blueprints vuejs
 ```
 
 # License
@@ -105,10 +112,9 @@ Apache-2.0 © [Deepu K Sasidharan](https://deepu.js.org)
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-vuejs/latest.svg?style=flat
 [npm-url]: https://npmjs.org/package/generator-jhipster-vuejs
-[travis-image]: https://travis-ci.com/jhipster/jhipster-vuejs.svg?branch=master
-[travis-url]: https://travis-ci.com/jhipster/jhipster-vuejs
-[azure-devops-image]: https://dev.azure.com/jhipster/jhipster-vuejs/_apis/build/status/jhipster-vuejs?branchName=master
-[azure-devops-url-main]: https://dev.azure.com/jhipster/jhipster-vuejs/_build
+[github-actions-generator-image]: https://github.com/jhipster/jhipster-vuejs/workflows/Generator/badge.svg
+[github-actions-vuejs-image]: https://github.com/jhipster/jhipster-vuejs/workflows/Vue.js/badge.svg
+[github-actions-url]: https://github.com/jhipster/jhipster-vuejs/actions
 [daviddm-image]: https://david-dm.org/jhipster/jhipster-vuejs.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/jhipster/jhipster-vuejs
 [npmcharts-image]: https://img.shields.io/npm/dm/generator-jhipster-vuejs.svg?label=Downloads&style=flat
