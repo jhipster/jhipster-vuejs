@@ -3,19 +3,19 @@
         <b-navbar-brand class="logo" b-link to="/">
             <span class="logo-img"></span>
             <span v-text="$t('global.title')" class="navbar-title"><%= baseName %></span> <span class="navbar-version">{{version}}</span>
-        </b-navbar-brand>      
-        <b-navbar-toggle 
-        right 
-        class="jh-navbar-toggler d-lg-none" 
-        href="javascript:void(0);"  
-        data-toggle="collapse" 
-        target="header-tabs" 
-        aria-expanded="false" 
+        </b-navbar-brand>
+        <b-navbar-toggle
+        right
+        class="jh-navbar-toggler d-lg-none"
+        href="javascript:void(0);"
+        data-toggle="collapse"
+        target="header-tabs"
+        aria-expanded="false"
         aria-label="Toggle navigation">
             <font-awesome-icon icon="bars" />
         </b-navbar-toggle>
-           
-        <b-collapse is-nav id="header-tabs">
+
+        <b-collapse is-nav id="header-tabs" data-cy=header-tabs>
             <b-navbar-nav class="ml-auto">
                 <b-nav-item to="/" exact>
                     <span>
@@ -27,7 +27,8 @@
                     right
                     id="entity-menu"
                     v-if="authenticated"
-                    active-class="active" class="pointer">
+                    active-class="active" class="pointer"
+                    data-cy=entity-menu>
                     <span slot="button-content" class="navbar-dropdown-menu">
                         <font-awesome-icon icon="th-list" />
                         <span v-text="$t('global.menu.entities.main')">Entities</span>
@@ -40,7 +41,8 @@
                     v-if="hasAnyAuthority('ROLE_ADMIN') && authenticated"
                     :class="{'router-link-active': subIsActive('/admin')}"
                     active-class="active"
-                    class="pointer">
+                    class="pointer"
+                    data-cy=admin-menu>
                     <span slot="button-content" class="navbar-dropdown-menu">
                         <font-awesome-icon icon="cogs" />
                         <span v-text="$t('global.menu.admin.main')">Administration</span>
@@ -114,7 +116,8 @@
                     id="account-menu"
                     :class="{'router-link-active': subIsActive('/account')}"
                     active-class="active"
-                    class="pointer">
+                    class="pointer"
+                    data-cy=account-menu>
                     <span slot="button-content" class="navbar-dropdown-menu">
                         <font-awesome-icon icon="user" />
                         <span v-text="$t('global.menu.account.main')">
@@ -137,16 +140,16 @@
                         <span v-text="$t('global.menu.account.sessions')">Sessions</span>
                     </b-dropdown-item>
                     <%_ } _%>
-                    <b-dropdown-item v-if="authenticated"  v-on:click="logout()" id="logout" active-class="active">
+                    <b-dropdown-item v-if="authenticated"  v-on:click="logout()" id="logout" active-class="active" data-cy=logout>
                         <font-awesome-icon icon="sign-out-alt" />
                         <span v-text="$t('global.menu.account.logout')">Sign out</span>
                     </b-dropdown-item>
-                    <b-dropdown-item v-if="!authenticated"  v-on:click="openLogin()" id="login" active-class="active">
+                    <b-dropdown-item v-if="!authenticated"  v-on:click="openLogin()" id="login" active-class="active" data-cy=login>
                         <font-awesome-icon icon="sign-in-alt" />
                         <span v-text="$t('global.menu.account.login')">Sign in</span>
                     </b-dropdown-item>
                     <%_ if (!skipUserManagement) { _%>
-                    <b-dropdown-item to="/register" tag="b-dropdown-item" id="register" v-if="!authenticated" active-class="active">
+                    <b-dropdown-item to="/register" tag="b-dropdown-item" id="register" v-if="!authenticated" active-class="active" data-cy=register>
                         <font-awesome-icon icon="user-plus" />
                         <span v-text="$t('global.menu.account.register')">Register</span>
                     </b-dropdown-item>

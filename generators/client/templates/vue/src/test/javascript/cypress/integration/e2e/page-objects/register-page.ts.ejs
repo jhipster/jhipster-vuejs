@@ -1,8 +1,15 @@
 import BasePage from './base-component';
 
+export const registerFormSelector = '[data-cy=register-form]';
+export const registerTitleSelector = '[data-cy=register-title]';
+export const usernameFormSelector = '[data-cy=username]';
+export const emailFormSelector = '[data-cy=email]';
+export const firstPasswordFormSelector = '[data-cy=firstPassword]';
+export const secondPasswordFormSelector = '[data-cy=secondPassword]';
+
 export default class RegisterPage extends BasePage {
     static getSelf() {
-        return cy.get('#register-form');
+        return cy.get(registerFormSelector);
     }
 
     static get() {
@@ -10,23 +17,23 @@ export default class RegisterPage extends BasePage {
     }
 
     static getTitleElement() {
-        return cy.get('#register-title');
+        return cy.get(registerTitleSelector);
     }
 
     static getUsernameElement() {
-        return cy.get('#username');
+        return cy.get(usernameFormSelector);
     }
 
     static getEmailElement() {
-        return cy.get('#email');
+        return cy.get(emailFormSelector);
     }
 
     static getFirstPasswordElement() {
-        return cy.get('#firstPassword');
+        return cy.get(firstPasswordFormSelector);
     }
 
     static getSecondPasswordElement() {
-        return cy.get('#secondPassword');
+        return cy.get(secondPasswordFormSelector);
     }
 
     static getSaveButton() {

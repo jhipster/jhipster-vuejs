@@ -1,8 +1,14 @@
 import BasePage from './base-component';
 
+export const settingsFormSelector = '[data-cy=settings-form]';
+export const settingsTitleSelector = '[data-cy=settings-title]';
+export const firstNameSelector = '[data-cy=firstName]';
+export const lastNameSelector = '[data-cy=lastName]';
+export const emailSelector = '[data-cy=email]';
+
 export default class SettingsPage extends BasePage {
     static getSelf() {
-        return cy.get('#settings-form');
+        return cy.get(settingsFormSelector);
     }
 
     static get() {
@@ -10,19 +16,19 @@ export default class SettingsPage extends BasePage {
     }
 
     static getTitleElement() {
-        return cy.get('#settings-title');
+        return cy.get(settingsTitleSelector);
     }
 
     static getFirstNameElement() {
-        return cy.get('#firstName');
+        return cy.get(firstNameSelector);
     }
 
     static getLastNameElement() {
-        return cy.get('#lastName');
+        return cy.get(lastNameSelector);
     }
 
     static getEmailElement() {
-        return cy.get('#email');
+        return cy.get(emailSelector);
     }
 
     static getSaveButton() {
