@@ -443,6 +443,7 @@ const vueFiles = {
                 'cypress/plugins/index.js',
                 'cypress/support/index.js',
                 'cypress/support/commands.ts',
+                'cypress/support/authentication.ts',
                 // TODO: conditional adding
                 'cypress/fixtures/integration-test.png'
             ]
