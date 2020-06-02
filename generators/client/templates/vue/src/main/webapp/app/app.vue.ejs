@@ -9,7 +9,7 @@
         <router-view></router-view>
       </div>
       <%_ if (authenticationType !== 'oauth2') { _%>
-      <b-modal id="login-page" hide-footer lazy>
+      <b-modal id="login-page" hide-footer lazy data-cy=login-page >
         <span slot="modal-title" id="login-title" v-text="$t('login.title')" data-cy=login-title >Sign in</span>
         <login-form></login-form>
       </b-modal>

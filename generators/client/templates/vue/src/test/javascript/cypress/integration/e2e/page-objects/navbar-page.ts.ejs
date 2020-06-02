@@ -63,6 +63,10 @@ export default class NavBarPage extends BasePage {
     return this.getAccountMenuElement().click();
   }
 
+  static clickOnRegisterItem() {
+    return cy.get(navbarSelector).find(accountMenuSelector).click().find(registerSelector).click();
+  }
+
   static clickOnAccountMenuItem(item: string) {
     return this.clickOnAccountMenu().get(`.dropdown-item[href="/account/${item}"`).click();
   }

@@ -1,9 +1,12 @@
 import BasePage from './base-component';
 
+export const loginPageSelector = '[data-cy=login-page]';
 export const registerFormSelector = '[data-cy=register-form]';
 export const loginTitleSelector = '[data-cy=login-title]';
 export const usernameSelector = '[data-cy=username]';
 export const passwordSelector = '[data-cy=password]';
+export const submitSelector = '[data-cy=submit]';
+export const loginAlertSelector = '[data-cy=login-alert]';
 
 export default class SignInPage extends BasePage {
   static getSelf() {

@@ -1,5 +1,24 @@
-import SignInPage from '../../page-objects/signin-page';
-import NavBarPage from '../../page-objects/navbar-page';
+import SignInPage, {
+  loginPageSelector,
+  registerFormSelector,
+  loginTitleSelector,
+  usernameSelector,
+  passwordSelector,
+  submitSelector,
+  loginAlertSelector }
+from '../../page-objects/signin-page';
+import NavBarPage, {
+  headerSelector,
+  headerTabsSelector,
+  navbarSelector,
+  adminMenuSelector,
+  accountMenuSelector,
+  loginSelector,
+  logoutSelector,
+  entityMenuSelector,
+  registerSelector
+}
+from '../../page-objects/navbar-page';
 
 describe('Log In', () => {
   const loginPageTitle = 'login-title';
@@ -7,26 +26,29 @@ describe('Log In', () => {
   beforeEach(() => {
     cy.logout();
     cy.visit('/');
-<%_ if (authenticationType === 'oauth2') { _%>
-    cy.clearCookies();
-    NavBarPage.autoSignOut();
-<%_ } _%>
     NavBarPage.getSignInPage();
+  });
+
+  it('should display login modal', () => {
+    cy.get(loginPageSelector).find(loginTitleSelector);
+    cy.get(loginPageSelector).find(usernameSelector);
+    cy.get(loginPageSelector).find(passwordSelector);
+    cy.get(loginPageSelector).find(submitSelector);
+
+    // TODO: test checkbox and alert warnings si moins de flemme
   });
 
   it('should fail to login with bad password', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
-    SignInPage.getTitle().should('equal', loginPageTitle);
-    SignInPage.getUsernameElement().type('admin');
-    SignInPage.getPasswordElement().type('foo');
-
-    SignInPage.getLoginButton().click();
-    SignInPage.getTitle().should('equal', loginPageTitle);
+    SignInPage.autoSignInUsing('admin', 'wrong');
+    cy.get(loginPageSelector)
+      .find(loginTitleSelector)
+      .should('exist');
+    cy.get(loginPageSelector)
+      .find(loginAlertSelector)
+      .should('have.class', 'alert-danger');
 <%_ } else {_%>
-    cy.get('#username').type('admin');
-    cy.get('#password').type('foo');
-    cy.get('input[type=submit]').click();
-
+    SignInPage.loginWithOAuth('admin', 'wrong');
     cy.get('.alert-error').then($alert => {
       if ($alert.length) {
         // Keycloak
@@ -41,28 +63,13 @@ describe('Log In', () => {
 
   it('should login with admin account', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
-    cy.server();
-    cy.route('GET', '/api/account').as('authenticationRequest');
-
-    SignInPage.clearUserName();
-    SignInPage.setUserName('admin');
-    SignInPage.clearPassword();
-    SignInPage.setPassword('admin');
-    SignInPage.getLoginButton().click();
-
-    cy.wait('@authenticationRequest');
-
-    SignInPage.getTitleElement().should('not.exist');
-    NavBarPage.autoSignOut();
+    SignInPage.autoSignInUsing('admin', 'admin');
+    cy.get(loginPageSelector)
+      .find(loginTitleSelector)
+      .should('not.exist');
 <%_ } else {_%>
-    // Keycloak credentials by default, change them to be able to use oauth2 with Okta
-    cy.get('#username').type('admin');
-    cy.get('#password').type('admin');
-    cy.get('input[type=submit]').click();
-
-    // Success alert should appear in home page
+    SignInPage.loginWithOAuth('admin', 'admin');
     cy.get('.alert-success').should('exist');
 <%_ } _%>
   });
 });
-

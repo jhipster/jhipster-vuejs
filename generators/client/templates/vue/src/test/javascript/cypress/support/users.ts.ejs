@@ -168,20 +168,10 @@ Cypress.Commands.add('registerUserUsing', (login: string, email: string, passwor
 });
 <%_ } _%>
 
-Cypress.Commands.add('clickOnRegisterItem', () => {
-  return cy
-    .get(navbarSelector)
-    .find(accountMenuSelector)
-    .click()
-    .find(registerSelector)
-    .click();
-});
-
 declare global {
   namespace Cypress {
     interface Chainable<Subject> {
       registerUserUsing(login: string, email: string, password: string): Cypress.Chainable;
-      clickOnRegisterItem(): Cypress.Chainable;
       createAndActivateUserUsing(login: string, email: string, password: string, firstName?: string, lastName?: string): Cypress.Chainable;
       cleanUsers(): void;
     }
