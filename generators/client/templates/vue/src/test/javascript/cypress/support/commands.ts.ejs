@@ -1,8 +1,12 @@
+export const accountMenuSelector = '[data-cy=account-menu]';
+export const navbarSelector = '[data-cy=navbar]';
+export const registerSelector = '[data-cy=register]';
+
 <%_
 const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
 _%>
 
-<%_ if (authenticationType !== 'oauth2') { _%>
+<%_ if (authenticationType == 'jwt') { _%>
 Cypress.Commands.add('loginUsing', (username: string, password: string) => {
   return cy
     .request({
@@ -21,14 +25,40 @@ Cypress.Commands.add('loginUsing', (username: string, password: string) => {
       }
     });
 });
-<%_ } else { _%>
+<%_ } else if (authenticationType === 'session') { _%>
+  Cypress.Commands.add('loginUsing', (username: string, password: string) => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi %>account').as('accountRequest');
+    return cy.getXsrfToken().then((cookie: any) => {
+      cy
+      .request({
+        method: 'POST',
+        url: '/<%= baseApi %>authentication',
+        body: {
+          username,
+          password
+        },
+        form: true,
+        headers: {
+          'X-XSRF-TOKEN': cookie.value
+        }
+      })
+      .then((result: any) => {
+        const bearerToken = result.headers.authorization;
+        if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+          window.sessionStorage.setItem('jhi-authenticationToken', bearerToken.slice(7, bearerToken.length));
+        }
+      });
+    });
+  });
+<%_ } else if (authenticationType === 'oauth2') { _%>
 Cypress.Commands.add('loginUsing', (username: string, password: string) => {
-    cy.get('#account-menu')
+    cy.get(accountMenuSelector)
       .click()
       .get(`.dropdown-menu`).then($dropDownMenu => {
           if ($dropDownMenu.get(0).firstElementChild.id === 'logout') {
             $dropDownMenu.get(0).firstElementChild.click();
-            cy.get('#account-menu')
+            cy.get(accountMenuSelector)
               .click()
               .get(`.dropdown-menu`).then($dropDownMenu2 => {
                   $dropDownMenu2.get(0).firstElementChild.click();
@@ -67,22 +97,108 @@ Cypress.Commands.add('logout', () => {
       cy.visit(logoutUrl);
   })
 });
-<%_ } else { _%>
+<%_ } else if (authenticationType === 'session') { _%>
+  Cypress.Commands.add('logout', () => {
+    cy.clearCookie('JSESSIONID');
+  });
+
+  Cypress.Commands.add(
+  'createAndActivateUserUsing',
+  (login: string, email: string, password: string, firstName?: string, lastName?: string) => {
+    cy.registerUserUsing(login, email, password).then(() => {
+      cy.loginWithAdmin().then(result => {
+        cy.getXsrfToken().then((cookie: any) => {
+          cy.request({
+            method: 'GET',
+            url: '/<%= baseApi %>users',
+            headers: {
+              'X-XSRF-TOKEN': cookie.value
+            }
+          }).then(response => {
+            response.body.forEach(user => {
+              if (user.login === login) {
+                cy.request({
+                  method: 'PUT',
+                  url: '/<%= baseApi %>users',
+                  body: {
+                    ...user,
+                    firstName,
+                    lastName,
+                    activated: true
+                  },
+                  headers: {
+                    'X-XSRF-TOKEN': cookie.value
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+      cy.logout();
+    });
+  });
+
+  Cypress.Commands.add('getXsrfToken', () => {
+    return cy.getCookie('XSRF-TOKEN').then(cookieApp => {
+      if (cookieApp === null) {
+        cy.visit('/');
+        cy.getCookie('XSRF-TOKEN').then(cookieApp2 => {
+          return cookieApp2;
+        });
+      } else {
+        return cookieApp;
+      }
+    })
+  });
+
+  Cypress.Commands.add('cleanUsers', () => {
+    cy.loginWithAdmin().then(() => {
+      cy.getXsrfToken().then((cookie: any) => {
+        cy.request({
+          method: 'GET',
+          url: `/<%= baseApi %>users`,
+          headers: {
+            'X-XSRF-TOKEN': cookie.value
+          }
+        }).then(response => {
+          response.body.forEach(user => {
+            if (!['user', 'admin', 'system'].includes(user.login)) {
+              cy.request({
+                method: 'DELETE',
+                url: `/<%= baseApi %>users/${user.login}`,
+                headers: {
+                  'X-XSRF-TOKEN': cookie.value
+                }
+              });
+            }
+          });
+        });
+      });
+    });
+    cy.logout();
+  });
+
+  Cypress.Commands.add('registerUserUsing', (login: string, email: string, password: string) => {
+    return cy.getXsrfToken().then((cookie: any) => {
+      cy.request({
+        method: 'POST',
+        url: '/api/register',
+        body: {
+          login,
+          email,
+          password,
+        },
+        headers: {
+          'X-XSRF-TOKEN': cookie.value
+        },
+      });
+    });
+  });
+<%_ } else if (authenticationType === 'jwt') { _%>
 Cypress.Commands.add('logout', () => {
   window.sessionStorage.removeItem('jhi-authenticationToken');
   window.localStorage.removeItem('jhi-authenticationToken');
-});
-
-Cypress.Commands.add('registerUserUsing', (login: string, email: string, password: string) => {
-  return cy.request({
-    method: 'POST',
-    url: '/<%= baseApi %>register',
-    body: {
-      login,
-      email,
-      password
-    }
-  });
 });
 
 Cypress.Commands.add(
@@ -147,33 +263,49 @@ Cypress.Commands.add('cleanUsers', () => {
   });
   cy.logout();
 });
+
+Cypress.Commands.add('registerUserUsing', (login: string, email: string, password: string) => {
+  const auth = window.sessionStorage.getItem('jhi-authenticationToken');
+  return cy.request({
+    method: 'POST',
+    url: '/<%= baseApi %>register',
+    body: {
+      login,
+      email,
+      password
+    },
+    auth: {
+      bearer: auth
+    }
+  });
+});
 <%_ } _%>
 
-<%_ if (authenticationType === 'oauth2') { _%>
+Cypress.Commands.add('clickOnRegisterItem', () => {
+  return cy
+    .get(navbarSelector)
+    .find(accountMenuSelector)
+    .click()
+    .find(registerSelector)
+    .click();
+});
+
 declare global {
   namespace Cypress {
     interface Chainable<Subject> {
       logout(): void;
       loginUsing(username: string, password: string): Cypress.Chainable;
       loginWithAdmin(): Cypress.Chainable;
-    }
-  }
-}
-<%_ } else { _%>
-declare global {
-  namespace Cypress {
-    interface Chainable<Subject> {
-      logout(): void;
-      loginUsing(username: string, password: string): Cypress.Chainable;
-      loginWithAdmin(): Cypress.Chainable;
-      cleanUsers(): Cypress.Chainable;
       registerUserUsing(login: string, email: string, password: string): Cypress.Chainable;
+      clickOnRegisterItem(): Cypress.Chainable;
       createAndActivateUserUsing(login: string, email: string, password: string, firstName?: string, lastName?: string): Cypress.Chainable;
+      cleanUsers(): void;
+      <%_ if (authenticationType === 'session') { _%>
+      getXsrfToken(): Cypress.Chainable<Cookie | null>;
+      <%_ } _%>
     }
   }
 }
-<%_ } _%>
-
 
 // Convert this to a module instead of script (allows import/export)
 export {};

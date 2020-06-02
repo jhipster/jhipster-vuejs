@@ -1,21 +1,31 @@
 import BasePage from './base-component';
 import SignInPage from './signin-page';
 
+export const headerSelector = '[data-cy=app-header]';
+export const headerTabsSelector = '[data-cy=header-tabs]';
+export const navbarSelector = '[data-cy=navbar]';
+export const adminMenuSelector = '[data-cy=admin-menu]';
+export const accountMenuSelector = '[data-cy=account-menu]';
+export const loginSelector = '[data-cy=login]';
+export const logoutSelector = '[data-cy=logout]';
+export const entityMenuSelector = '[data-cy=entity-menu]';
+export const registerSelector = '[data-cy=register]';
+
 export default class NavBarPage extends BasePage {
   static getSelf() {
-    return cy.get('#app-header');
+    return cy.get(headerSelector);
   }
 
   static getAdminMenuElement() {
-    return cy.get('#admin-menu');
+    return cy.get(adminMenuSelector);
   }
 
   static getAccountMenuElement() {
-    return cy.get('#account-menu');
+    return cy.get(accountMenuSelector);
   }
 
   static getEntityMenuElement() {
-    return cy.get('#entity-menu');
+    return cy.get(entityMenuSelector);
   }
 
 <%_ if (authenticationType !== 'oauth2') { _%>
@@ -29,13 +39,13 @@ export default class NavBarPage extends BasePage {
 
   static getRegisterPage() {
     this.clickOnAccountMenu();
-    return this.clickOnTabMenu('#register');
+    return this.clickOnTabMenu(registerSelector);
   }
 
 <%_ } _%>
   static getSignInPage() {
     this.clickOnAccountMenu();
-    return this.clickOnTabMenu('#login');
+    return this.clickOnTabMenu(loginSelector);
   }
 
   static getEntityPage(entityName: string) {
@@ -44,7 +54,7 @@ export default class NavBarPage extends BasePage {
   }
 
   static clickOnTabMenu(item: string) {
-    return cy.get('#header-tabs')
+    return cy.get(headerTabsSelector)
       .get(`.dropdown-menu ${item}`)
       .click();
   }
@@ -80,6 +90,6 @@ export default class NavBarPage extends BasePage {
 
   static autoSignOut() {
     this.clickOnAccountMenu();
-    this.clickOnTabMenu('#logout');
+    this.clickOnTabMenu(logoutSelector);
   }
 }
