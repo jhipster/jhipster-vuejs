@@ -1,0 +1,65 @@
+import SignInPage from '../../page-objects/signin-page';
+import NavBarPage from '../../page-objects/navbar-page';
+import SettingsPage from '../../page-objects/settings-page';
+
+import {
+    getSuccessToast,
+    getDangerToast
+} from '../../util/utils';
+
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
+describe('Account Management', () => {
+
+    beforeEach(() => {
+        cy.cleanUsers();
+        cy.logout();
+        cy.visit('/');
+    });
+
+    it('should be able to change user_test settings', () => {
+        cy.createAndActivateUserUsing(
+            'user-change-settings',
+            'user-change-settings@localhost.jh',
+            'user-change-settings',
+            'User',
+            'Change-Settings'
+        );
+        NavBarPage.getSignInPage();
+        SignInPage.autoSignInUsing('user-change-settings', 'user-change-settings');
+        cy.wait(500);
+        NavBarPage.clickOnAccountMenuItem('settings');
+        NavBarPage.getSettingsPage();
+
+        SettingsPage.setFirstName('jhipster');
+        SettingsPage.setLastName('retspihj');
+        SettingsPage.save();
+
+        // Error toast should appear
+        getSuccessToast().should('exist');
+    });
+
+    it('should not be able to change user settings if email already exists', () => {
+        cy.createAndActivateUserUsing(
+            'user-fail-change-settings1',
+            'user-fail-change-settings1@localhost.jh',
+            'user-fail-change-settings1',
+            'User',
+            'Change-Settings'
+        );
+        cy.registerUserUsing('user-fail-change-settings2', 'user-fail-change-settings2@localhost.jh', 'user-fail-change-settings2');
+        NavBarPage.getSignInPage();
+        SignInPage.autoSignInUsing('user-fail-change-settings1', 'user-fail-change-settings1');
+        cy.wait(500);
+        NavBarPage.clickOnAccountMenuItem('settings');
+        NavBarPage.getSettingsPage();
+
+        SettingsPage.clearEmail();
+        SettingsPage.setEmail('user-fail-change-settings2@localhost.jh');
+        SettingsPage.save();
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+    });
+});

@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center">
         <div class="col-8">
-            <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" v-if="userAccount">
+            <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" v-if="userAccount" data-cy=user-edit-page>
                 <h2 id="myUserLabel" v-text="$t('userManagement.home.createOrEditLabel')">
                     Create or edit a User
                 </h2>
@@ -112,7 +112,7 @@
                             v-text="$t('entity.action.cancel')">Cancel</span>
                     </button>
                     <button type="submit" :disabled="$v.userAccount.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')" data-cy=save>Save</span>
                     </button>
                 </div>
             </form>

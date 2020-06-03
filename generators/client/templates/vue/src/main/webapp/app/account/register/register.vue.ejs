@@ -33,7 +33,7 @@
                         <input type="text" class="form-control" v-model="$v.registerAccount.login.$model" id="username" name="login"
                                :class="{'valid': !$v.registerAccount.login.$invalid, 'invalid': $v.registerAccount.login.$invalid }"
                                required minlength="1" maxlength="50" pattern="^[a-zA-Z0-9!#$&'*+=?^_`{|}~.-]+@?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" v-bind:placeholder="$t('global.form[\'username.placeholder\']')"
-                               data-cy=username >
+                               data-cy=register-username >
                         <div v-if="$v.registerAccount.login.$anyDirty && $v.registerAccount.login.$invalid">
                             <small class="form-text text-danger" v-if="!$v.registerAccount.login.required"
                                    v-text="$t('register.messages.validate.login.required')">
@@ -58,7 +58,7 @@
                         <input type="email" class="form-control" id="email" name="email"
                                :class="{'valid': !$v.registerAccount.email.$invalid, 'invalid': $v.registerAccount.email.$invalid }"
                                v-model="$v.registerAccount.email.$model" minlength=5 maxlength=254 email required  v-bind:placeholder="$t('global.form[\'email.placeholder\']')"
-                               data-cy=email >
+                               data-cy=register-email >
                         <div v-if="$v.registerAccount.email.$anyDirty && $v.registerAccount.email.$invalid">
                             <small class="form-text text-danger" v-if="!$v.registerAccount.email.required"
                                    v-text="$t('global.messages.validate.email.required')">
@@ -83,7 +83,7 @@
                         <input type="password" class="form-control" id="firstPassword" name="password"
                                :class="{'valid': !$v.registerAccount.password.$invalid, 'invalid': $v.registerAccount.password.$invalid }"
                                v-model="$v.registerAccount.password.$model" minlength=4 maxlength=50 required v-bind:placeholder="$t('global.form[\'newpassword.placeholder\']')"
-                               data-cy=firstPassword >
+                               data-cy=register-firstPassword >
                         <div v-if="$v.registerAccount.password.$anyDirty && $v.registerAccount.password.$invalid">
                             <small class="form-text text-danger" v-if="!$v.registerAccount.password.required"
                                    v-text="$t('global.messages.validate.newpassword.required')">
@@ -105,7 +105,7 @@
                         <input type="password" class="form-control" id="secondPassword" name="confirmPasswordInput"
                                :class="{'valid': !$v.confirmPassword.$invalid, 'invalid': $v.confirmPassword.$invalid }"
                                v-model="$v.confirmPassword.$model" minlength=4 maxlength=50 required v-bind:placeholder="$t('global.form[\'confirmpassword.placeholder\']')"
-                               data-cy=secondPassword >
+                               data-cy=register-secondPassword >
                         <div v-if="$v.confirmPassword.$dirty && $v.confirmPassword.$invalid">
                             <small class="form-text text-danger" v-if="!$v.confirmPassword.required"
                                    v-text="$t('global.messages.validate.confirmpassword.required')">
@@ -122,7 +122,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" :disabled="$v.registerAccount.$invalid || $v.confirmPassword.$invalid" class="btn btn-primary" v-text="$t('register.form.button')">Register</button>
+                    <button type="submit" :disabled="$v.registerAccount.$invalid || $v.confirmPassword.$invalid" class="btn btn-primary" v-text="$t('register.form.button')" data-cy=register-submit>Register</button>
                 </form>
                 <p></p>
                 <div class="alert alert-warning">

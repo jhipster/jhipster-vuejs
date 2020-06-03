@@ -1,0 +1,50 @@
+import NavBarPage from '../../page-objects/navbar-page';
+import RegisterPage from '../../page-objects/register-page';
+import {
+    getSuccessToast,
+    getDangerToast
+} from '../../util/utils';
+
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
+describe('Account Management', () => {
+
+    beforeEach(() => {
+        cy.cleanUsers();
+        cy.logout();
+        cy.visit('/');
+        NavBarPage.clickOnRegisterItem();
+    });
+
+    it('should display register page', () => {
+      RegisterPage.getTitleElement();
+      RegisterPage.getUsernameElement();
+      RegisterPage.getEmailElement();
+      RegisterPage.getFirstPasswordElement();
+      RegisterPage.getSecondPasswordElement();
+      RegisterPage.getSaveButton();
+    });
+
+    it('should be able to sign up', () => {
+        RegisterPage.autoSignUpUsing('user_test', 'admin@localhost.jh', 'user_test');
+
+        getSuccessToast().should('exist');
+    });
+
+    it('should not be able to sign up if login already taken', () => {
+        cy.createAndActivateUserUsing('user-login-taken', 'user-login-taken@localhost.jh', 'user-login-taken');
+        RegisterPage.autoSignUpUsing('user-login-taken', 'user-login-taken@localhost.jh', 'user-login-taken');
+
+        // Error toast should appear
+        getDangerToast().should('exist');
+    });
+
+    it('should not be able to sign up if email already taken', () => {
+        cy.createAndActivateUserUsing('user-email-taken', 'user-email-taken@localhost.jh', 'user-email-taken');
+        RegisterPage.autoSignUpUsing('user-email-taken', 'user-email-taken@localhost.jh', 'user-email-taken');
+
+        // Error registerFormSelector should appear
+        getDangerToast().should('exist');
+    });
+});

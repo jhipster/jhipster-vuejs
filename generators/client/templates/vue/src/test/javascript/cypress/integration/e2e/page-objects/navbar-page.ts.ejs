@@ -68,7 +68,7 @@ export default class NavBarPage extends BasePage {
   }
 
   static clickOnAccountMenuItem(item: string) {
-    return this.clickOnAccountMenu().get(`.dropdown-item[href="/account/${item}"`).click();
+    return this.clickOnAccountMenu().get(`.dropdown-item[href="/account/${item}"]`).click();
   }
 
   static clickOnAdminMenuItem(item: string) {
