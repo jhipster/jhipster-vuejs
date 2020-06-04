@@ -28,7 +28,6 @@ describe('Account Management', () => {
         );
         NavBarPage.getSignInPage();
         SignInPage.autoSignInUsing('user-change-settings', 'user-change-settings');
-        cy.wait(500);
         NavBarPage.clickOnAccountMenuItem('settings');
         NavBarPage.getSettingsPage();
 
@@ -51,7 +50,6 @@ describe('Account Management', () => {
         cy.registerUserUsing('user-fail-change-settings2', 'user-fail-change-settings2@localhost.jh', 'user-fail-change-settings2');
         NavBarPage.getSignInPage();
         SignInPage.autoSignInUsing('user-fail-change-settings1', 'user-fail-change-settings1');
-        cy.wait(500);
         NavBarPage.clickOnAccountMenuItem('settings');
         NavBarPage.getSettingsPage();
 

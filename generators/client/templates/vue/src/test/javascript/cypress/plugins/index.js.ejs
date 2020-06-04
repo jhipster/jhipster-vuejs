@@ -31,7 +31,7 @@ module.exports = on => {
     }
   };
   on('file:preprocessor', wp(options)),
-  on('before:browser:launch', (browser = {}, args) => {
+  on('before:browser:launch', (browser, launchOptions) => {
     // browser will look something like this
     // {
     //   name: 'chrome',
@@ -42,26 +42,26 @@ module.exports = on => {
     // }
 
     if (browser.name === 'chrome') {
-      // `args` is an araay of all the arguments
+      // `launchOptions.args` is an araay of all the arguments
       // that will be passed to Chrome when it launchers
-      args.push(
+      launchOptions.args.push(
         '--disable-gpu',
         '--window-size=800,600'<%_ if (authenticationType === 'oauth2') { _%>,
         '--disable-web-security'
         <%_ } _%>
       )
 
-      // whatever you return here becomes the new args
-      return args;
+      // whatever you return here becomes the new launchOptions.args
+      return launchOptions.args;
     }
 
     if (browser.name === 'electron') {
-      // `args` is a `BrowserWindow` options object
+      // `launchOptions.args` is a `BrowserWindow` options object
       // https://electronjs.org/docs/api/browser-window#new-browserwindowoptions
-      // args['fullscreen'] = true;
+      launchOptions.args['fullscreen'] = true;
 
-      // whatever you return here becomes the new args
-      return args;
+      // whatever you return here becomes the new launchOptions.args
+      return launchOptions.args;
     }
   });
 };
