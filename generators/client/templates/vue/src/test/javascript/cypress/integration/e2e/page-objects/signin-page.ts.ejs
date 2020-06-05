@@ -25,6 +25,10 @@ export default class SignInPage extends BasePage {
     return cy.get(usernameSelector);
   }
 
+  static getUsernameOauthElement() {
+    return cy.get('#username');
+  }
+
   static getPasswordElement() {
     return cy.get(passwordSelector);
   }
@@ -65,7 +69,7 @@ export default class SignInPage extends BasePage {
   }
 <%_ } else { _%>
   static loginWithOAuth(username: string, password: string) {
-    this.getUsernameElement().then($usernameElement => {
+    this.getUsernameOauthElement().then($usernameElement => {
       if ($usernameElement.length) {
         this.setUserName(username);
         this.setPassword(password);

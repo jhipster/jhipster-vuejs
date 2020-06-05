@@ -1,4 +1,6 @@
-import SignInPage, {
+import SignInPage
+<%_ if (authenticationType !== 'oauth2') { _%>
+  , {
   loginPageSelector,
   registerFormSelector,
   loginTitleSelector,
@@ -6,37 +8,44 @@ import SignInPage, {
   passwordSelector,
   submitSelector,
   loginAlertSelector }
+<%_ } _%>
 from '../../page-objects/signin-page';
-import NavBarPage, {
-  headerSelector,
-  headerTabsSelector,
-  navbarSelector,
-  adminMenuSelector,
-  accountMenuSelector,
-  loginSelector,
-  logoutSelector,
-  entityMenuSelector,
-  registerSelector
-}
+import NavBarPage
+<%_ if (authenticationType !== 'oauth2') { _%>
+  , {
+    headerSelector,
+    headerTabsSelector,
+    navbarSelector,
+    adminMenuSelector,
+    accountMenuSelector,
+    loginSelector,
+    logoutSelector,
+    entityMenuSelector,
+    registerSelector
+  }
+<%_ } _%>
 from '../../page-objects/navbar-page';
 
 describe('Log In', () => {
-  const loginPageTitle = 'login-title';
 
   beforeEach(() => {
+    <%_ if (authenticationType !== 'oauth2') { _%>
     cy.logout();
     cy.visit('/');
     NavBarPage.getSignInPage();
+    <%_ } else { _%>
+    cy.visit('/');
+    <%_ } _%>
   });
 
+  <%_ if (authenticationType !== 'oauth2') { _%>
   it('should display login modal', () => {
     cy.get(loginPageSelector).find(loginTitleSelector);
     cy.get(loginPageSelector).find(usernameSelector);
     cy.get(loginPageSelector).find(passwordSelector);
     cy.get(loginPageSelector).find(submitSelector);
-
-    // TODO: test checkbox and alert warnings si moins de flemme
   });
+  <%_ } _%>
 
   it('should fail to login with bad password', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
@@ -48,6 +57,7 @@ describe('Log In', () => {
       .find(loginAlertSelector)
       .should('have.class', 'alert-danger');
 <%_ } else {_%>
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'wrong');
     cy.get('.alert-error').then($alert => {
       if ($alert.length) {
@@ -58,6 +68,7 @@ describe('Log In', () => {
         cy.get('.infobox-error').invoke('text').should('equal', 'Sign in failed!');
       }
     });
+    cy.logout();
 <%_ } _%>
   });
 
@@ -68,8 +79,10 @@ describe('Log In', () => {
       .find(loginTitleSelector)
       .should('not.exist');
 <%_ } else {_%>
+    NavBarPage.getSignInPage();
     SignInPage.loginWithOAuth('admin', 'admin');
     cy.get('.alert-success').should('exist');
+    cy.logout();
 <%_ } _%>
   });
 });
