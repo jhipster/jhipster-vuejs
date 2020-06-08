@@ -1,0 +1,83 @@
+Cypress.Commands.add('oktaLogin', () => {
+  const optionsSessionToken = {
+      method: 'POST',
+      url: Cypress.env("token_endpoint"),
+      form: true,
+      headers: {
+          accept: 'application/json'
+      },
+      body: {
+          username: Cypress.env("username"),
+          password: Cypress.env("password"),
+          options: {
+              warnBeforePasswordExpired: true,
+              multiOptionalFactorEnroll: true
+          }
+      }
+  }
+  cy.request(optionsSessionToken).then(response => {
+      const sessionToken = response.body.sessionToken;
+      const qs = {
+          client_id: Cypress.env("client_id"),
+          client_secret: Cypress.env("client_secret"),
+          state: Cypress.env('state'),
+          redirect_uri: Cypress.env("redirect_uri"),
+          scope: 'openid',
+          sessionToken: sessionToken
+      }
+      cy.request({
+          method: 'GET',
+          url: Cypress.env("authorization_endpoint"),
+          form: true,
+          followRedirect: false,
+          qs: qs
+      }).then(responseWithToken => {
+          const redirectUrl = responseWithToken.redirectedToUrl;
+          console.log('Test1' + redirectUrl)
+          const accessToken = redirectUrl
+              .substring(redirectUrl.indexOf('access_token'))
+              .split('=')[1]
+              .split('&')[0];
+          cy.wrap(accessToken).as('accessToken');
+          cy.visit(redirectUrl).then(() => {
+              cy.visit('/');
+          });
+      });
+  });
+})
+
+Cypress.Commands.add('oktaLogout', () => {
+  const sessionToken = Cypress.env('accessToken');
+  cy.log(sessionToken);
+  const qs = {
+    id_token_hint: sessionToken,
+    post_logout_redirect_uri: Cypress.env('redirect_uri'),
+    state: Cypress.env('state')
+  }
+
+  cy.request({
+    method: 'GET',
+    url: Cypress.env('logout_okta'),
+    form: true,
+    followRedirect: false,
+    qs: qs
+  }).then(responseWithToken => {
+    const redirectUrl = responseWithToken.redirectedToUrl;
+
+    cy.visit(redirectUrl).then(() => {
+      cy.visit('/');
+    });
+  });
+});
+
+declare global {
+  namespace Cypress {
+      interface Chainable<Subject> {
+          oktaLogin(): void;
+          oktaLogout(user: string): Cypress.Chainable;
+      }
+  }
+}
+
+// Convert this to a module instead of script (allows import/export)
+export {};

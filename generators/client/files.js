@@ -443,8 +443,8 @@ const vueFiles = {
                 'cypress/plugins/index.js',
                 'cypress/support/index.js',
                 'cypress/support/users.ts',
-                'cypress/support/oauth-authentication.ts',
-                // TODO: conditional adding
+                'cypress/support/oauth-keycloak.ts',
+                'cypress/support/oauth-okta.ts',
                 'cypress/fixtures/integration-test.png',
                 'cypress/fixtures/users/user.json'
             ]

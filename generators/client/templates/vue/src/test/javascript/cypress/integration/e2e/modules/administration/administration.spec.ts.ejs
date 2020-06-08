@@ -10,10 +10,17 @@ describe('Administration', () => {
   });
 <%_ } else { _%>
   before(() => {
+    /** Keycloak */
     cy.resetDb();
     cy.kcLogout()
     cy.visit('/');
     cy.kcLogin('user');
+
+    /** Okta */
+    // cy.oktaLogout();
+    // cy.visit('/');
+    // cy.oktaLogin();
+
     NavBarPage.getSignInPage();
   })
   after(() => {

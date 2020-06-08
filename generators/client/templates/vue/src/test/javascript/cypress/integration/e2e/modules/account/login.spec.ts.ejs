@@ -1,6 +1,5 @@
-import SignInPage
 <%_ if (authenticationType !== 'oauth2') { _%>
-  , {
+  import SignInPage, {
   loginPageSelector,
   registerFormSelector,
   loginTitleSelector,
@@ -35,7 +34,13 @@ describe('Log In', () => {
     NavBarPage.getSignInPage();
     <%_ } else { _%>
     cy.visit('/')
+
+    /** Keycloak */
     cy.kcLogin('user');
+
+    /** Okta */
+    // cy.oktaLogin();
+
     NavBarPage.getSignInPage()
     <%_ } _%>
   });
@@ -56,8 +61,8 @@ describe('Log In', () => {
   });
   <%_ } _%>
 
+  <%_ if (authenticationType !== 'oauth2') { _%>
   it('should fail to login with bad password', () => {
-<%_ if (authenticationType !== 'oauth2') { _%>
     SignInPage.autoSignInUsing('admin', 'wrong');
     cy.get(loginPageSelector)
       .find(loginTitleSelector)
@@ -65,8 +70,8 @@ describe('Log In', () => {
     cy.get(loginPageSelector)
       .find(loginAlertSelector)
       .should('have.class', 'alert-danger');
-<%_ } _%>
   });
+  <%_ } _%>
 
 <%_ if(authenticationType == 'oauth2') { _%>
     it('should show user authenticated as an admin', () => {
@@ -74,12 +79,12 @@ describe('Log In', () => {
     });
 <%_ } _%>
 
-  it('should login with admin account', () => {
 <%_ if (authenticationType !== 'oauth2') { _%>
+  it('should login with admin account', () => {
     SignInPage.autoSignInUsing('admin', 'admin');
     cy.get(loginPageSelector)
       .find(loginTitleSelector)
       .should('not.exist');
-<%_ } _%>
   });
+<%_ } _%>
 });
