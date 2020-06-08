@@ -1,15 +1,19 @@
 import 'cypress-file-upload';
+<%_ if (authenticationType === 'oauth2') { _%>
+import './oauth-authentication';
+<% _ } else { _%>
 import './authentication';
+<% _ } _%>
 import './users'
 
 <%_ if (authenticationType === 'oauth2') { _%>
 
 Cypress.Cookies.defaults({
-  whitelist: ['JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION']
+whitelist: ['JSESSIONID', 'XSRF-TOKEN', 'AUTH_SESSION_ID', 'KEYCLOAK_IDENTITY', 'KEYCLOAK_SESSION']
 })
 <%_ } else if (authenticationType === 'session') { _%>
 
 Cypress.Cookies.defaults({
-  whitelist: ['JSESSIONID', 'XSRF-TOKEN']
+whitelist: ['JSESSIONID', 'XSRF-TOKEN']
 });
-<%_ } // TODO: add for uaa _%>
+<% _ } // TODO: add for uaa  _%>

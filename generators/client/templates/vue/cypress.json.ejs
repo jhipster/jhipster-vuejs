@@ -7,6 +7,12 @@
   "fixturesFolder": "src/test/javascript/cypress/fixtures",
   "pluginsFile": "src/test/javascript/cypress/plugins/index.js",
   "screenshotsFolder": "src/test/javascript/cypress/screenshots"<%_ if (authenticationType === 'oauth2') { _%>,
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "env": {
+    "auth_base_url": "http://localhost:9080/auth",
+    "auth_realm": "jhipster",
+    "auth_client_id": "web_app",
+    "redirect_uri": "http://localhost:8080/"
+  },
   <%_ } _%>
 }

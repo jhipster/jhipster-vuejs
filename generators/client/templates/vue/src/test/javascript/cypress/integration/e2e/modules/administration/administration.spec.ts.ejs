@@ -1,11 +1,27 @@
 import NavBarPage from '../../page-objects/navbar-page';
 
 describe('Administration', () => {
+
+<%_ if (authenticationType !== 'oauth2') { _%>
   beforeEach(() => {
     cy.visit('/');
     cy.loginWithAdmin();
     cy.reload();
   });
+<%_ } else { _%>
+  before(() => {
+    cy.resetDb();
+    cy.kcLogout()
+    cy.visit('/');
+    cy.kcLogin('user');
+    NavBarPage.getSignInPage();
+  })
+  after(() => {
+    NavBarPage.autoSignOut();
+  })
+<%_ } _%>
+
+
 
 <%_ if (authenticationType !== 'oauth2') { _%>
   it('should load user management', () => {

@@ -42,8 +42,8 @@ module.exports = on => {
     // }
 
     if (browser.name === 'chrome') {
-      // `launchOptions.args` is an araay of all the arguments
-      // that will be passed to Chrome when it launchers
+      // `launchOptions.args` is an array of all the arguments
+      // that will be passed to Chrome when it launches
       launchOptions.args.push(
         '--disable-gpu',
         '--window-size=800,600'<%_ if (authenticationType === 'oauth2') { _%>,
@@ -52,7 +52,7 @@ module.exports = on => {
       )
 
       // whatever you return here becomes the new launchOptions.args
-      return launchOptions.args;
+      return launchOptions;
     }
 
     if (browser.name === 'electron') {

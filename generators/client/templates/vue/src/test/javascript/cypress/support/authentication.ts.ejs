@@ -71,46 +71,6 @@ Cypress.Commands.add('logout', () => {
   Cypress.Commands.add('logout', () => {
     cy.clearCookie('JSESSIONID');
   });
-<%_ } else if (authenticationType === 'oauth2') { _%>
-Cypress.Commands.add('loginUsing', (username: string, password: string) => {
-    cy.get(accountMenuSelector)
-      .click()
-      .get(`.dropdown-menu`).then($dropDownMenu => {
-          if ($dropDownMenu.get(0).firstElementChild.id === 'logout') {
-            $dropDownMenu.get(0).firstElementChild.click();
-            cy.get(accountMenuSelector)
-              .click()
-              .get(`.dropdown-menu`).then($dropDownMenu2 => {
-                  $dropDownMenu2.get(0).firstElementChild.click();
-              });
-          }
-      });
-
-    cy.get('#username').then($usernameElement => {
-      if ($usernameElement.length) {
-        cy.get('#username').type(username);
-        cy.get('#password').type(password);
-        cy.get('input[type=submit]').click();
-      }
-    });
-});
-
-Cypress.Commands.add('logout', () => {
-  cy.request({
-    method: 'POST',
-    url: '/<%= baseApi %>logout'
-  }).then(response => {
-      let logoutUrl = data.logoutUrl;
-      // if Keycloak, uri has protocol/openid-connect/token
-      if (logoutUrl.indexOf('/protocol') > -1) {
-        logoutUrl = logoutUrl + '?redirect_uri=' + window.location.origin;
-      } else {
-        // Okta
-        logoutUrl = logoutUrl + '?id_token_hint=' + data.idToken + '&post_logout_redirect_uri=' + window.location.origin;
-      }
-      cy.visit(logoutUrl);
-  })
-});
 <%_ } _%>
 
 Cypress.Commands.add('loginWithAdmin', () => {
