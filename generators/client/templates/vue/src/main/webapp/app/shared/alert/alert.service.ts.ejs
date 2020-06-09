@@ -1,9 +1,9 @@
 import { Store } from 'vuex';
 
 export default class JhiAlertService {
-  private store: Store<{}>;
+  private store: Store<unknown>;
 
-  constructor(store: Store<{}>) {
+  constructor(store: Store<unknown>) {
     this.store = store;
     this.store.commit('initAlert');
   }
