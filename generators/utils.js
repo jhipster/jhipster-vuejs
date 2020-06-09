@@ -163,7 +163,7 @@ function replaceTranslation(generator, files) {
         const filePath = `${CLIENT_MAIN_SRC_DIR}${files[i]}`;
         // Match the below attributes and the $t() method
         const regexp = ['v-text', 'v-bind:placeholder', 'v-html', 'v-bind:title', 'v-bind:label', 'v-bind:value', 'v-bind:html']
-            .map(s => `${s}="\\$t\\(.*?\\)"`)
+            .map((s) => `${s}="\\$t\\(.*?\\)"`)
             .join(')|(');
         jhipsterUtils.replaceContent(
             {

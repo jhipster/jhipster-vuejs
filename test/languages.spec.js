@@ -41,7 +41,7 @@ describe('Subgenerator languages of Vue.js JHipster blueprint', () => {
                     authenticationType: 'jwt',
                     enableTranslation: true,
                     nativeLanguage: 'en',
-                    languages: constants.LANGUAGES.map(el => el.value),
+                    languages: constants.LANGUAGES.map((el) => el.value),
                     buildTool: 'maven',
                     clientFramework: 'Vue.js',
                     clientTheme: 'none'
@@ -70,7 +70,7 @@ describe('Subgenerator languages of Vue.js JHipster blueprint', () => {
                         `${CLIENT_MAIN_SRC_DIR}i18n/${language.value}/health.json`,
                         `${SERVER_MAIN_RES_DIR}i18n/messages_${language.value
                             .replace(/-/g, '_')
-                            .replace(/_[a-z]+$/g, lang => lang.toUpperCase())}.properties`
+                            .replace(/_[a-z]+$/g, (lang) => lang.toUpperCase())}.properties`
                     ]);
                     assert.noFile([`${CLIENT_MAIN_SRC_DIR}i18n/${language.value}/gateway.json`]);
                 });

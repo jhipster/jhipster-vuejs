@@ -7,7 +7,7 @@
     },
     "extends": ["airbnb-base"],
     "parserOptions": {
-        "ecmaVersion": 2017
+        "ecmaVersion": 2019
     },
     "rules": {
         "indent": [2, 4],

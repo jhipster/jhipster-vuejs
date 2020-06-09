@@ -50,7 +50,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.protractorTests,
+            condition: (generator) => generator.protractorTests,
             templates: ['tsconfig.e2e.json']
         }
     ],
@@ -96,7 +96,7 @@ const vueFiles = {
             templates: ['content/scss/_bootstrap-variables.scss', 'content/scss/global.scss', 'content/scss/vendor.scss']
         },
         {
-            condition: generator => generator.enableI18nRTL,
+            condition: (generator) => generator.enableI18nRTL,
             path: MAIN_SRC_DIR,
             templates: ['content/scss/rtl.scss']
         }
@@ -141,7 +141,7 @@ const vueFiles = {
     ],
     i18n: [
         {
-            condition: generator => generator.enableTranslation,
+            condition: (generator) => generator.enableTranslation,
             path: VUE_DIR,
             templates: [
                 'locale/translation.service.ts',
@@ -185,7 +185,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.authenticationType !== 'oauth2',
+            condition: (generator) => generator.authenticationType !== 'oauth2',
             path: VUE_DIR,
             templates: [
                 'account/login-form/login-form.vue',
@@ -194,7 +194,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => !generator.skipUserManagement,
+            condition: (generator) => !generator.skipUserManagement,
             path: VUE_DIR,
             templates: [
                 'account/change-password/change-password.vue',
@@ -214,7 +214,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.authenticationType === 'session' && !this.skipUserManagement,
+            condition: (generator) => generator.authenticationType === 'session' && !this.skipUserManagement,
             path: VUE_DIR,
             templates: [
                 'account/sessions/sessions.vue',
@@ -222,7 +222,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.authenticationType === 'oauth2',
+            condition: (generator) => generator.authenticationType === 'oauth2',
             path: VUE_DIR,
             templates: [
                 'account/login.service.ts'
@@ -255,7 +255,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => (generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra',
+            condition: (generator) => (generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra',
             path: VUE_DIR,
             templates: [
                 'admin/audits/audits.vue',
@@ -264,7 +264,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.websocket === 'spring-websocket',
+            condition: (generator) => generator.websocket === 'spring-websocket',
             path: VUE_DIR,
             templates: [
                 'admin/tracker/tracker.vue',
@@ -273,7 +273,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => !generator.skipUserManagement,
+            condition: (generator) => !generator.skipUserManagement,
             path: VUE_DIR,
             templates: [
                 'admin/user-management/user-management.vue',
@@ -286,7 +286,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.applicationType === 'gateway' && generator.serviceDiscoveryType,
+            condition: (generator) => generator.applicationType === 'gateway' && generator.serviceDiscoveryType,
             path: VUE_DIR,
             templates: [
                 'admin/gateway/gateway.vue',
@@ -326,35 +326,35 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => ((generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra'),
+            condition: (generator) => ((generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra'),
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/admin/audits/audits.component.spec.ts'
             ]
         },
         {
-            condition: generator => generator.enableTranslation,
+            condition: (generator) => generator.enableTranslation,
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/shared/config/formatter.spec.ts',
             ]
         },
         {
-            condition: generator => generator.authenticationType === 'oauth2',
+            condition: (generator) => generator.authenticationType === 'oauth2',
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/account/login.service.spec.ts',
             ]
         },
         {
-            condition: generator => generator.authenticationType !== 'oauth2',
+            condition: (generator) => generator.authenticationType !== 'oauth2',
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/account/login-form/login-form.component.spec.ts'
             ]
         },
         {
-            condition: generator => generator.authenticationType === 'session' && !generator.skipUserManagement,
+            condition: (generator) => generator.authenticationType === 'session' && !generator.skipUserManagement,
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/account/sessions/sessions.component.spec.ts',
@@ -362,7 +362,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => !generator.skipUserManagement,
+            condition: (generator) => !generator.skipUserManagement,
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/account/change-password/change-password.component.spec.ts',
@@ -374,12 +374,12 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => (generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra',
+            condition: (generator) => (generator.databaseType !== 'no' || generator.authenticationType === 'uaa') && generator.databaseType !== 'cassandra',
             path: TEST_SRC_DIR,
             templates: ['spec/app/admin/audits/audits.component.spec.ts']
         },
         {
-            condition: generator => generator.websocket === 'spring-websocket',
+            condition: (generator) => generator.websocket === 'spring-websocket',
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/admin/tracker/tracker.component.spec.ts',
@@ -387,7 +387,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => !generator.skipUserManagement,
+            condition: (generator) => !generator.skipUserManagement,
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/admin/user-management/user-management.component.spec.ts',
@@ -396,14 +396,14 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.applicationType === 'gateway' && generator.serviceDiscoveryType,
+            condition: (generator) => generator.applicationType === 'gateway' && generator.serviceDiscoveryType,
             path: TEST_SRC_DIR,
             templates: [
                 'spec/app/admin/gateway/gateway.component.spec.ts'
             ]
         },
         {
-            condition: generator => generator.protractorTests,
+            condition: (generator) => generator.protractorTests,
             path: TEST_SRC_DIR,
             templates: [
                 'e2e/modules/account/account.spec.ts',
@@ -417,7 +417,7 @@ const vueFiles = {
             ]
         },
         {
-            condition: generator => generator.protractorTests && !generator.skipUserManagement,
+            condition: (generator) => generator.protractorTests && !generator.skipUserManagement,
             path: TEST_SRC_DIR,
             templates: [
                 'e2e/page-objects/password-page.ts',
