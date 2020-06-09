@@ -76,11 +76,11 @@ export default class NavBarPage extends BasePage {
   }
 
   static clickOnEntityMenu() {
-    return this.getEntityMenuElement().click({ force: true });
+    return this.getEntityMenuElement().click();
   }
 
   static clickOnEntity(entityName: string) {
-    return cy.get(`.dropdown-item[href="/entity/${entityName}"]`).click({ force: true });
+    return cy.get(`.dropdown-item[href="/${entityName}"]`).click({ force: true });
   }
 
   static autoSignIn() {

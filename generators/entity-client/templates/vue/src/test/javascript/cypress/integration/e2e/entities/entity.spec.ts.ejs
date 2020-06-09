@@ -58,10 +58,18 @@ describe('<%= entityClass %> e2e test', () => {
     NavBarPage.getSignInPage();
     SignInPage.autoSignInUsing('admin', 'admin');
     <%_ } else {_%>
-    // very weird: but we need to first logout when disabling web security
-    NavBarPage.autoSignOut();
+    /** Keycloak */
+    cy.resetDb();
+    cy.kcLogout()
+    cy.visit('/');
+    cy.kcLogin('user');
+
+    /** Okta */
+    // cy.oktaLogout();
+    // cy.visit('/');
+    // cy.oktaLogin();
+
     NavBarPage.getSignInPage();
-    SignInPage.loginWithOAuth('admin', 'admin');
     <%_ } _%>
 
     cy.wait('@getAccountRequest');

@@ -7,11 +7,10 @@
   passwordSelector,
   submitSelector,
   loginAlertSelector }
+  from '../../page-objects/signin-page';
 <%_ } _%>
-from '../../page-objects/signin-page';
-import NavBarPage
 <%_ if (authenticationType !== 'oauth2') { _%>
-  , {
+  import NavBarPage, {
     headerSelector,
     headerTabsSelector,
     navbarSelector,
@@ -22,8 +21,9 @@ import NavBarPage
     entityMenuSelector,
     registerSelector
   }
+<%_ } else { _%>
+  import NavBarPage from '../../page-objects/navbar-page';
 <%_ } _%>
-from '../../page-objects/navbar-page';
 
 describe('Log In', () => {
 
