@@ -32,12 +32,12 @@ limitations under the License.
     "@fortawesome/vue-fontawesome": "0.1.9",
     "axios": "0.19.2",
     "bootstrap": "4.5.0",
-    "bootstrap-vue": "2.14.0",
+    "bootstrap-vue": "2.15.0",
     <%_ if (clientTheme !== 'none') { _%>
     "bootswatch": "4.5.0",
     <%_ } _%>
     "date-fns": "2.14.0",
-    "swagger-ui-dist": "3.25.4",
+    "swagger-ui-dist": "3.26.0",
     <%_ if (websocket === 'spring-websocket') { _%>
     "sockjs-client": "1.1.4",
     "webstomp-client": "1.2.0",
@@ -45,10 +45,10 @@ limitations under the License.
     "vue": "2.6.11",
     "vue-class-component": "7.2.3",
     "vue-cookie": "1.1.4",
-    "vue-i18n": "8.17.7",
+    "vue-i18n": "8.18.2",
     "vue-infinite-loading": "2.4.5",
     "vue-property-decorator": "8.4.2",
-    "vue-router": "3.2.0",
+    "vue-router": "3.3.2",
     "vue2-filters": "0.11.0",
     "vuelidate": "0.7.5",
     "vuex": "3.4.0"
@@ -69,11 +69,11 @@ limitations under the License.
 <%_ } _%>
     "@types/sinon": "9.0.3",
     "@types/vuelidate": "0.7.13",
-    "@typescript-eslint/eslint-plugin": "2.26.0",
-    "@typescript-eslint/parser": "2.26.0",
-    "@vue/cli-plugin-eslint": "4.3.1",
-    "@vue/cli-plugin-typescript": "4.3.1",
-    "@vue/cli-service": "4.3.1",
+    "@typescript-eslint/eslint-plugin": "3.2.0",
+    "@typescript-eslint/parser": "3.2.0",
+    "@vue/cli-plugin-eslint": "4.4.1",
+    "@vue/cli-plugin-typescript": "4.4.1",
+    "@vue/cli-service": "4.4.1",
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/eslint-config-typescript": "5.0.2",
     "@vue/test-utils": "1.0.3",
@@ -85,10 +85,10 @@ limitations under the License.
     "chai-as-promised": "7.1.1",
     "chai-string": "1.5.0",
 <%_ } _%>
-    "copy-webpack-plugin": "6.0.1",
+    "copy-webpack-plugin": "6.0.2",
     "css-loader": "3.5.3",
     "file-loader": "6.0.0",
-    "fork-ts-checker-webpack-plugin": "4.1.4",
+    "fork-ts-checker-webpack-plugin": "4.1.6",
     "friendly-errors-webpack-plugin": "1.7.0",
     "generator-jhipster-vuejs": "<%= blueprintjs.version %>",
     "html-webpack-plugin": "4.3.0",
@@ -101,14 +101,14 @@ limitations under the License.
     "jest-sonar-reporter": "2.0.0",
     "jest-vue-preprocessor": "1.7.1",
     <%_ if (!skipCommitHook) { _%>
-    "lint-staged": "10.2.4",
+    "lint-staged": "10.2.9",
     <%_ } _%>
     "merge-jsons-webpack-plugin": "1.0.21",
 <%_ if (protractorTests) { _%>
     "mocha": "7.1.2",
 <%_ } _%>
     "mini-css-extract-plugin": "0.9.0",
-    "node-notifier": "7.0.0",
+    "node-notifier": "7.0.1",
     "numeral": "2.0.6",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "portfinder": "1.0.26",
@@ -120,20 +120,20 @@ limitations under the License.
     "protractor": "5.4.4",
 <%_ } _%>
     "rimraf": "3.0.2",
-    "sass": "1.26.5",
+    "sass": "1.26.8",
     "sass-loader": "8.0.2",
     "sinon": "9.0.2",
-    "terser-webpack-plugin": "3.0.1",
+    "terser-webpack-plugin": "3.0.3",
     "ts-jest": "26.0.0",
     "ts-loader": "7.0.4",
 <%_ if (protractorTests) { _%>
     "ts-node": "8.10.1",
 <%_ } _%>
     "tslib": "2.0.0",
-    "eslint": "6.7.2",
-    "eslint-plugin-prettier": "3.1.1",
+    "eslint": "7.2.0",
+    "eslint-plugin-prettier": "3.1.3",
     "eslint-plugin-vue": "6.2.2",
-    "typescript": "3.9.3",
+    "typescript": "3.9.5",
     "url-loader": "4.1.0",
     "vue-jest": "3.0.5",
     "vue-loader": "15.9.2",
@@ -145,8 +145,8 @@ limitations under the License.
     "webpack-merge": "4.2.2"
   },
   "engines": {
-    "node": ">= 10.17.0",
-    "npm": ">= 6.13.4"
+    "node": ">= 12.18.0",
+    "npm": ">= 6.14.4"
   },
   <%_ if (!skipCommitHook) { _%>
   "lint-staged": {
