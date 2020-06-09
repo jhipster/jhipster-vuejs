@@ -442,11 +442,16 @@ const vueFiles = {
                 'cypress/integration/e2e/page-objects/signin-page.ts',
                 'cypress/plugins/index.js',
                 'cypress/support/index.js',
-                'cypress/support/users.ts',
+                'cypress/fixtures/integration-test.png'
+            ]
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress') && generator.authenticationType === 'oauth2',
+            path: TEST_SRC_DIR,
+            templates: [
+                'cypress/fixtures/users/user.json',
                 'cypress/support/oauth-keycloak.ts',
-                'cypress/support/oauth-okta.ts',
-                'cypress/fixtures/integration-test.png',
-                'cypress/fixtures/users/user.json'
+                'cypress/support/oauth-okta.ts'
             ]
         },
         {
@@ -460,7 +465,9 @@ const vueFiles = {
                 'cypress/integration/e2e/page-objects/password-page.ts',
                 'cypress/integration/e2e/page-objects/settings-page.ts',
                 'cypress/integration/e2e/page-objects/register-page.ts',
-                'cypress/integration/e2e/page-objects/user-management-page.ts'
+                'cypress/integration/e2e/page-objects/user-management-page.ts',
+                'cypress/support/authentication.ts',
+                'cypress/support/users.ts'
             ]
         }
     ]
