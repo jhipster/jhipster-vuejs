@@ -22,7 +22,7 @@
         "enableSwaggerCodegen": false,
         "clientPackageManager": "npm",
         "applicationType": "monolith",
-        "testFrameworks": ["gatling", "protractor"],
+        "testFrameworks": ["gatling", "cypress"],
         "jhiPrefix": "jhi",
         "travis": true,
         "enableTranslation": true,
