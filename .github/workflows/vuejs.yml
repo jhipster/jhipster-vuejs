@@ -158,4 +158,4 @@ jobs:
             - name: 'TESTS: packaging'
               run: $HOME/$JHI_SCRIPTS_PATH/23-package.sh
             - name: 'TESTS: End-to-End'
-              run: $HOME/$JHI_SCRIPTS_PATH/24-tests-e2e.sh
+              run: $VUEJS_JHI_SCRIPTS/26-tests-e2e-cypress.sh

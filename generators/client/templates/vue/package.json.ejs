@@ -175,6 +175,7 @@ limitations under the License.
 <%_ } else if (e2eTestsFramework.includes('cypress')) { _%>
     "e2e:cypress": "cypress open",
     "e2e:cypress:headed": "cypress run --headed",
+    "e2e:cypress:headless": "cypress run --headless",
 <%_ } _%>
     "jest": "jest --coverage --logHeapUsage --maxWorkers=2 --no-cache --config src/test/javascript/jest.conf.js",
     "jest:update": "<%= clientPackageManager %> run jest <%= optionsForwarder %>--updateSnapshot",

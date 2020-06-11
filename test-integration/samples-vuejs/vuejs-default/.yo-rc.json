@@ -26,7 +26,8 @@
     "languages": [
       "en"
     ],
-    "testFrameworks": ["cypress"],
+    "testFrameworks": [],
+    "e2eTestsFramework": ["cypress"],
     "jhiPrefix": "jhi",
     "clientPackageManager": "npm",
     "nativeLanguage": "en",
