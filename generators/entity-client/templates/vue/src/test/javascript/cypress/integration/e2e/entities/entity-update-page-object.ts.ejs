@@ -84,12 +84,14 @@ export default class <%= entityClass %>UpdatePage {
     }
 
     static set<%= fieldNameCapitalized %>Input(<%= fieldName %>) {
-      return this.clear<%= fieldNameCapitalized %>Input().then($input => {
-        const htmlElementInput = $input.get(0);
-        const currentDateInMinutes = htmlElementInput.value === '' ? 0 : datetimeToMinutes(htmlElementInput.value);
-        htmlElementInput.stepUp(datetimeToMinutes(<%= fieldName %>) - currentDateInMinutes);
+      return this.get<%= fieldNameCapitalized %>Input()
+      .clear()
+      .then(input => {
+        input[0].dispatchEvent(new Event('input', { bubbles: true }))
+        input.val(<%= fieldName %>)
       })
-      .trigger('change', {force: true});
+      .trigger('change', { force: true })
+      .click();
     }
 
     static clear<%= fieldNameCapitalized %>Input() {
@@ -160,10 +162,9 @@ export default class <%= entityClass %>UpdatePage {
       return cy.get('select#<%= entityFileName %>-<%= relationshipName %>');
     }
 
-    static get<%=relationshipNameCapitalized %>SelectLastOption() {
+    static get<%=relationshipNameCapitalized %>SelectOption() {
       return this.get<%=relationshipNameCapitalized %>Select()
-                  .find('option')
-                  .last.click();
+                  .select('4');
     }
 
     static get<%=relationshipNameCapitalized %>SelectOption(option) {

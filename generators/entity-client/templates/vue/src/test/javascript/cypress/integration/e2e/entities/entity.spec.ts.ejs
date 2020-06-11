@@ -25,9 +25,6 @@ import { <%= entityClass %>DeleteDialog } from './<%= entityFileName %>.page-obj
 import <%= entityClass %>UpdatePage from './<%= entityFileName%>-update.page-object';
 import <%= entityClass %>DetailsPage from './<%= entityFileName%>-details.page-object';
 import { getIdSortButton, getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityParentPathAddition %>util/utils';
-<%_ if (fieldsContainBlobOrImage) { _%>
-import path from 'path';
-<%_ } _%>
 <%_
 const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
 let openBlockComment = ``;
@@ -41,11 +38,6 @@ for (let relationship of relationships) {
 } _%>
 
 describe('<%= entityClass %> e2e test', () => {
-  <%_ if (fieldsContainBlobOrImage) { _%>
-  const fileToUpload = '../../../../../<%= entityParentPathAddition %>main/webapp/content/images/logo-jhipster.png';
-  const absolutePath = path.resolve(__dirname, fileToUpload);
-  <%_ } _%>
-
   let startingEntitiesCount = 0;
 
   before(() => {
@@ -115,8 +107,6 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
    <%= openBlockComment %> it('should create and save <%= entityClassPlural %>', () => {
-    cy.server();
-    cy.route('POST', '/<%= baseApi + entityApiUrl %>').as('saveEntityRequest');
 
     <%_ fields.forEach((field) => {
       const fieldName = field.fieldName;
@@ -163,15 +153,13 @@ describe('<%= entityClass %> e2e test', () => {
       const ownerSide = relationship.ownerSide;
       const relationshipName = relationship.relationshipName; _%>
     <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
-    // <%= entityClass %>UpdatePage.<%=relationshipName %>SelectLastOption();
+     <%= entityClass %>UpdatePage.<%=relationshipName %>SelectOption();
     <%_ } else if ((relationshipType === 'many-to-many' && ownerSide === true)) { _%>
-    // <%= entityClass %>UpdatePage.<%=relationshipName %>SelectLastOption();
+     <%= entityClass %>UpdatePage.<%=relationshipName %>SelectOption();
     <%_ } _%>
     <%_ }); _%>
 
     <%= entityClass %>UpdatePage.save();
-
-    cy.wait('@saveEntityRequest');
 
     <%= entityClass %>UpdatePage.getSaveButton().should('not.exist');
 
