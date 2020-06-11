@@ -167,11 +167,6 @@ export default class <%= entityClass %>UpdatePage {
                   .select('4');
     }
 
-    static get<%=relationshipNameCapitalized %>SelectOption(option) {
-      return this.get<%=relationshipNameCapitalized %>Select()
-                  .type(option);
-    }
-
     static get<%=relationshipNameCapitalized %>SelectedOption() {
         return this.get<%=relationshipNameCapitalized %>Select()
                     .find('option:checked')
