@@ -153,9 +153,9 @@ describe('<%= entityClass %> e2e test', () => {
       const ownerSide = relationship.ownerSide;
       const relationshipName = relationship.relationshipName; _%>
     <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
-     <%= entityClass %>UpdatePage.get<%=relationshipName %>SelectOption();
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectOption();
     <%_ } else if ((relationshipType === 'many-to-many' && ownerSide === true)) { _%>
-     <%= entityClass %>UpdatePage.get<%=relationshipName %>SelectOption();
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectOption();
     <%_ } _%>
     <%_ }); _%>
 
