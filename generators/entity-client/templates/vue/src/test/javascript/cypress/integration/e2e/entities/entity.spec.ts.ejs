@@ -1,21 +1,3 @@
-<%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
-
- This file is part of the JHipster project, see https://www.jhipster.tech/
- for more information.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--%>
 /* tslint:disable no-unused-expression */
 
 import NavBarPage from './../../<%= entityParentPathAddition %>page-objects/navbar-page';
@@ -41,6 +23,8 @@ describe('<%= entityClass %> e2e test', () => {
   let startingEntitiesCount = 0;
 
   before(() => {
+    cy.createAndActivateUserUsing('user-entity', 'user-entity@localhost.jh', 'user-entity');
+
     cy.server();
     cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
     cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
@@ -106,8 +90,7 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ } _%>
   });
 
-   <%= openBlockComment %> it('should create and save <%= entityClassPlural %>', () => {
-
+   it('should create and save <%= entityClassPlural %>', () => {
     <%_ fields.forEach((field) => {
       const fieldName = field.fieldName;
       const fieldNameCapitalized = field.fieldNameCapitalized;
@@ -151,11 +134,12 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ relationships.forEach((relationship) => {
       const relationshipType = relationship.relationshipType;
       const ownerSide = relationship.ownerSide;
-      const relationshipName = relationship.relationshipName; _%>
+      const relationshipName = relationship.relationshipName;
+      const relationshipNameCapitalized = relationship.relationshipNameCapitalized;_%>
     <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
-     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectOption();
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectLastOption();
     <%_ } else if ((relationshipType === 'many-to-many' && ownerSide === true)) { _%>
-     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectOption();
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectLastOption();
     <%_ } _%>
     <%_ }); _%>
 
@@ -167,7 +151,7 @@ describe('<%= entityClass %> e2e test', () => {
     getSuccessToast().should('exist');
 
     <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount + 1);
-  });<%= closeBlockComment %>
+  });
 
   it('should load details <%= entityClass %> page and fetch data', () => {
     <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
@@ -249,7 +233,7 @@ describe('<%= entityClass %> e2e test', () => {
     getInfoToast().should('exist');
   });
 
-  <%= openBlockComment %> it('should delete last <%= entityClass %>', () => {
+  it('should delete last <%= entityClass %>', () => {
     cy.server();
     cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
 
@@ -278,9 +262,10 @@ describe('<%= entityClass %> e2e test', () => {
     }
     // Danger toast should appear
     getDangerToast().should('exist')
-  });<%= closeBlockComment %>
+  });
 
   after(() => {
+    cy.cleanUsers();
     NavBarPage.autoSignOut();
   });
 });

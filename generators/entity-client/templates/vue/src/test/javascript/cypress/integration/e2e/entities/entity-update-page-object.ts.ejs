@@ -162,9 +162,12 @@ export default class <%= entityClass %>UpdatePage {
       return cy.get('select#<%= entityFileName %>-<%= relationshipName %>');
     }
 
-    static get<%=relationshipNameCapitalized %>SelectOption() {
-      return this.get<%=relationshipNameCapitalized %>Select()
-                  .select('4');
+    static get<%=relationshipNameCapitalized %>SelectLastOption() {
+      return cy.get('select#<%= entityFileName %>-<%= relationshipName %> option').then((options : any) => {
+        const elements = [...options].map(o => o.text);
+        const lastElement = elements.length - 1;
+        this.get<%=relationshipNameCapitalized %>Select().select(elements[lastElement])
+      });
     }
 
     static get<%=relationshipNameCapitalized %>SelectedOption() {
