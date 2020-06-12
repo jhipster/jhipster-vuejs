@@ -23,7 +23,9 @@ describe('<%= entityClass %> e2e test', () => {
   let startingEntitiesCount = 0;
 
   before(() => {
+    <%_ if (authenticationType !== 'oauth2') { _%>
     cy.createAndActivateUserUsing('user-entity', 'user-entity@localhost.jh', 'user-entity');
+    <%_ } _%>
 
     cy.server();
     cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
@@ -126,6 +128,9 @@ describe('<%= entityClass %> e2e test', () => {
     <%_ } else if (fieldType === 'UUID'){ _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade974').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade974/);
 
+    <%_ } else if(fieldType === 'String' && fieldName.toLowerCase().includes('number')){ _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5').should('have.value', '5');
+
     <%_ } else { _%>
     <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>').invoke('val').should('match', /<%= fieldName %>/);
 
@@ -217,9 +222,9 @@ describe('<%= entityClass %> e2e test', () => {
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
       <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade978').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade978/);
 
-    <%_ } else if (!fieldIsEnum && !['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
+    <%_ } else if(fieldType === 'String' && fieldName.toLowerCase().includes('number')){ _%>
       <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
-      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('modified').invoke('val').should('match', /modified/);
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('8').should('have.value', '8');
 
     <%_ } _%>
     <%_ }); _%>
@@ -265,7 +270,9 @@ describe('<%= entityClass %> e2e test', () => {
   });
 
   after(() => {
+    <%_ if (authenticationType !== 'oauth2') { _%>
     cy.cleanUsers();
+    <%_ } _%>
     NavBarPage.autoSignOut();
   });
 });
