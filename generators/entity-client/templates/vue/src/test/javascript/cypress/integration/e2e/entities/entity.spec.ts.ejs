@@ -164,19 +164,21 @@ describe('<%= entityClass %> e2e test', () => {
   <%= closeBlockComment %>
 
   it('should load details <%= entityClass %> page and fetch data', () => {
-    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
-    getIdSortButton().click();
+    <%_ if (startingEntitiesCount > 0) { _%>
+      <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+      getIdSortButton().click();
+      <%_ } _%>
+      <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
+
+      <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
+      <%= entityClass %>UpdatePage.getFooter().should('exist');
+      <%= entityClass %>DetailsPage.getBackButton().should('exist');
+
+      <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
+
+      <%= entityClass %>DetailsPage.getBackButton().click();
+      cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount + 1);
     <%_ } _%>
-    <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
-
-    <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
-    <%= entityClass %>UpdatePage.getFooter().should('exist');
-    <%= entityClass %>DetailsPage.getBackButton().should('exist');
-
-    <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
-
-    <%= entityClass %>DetailsPage.getBackButton().click();
-    cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount + 1);
   });
 
   <%= openBlockComment %>
