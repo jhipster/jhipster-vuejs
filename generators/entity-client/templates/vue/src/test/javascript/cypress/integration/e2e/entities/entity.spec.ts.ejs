@@ -177,7 +177,7 @@ describe('<%= entityClass %> e2e test', () => {
       <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
 
       <%= entityClass %>DetailsPage.getBackButton().click();
-      cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount + 1);
+      cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount);
     }
   });
 
