@@ -186,6 +186,17 @@ export default class <%= entityAngularName %>Update extends <% if (fieldsContain
       return null;
     }
 
+    public convertDateTimeArrayFromServer(dates: Date[]): string[] {
+      if (dates) {
+        const convertedDates = [];
+        dates.forEach(date => {
+          convertedDates.push(format(date, DATE_TIME_LONG_FORMAT));
+        });
+        return convertedDates;
+      }
+      return null;
+    }
+
     public updateInstantField(field, event) {
       if (event.target.value) {
         this.<%= entityInstance %>[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
