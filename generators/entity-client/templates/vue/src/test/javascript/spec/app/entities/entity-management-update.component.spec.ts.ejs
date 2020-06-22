@@ -144,6 +144,10 @@ describe('Component Tests', () => {
         expect(convertedDates).toEqual(exceptedDates);   
       });
 
+      it('Should not map dates if dates are not present', () => {
+        expect(comp.mapAllDatesFromServer(null)).toBeNull();
+      });
+
       it('Should not convert date if date is not present', () => {
         expect(comp.convertDateTimeFromServer(null)).toBeNull();
       });
