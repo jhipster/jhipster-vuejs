@@ -130,6 +130,20 @@ describe('Component Tests', () => {
         expect(convertedDate).toEqual(format(date, DATE_TIME_LONG_FORMAT));
       });
 
+      it('Should map all dates from server', () => {
+        // GIVEN
+        const date1 = new Date('2020-10-15T11:42:02Z');
+        const date2 = new Date('2020-11-15T11:42:02Z');
+        const date3 = new Date('2020-12-15T11:42:02Z');
+        const dates = [date1, date2, date3];
+        // WHEN
+        const convertedDates = comp.mapAllDatesFromServer(dates);
+        
+        // THEN
+        const exceptedDates = dates.map(date => format(date, DATE_TIME_LONG_FORMAT));
+        expect(convertedDates).toEqual(exceptedDates);   
+      });
+
       it('Should not convert date if date is not present', () => {
         expect(comp.convertDateTimeFromServer(null)).toBeNull();
       });
