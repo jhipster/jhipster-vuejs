@@ -1,0 +1,64 @@
+import NavBarPage from '../../page-objects/navbar-page';
+import SignInPage from '../../page-objects/signin-page';
+import UserManagementPage, {
+  userDeleteModalPageSelector,
+  userEditPageSelector,
+  userEditEmailSelector,
+  userEditSaveSelector,
+  userDetailsPageSelector,
+  userDetailsLoginSelector
+} from '../../page-objects/user-management-page';
+import { getInfoToast, getDangerToast } from '../../util/utils';
+
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
+describe('User Management', () => {
+
+    beforeEach(() => {
+        cy.cleanUsers();
+        cy.logout();
+        cy.visit('/');
+        NavBarPage.getSignInPage();
+        SignInPage.autoSignInUsing('admin', 'admin');
+        NavBarPage.clickOnAdminMenuItem('user-management');
+    });
+
+    it('should be able to activate deactivated user', () => {
+      cy.registerUserUsing('user-deactivated', 'user-deactivated@localhost.jh', 'user-deactivated');
+      cy.reload();
+      UserManagementPage.getUserDeactivateButtonByLogin('user-deactivated').click();
+      UserManagementPage.getUserActivateButtonByLogin('user-deactivated').should('exist');
+    });
+
+    it('should preview details from user', () => {
+      cy.registerUserUsing('user-deactivated', 'user-deactivated@localhost.jh', 'user-deactivated');
+      cy.reload();
+      UserManagementPage.getUserDetailsButtonByLogin('user-deactivated').click();
+      cy.get(userDetailsPageSelector).find(userDetailsLoginSelector).contains('user-deactivated');
+    });
+
+    it('should edit details from user', () => {
+      cy.registerUserUsing('user-deactivated', 'user-deactivated@localhost.jh', 'user-deactivated');
+      cy.reload();
+      UserManagementPage.getUserEditButtonByLogin('user-deactivated').click();
+
+      cy.get(userEditPageSelector).find(userEditEmailSelector).should('have.value', 'user-deactivated@localhost.jh');
+      cy.get(userEditPageSelector).find(userEditEmailSelector).type('ipster');
+      cy.get(userEditPageSelector).find(userEditSaveSelector).click();
+
+      getInfoToast().should('exist');
+      UserManagementPage.getUserEmailByLogin('user-deactivated').contains('user-deactivated@localhost.jhipster');
+    });
+
+    it('should be able to delete existing user', () => {
+      cy.registerUserUsing('user-to-delete', 'user-to-delete@localhost.jh', 'user-to-delete');
+      cy.reload();
+
+      UserManagementPage.getUserDeleteButtonByLogin('user-to-delete').click();
+      cy.get(userDeleteModalPageSelector).find('button').contains('Delete').click();
+
+      cy.get(userDeleteModalPageSelector).should('not.be.visible');
+      getDangerToast().should('exist');
+    });
+});

@@ -1,0 +1,89 @@
+import BasePage from './base-component';
+
+export const loginPageSelector = '[data-cy=login-page]';
+export const registerFormSelector = '[data-cy=register-form]';
+export const loginTitleSelector = '[data-cy=login-title]';
+export const usernameSelector = '[data-cy=login-username]';
+export const passwordSelector = '[data-cy=login-password]';
+export const submitSelector = '[data-cy=login-submit]';
+export const loginAlertSelector = '[data-cy=login-alert]';
+
+export default class SignInPage extends BasePage {
+  static getSelf() {
+    return cy.get(registerFormSelector);
+  }
+
+  static get() {
+    return cy.visit('/login');
+  }
+
+  static getTitleElement() {
+    return cy.get(loginTitleSelector);
+  }
+
+  static getUsernameElement() {
+    return cy.get(usernameSelector);
+  }
+
+  static getUsernameOauthElement() {
+    return cy.get('#username');
+  }
+
+  static getPasswordElement() {
+    return cy.get(passwordSelector);
+  }
+
+  static getLoginButton() {
+<%_ if (authenticationType !== 'oauth2') { _%>
+    return cy.get('button[type=submit]');
+<%_ } else {_%>
+    return cy.get('input[type=submit]');
+<%_ } _%>
+  }
+
+  static getTitle() {
+    return this.getTitleElement().invoke('attr', 'id');
+  }
+
+  static setUserName(username: string) {
+    return this.getUsernameElement().type(username);
+  }
+
+  static clearUserName() {
+    return this.getUsernameElement().clear();
+  }
+
+  static setPassword(password: string) {
+    return this.getPasswordElement().type(password);
+  }
+
+  static clearPassword() {
+    return this.getPasswordElement().clear();
+  }
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+  static autoSignInUsing(username: string, password: string) {
+    this.setUserName(username);
+    this.setPassword(password);
+    return this.login();
+  }
+<%_ } else { _%>
+  static loginWithOAuth(username: string, password: string) {
+    this.getUsernameOauthElement().then($usernameElement => {
+      if ($usernameElement.length) {
+        this.setUserName(username);
+        this.setPassword(password);
+        this.login();
+      }
+    });
+  }
+<%_ } _%>
+
+  static autoSignOut() {
+    return cy.visit('/logout');
+  }
+
+  static login() {
+    return this.getLoginButton().click();
+  }
+}

@@ -67,7 +67,8 @@
             "uz-Latn-uz",
             "vi"
         ],
-        "testFrameworks": ["protractor"],
+        "testFrameworks": [],
+        "e2eTestsFramework": ["cypress"],
         "jhiPrefix": "jhi",
         "clientPackageManager": "npm",
         "nativeLanguage": "en",

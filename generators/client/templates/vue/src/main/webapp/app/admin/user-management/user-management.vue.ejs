@@ -33,16 +33,16 @@
                   <th></th>
                 </tr>
                 </thead>
-                <tbody v-if ="users">
+                <tbody v-if ="users" data-cy=users-table-body>
                     <tr v-for="user in users" :key="user.id" :id="user.login">
                         <td><router-link tag="a" :to="{name: '<%= jhiPrefixCapitalized %>UserView', params: {userId: user.login}}">{{user.id}}</router-link></td>
                         <td>{{user.login}}</td>
-                        <td class="jhi-user-email">{{user.email}}</td>
+                        <td class="jhi-user-email" data-cy=email>{{user.email}}</td>
                         <td>
                             <button class="btn btn-danger btn-sm deactivated" v-on:click="setActive(user, true)" v-if="!user.activated"
-                                    v-text="$t('userManagement.deactivated')">Deactivated</button>
+                                    v-text="$t('userManagement.deactivated')" data-cy=deactivate-button>Deactivated</button>
                             <button class="btn btn-success btn-sm" v-on:click="setActive(user, false)" v-if="user.activated"
-                                    :disabled="username === user.login" v-text="$t('userManagement.activated')">Activated</button>
+                                    :disabled="username === user.login" v-text="$t('userManagement.activated')" data-cy=activate-button>Activated</button>
                         </td>
                         <% if (enableTranslation) { %><td>{{user.langKey}}</td><% } %>
                         <td>
@@ -65,25 +65,25 @@
                             <div class="btn-group">
                                 <router-link :to="{name: '<%= jhiPrefixCapitalized %>UserView', params: {userId: user.login}}" tag="button" class="btn btn-info btn-sm details">
                                     <font-awesome-icon icon="eye"></font-awesome-icon>
-                                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')" data-cy=detail-button>View</span>
                                 </router-link>
                                 <router-link :to="{name: '<%= jhiPrefixCapitalized %>UserEdit', params: {userId: user.login}}"  tag="button" class="btn btn-primary btn-sm edit">
                                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')" data-cy=edit-button>Edit</span>
                                 </router-link>
                                 <b-button v-on:click="prepareRemove(user)"
                                        variant="danger"
                                        class="btn btn-sm delete"
                                        :disabled="username === user.login">
                                     <font-awesome-icon icon="times"></font-awesome-icon>
-                                    <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                    <span class="d-none d-md-inline" v-text="$t('entity.action.delete')" data-cy=delete-button>Delete</span>
                                 </b-button>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <b-modal ref="removeUser" id="removeUser" title="Confirm delete operation" v-bind:title="$t('entity.delete.title')" @ok="deleteUser()">
+            <b-modal ref="removeUser" id="removeUser" title="Confirm delete operation" v-bind:title="$t('entity.delete.title')" @ok="deleteUser()" data-cy=user-delete-modal>
                 <div class="modal-body">
                     <p id="<%= jhiPrefixDashed %>-delete-user-heading" v-text="$t('userManagement.delete.question', { 'login': removeId})">Are you sure you want to delete this user?</p>
                 </div>

@@ -24,6 +24,7 @@ module.exports = class extends ClientGenerator {
         this.blueprintjs = blueprintPackagejs;
         this.clientTheme = this.config.get('clientTheme') || 'none';
         this.clientThemeVariant = this.config.get('clientThemeVariant') || '';
+        this.e2eTestsFramework = this.config.get('e2eTestsFramework') || [];
         // This sets up options for this sub generator and is being reused from JHipster
         jhContext.setupClientOptions(this, jhContext);
     }
@@ -75,11 +76,14 @@ module.exports = class extends ClientGenerator {
             askForClient: prompts.askForClient,
             askForClientTheme: mainPrompts.askForClientTheme,
             askForClientThemeVariant: mainPrompts.askForClientThemeVariant,
+            askForE2eTestsFramework: prompts.askForE2eTestsFramework,
 
             setSharedConfigOptions() {
                 this.configOptions.clientFramework = this.clientFramework;
                 this.configOptions.clientTheme = this.clientTheme;
                 this.configOptions.clientThemeVariant = this.clientThemeVariant;
+                this.configOptions.e2eTestsFramework = this.askForE2eTestsFramework;
+                this.config.set('e2eTestsFramework', this.e2eTestsFramework);
             }
         };
     }

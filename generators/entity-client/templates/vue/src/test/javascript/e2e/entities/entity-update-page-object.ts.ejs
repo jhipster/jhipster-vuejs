@@ -16,10 +16,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
+
 import {by, element, ElementFinder} from 'protractor';
-
 import AlertPage from '<% if (clientRootFolder && !skipUiGrouping) { %>../<% } %>../../page-objects/alert-page';
-
 
 <%_
 let elementGetter = `getText()`;

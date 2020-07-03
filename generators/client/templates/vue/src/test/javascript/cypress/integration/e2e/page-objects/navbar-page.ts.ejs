@@ -1,0 +1,99 @@
+import BasePage from './base-component';
+import SignInPage from './signin-page';
+
+export const headerSelector = '[data-cy=app-header]';
+export const headerTabsSelector = '[data-cy=header-tabs]';
+export const navbarSelector = '[data-cy=navbar]';
+export const adminMenuSelector = '[data-cy=admin-menu]';
+export const accountMenuSelector = '[data-cy=account-menu]';
+export const loginSelector = '[data-cy=login]';
+export const logoutSelector = '[data-cy=logout]';
+export const entityMenuSelector = '[data-cy=entity-menu]';
+export const registerSelector = '[data-cy=register]';
+
+export default class NavBarPage extends BasePage {
+  static getSelf() {
+    return cy.get(headerSelector);
+  }
+
+  static getAdminMenuElement() {
+    return cy.get(adminMenuSelector);
+  }
+
+  static getAccountMenuElement() {
+    return cy.get(accountMenuSelector);
+  }
+
+  static getEntityMenuElement() {
+    return cy.get(entityMenuSelector);
+  }
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+  static getPasswordPage() {
+    return this.clickOnAccountMenuItem('password');
+  }
+
+  static getSettingsPage() {
+    return this.clickOnAccountMenuItem('settings');
+  }
+
+  static getRegisterPage() {
+    this.clickOnAccountMenu();
+    return this.clickOnTabMenu(registerSelector);
+  }
+
+<%_ } _%>
+  static getSignInPage() {
+    this.clickOnAccountMenu();
+    return this.clickOnTabMenu(loginSelector);
+  }
+
+  static getEntityPage(entityName: string) {
+    this.clickOnEntityMenu();
+    return this.clickOnEntity(entityName);
+  }
+
+  static clickOnTabMenu(item: string) {
+    return cy.get(headerTabsSelector)
+      .get(`.dropdown-menu ${item}`)
+      .click();
+  }
+
+  static clickOnAccountMenu() {
+    return this.getAccountMenuElement().click();
+  }
+
+  static clickOnRegisterItem() {
+    return cy.get(navbarSelector).find(accountMenuSelector).click().find(registerSelector).click();
+  }
+
+  static clickOnAccountMenuItem(item: string) {
+    return this.clickOnAccountMenu().get(`.dropdown-item[href="/account/${item}"]`).click();
+  }
+
+  static clickOnAdminMenuItem(item: string) {
+    return this.getAdminMenuElement().click().get(`.dropdown-item[href="/admin/${item}"]`).click();
+  }
+
+  static clickOnEntityMenu() {
+    return this.getEntityMenuElement().click();
+  }
+
+  static clickOnEntity(entityName: string) {
+    return cy.get(`.dropdown-item[href="/${entityName}"]`).click({ force: true });
+  }
+
+  static autoSignIn() {
+    SignInPage.getSelf();
+  <%_ if (authenticationType !== 'oauth2') { _%>
+    SignInPage.autoSignInUsing('admin', 'admin');
+  <%_ } else { _%>
+    SignInPage.loginWithOAuth('admin', 'admin');
+  <%_ } _%>
+  }
+
+  static autoSignOut() {
+    this.clickOnAccountMenu();
+    this.clickOnTabMenu(logoutSelector);
+  }
+}

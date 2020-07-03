@@ -42,37 +42,14 @@ fi
 # Install JHipster Generator
 #-------------------------------------------------------------------------------
 cd "$HOME"
-if [[ "$JHI_REPO" == *"/generator-jhipster" ]]; then
-    echo "*** generator-jhipster: use local version at JHI_REPO=$JHI_REPO"
+echo "*** generator-jhipster: JHI_GEN_REPO=$JHI_GEN_REPO with JHI_GEN_BRANCH=$JHI_GEN_BRANCH"
+git clone "$JHI_GEN_REPO" generator-jhipster
+cd generator-jhipster
+git checkout "$JHI_GEN_BRANCH"
+git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
-    cd "$JHI_HOME"
-    git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-
-    npm ci
-    npm link
-    if [[ "$JHI_APP" == "" || "$JHI_APP" == "ngx-default" ]]; then
-        npm test
-    fi
-
-elif [[ "$JHI_GEN_BRANCH" == "release" ]]; then
-    echo "*** generator-jhipster: use release version"
-    npm install -g generator-jhipster
-
-else
-    echo "*** generator-jhipster: JHI_GEN_REPO=$JHI_GEN_REPO with JHI_GEN_BRANCH=$JHI_GEN_BRANCH"
-    git clone "$JHI_GEN_REPO" generator-jhipster
-    cd generator-jhipster
-    if [ "$JHI_GEN_BRANCH" == "latest" ]; then
-        LATEST=$(git describe --abbrev=0)
-        git checkout "$LATEST"
-    elif [ "$JHI_GEN_BRANCH" != "master" ]; then
-        git checkout "$JHI_GEN_BRANCH"
-    fi
-    git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-
-    npm ci
-    npm link
-fi
+npm ci
+npm link
 
 #-------------------------------------------------------------------------------
 # Override config

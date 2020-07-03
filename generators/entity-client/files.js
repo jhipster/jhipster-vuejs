@@ -142,6 +142,28 @@ const vueFiles = {
                     renameTo: generator => `e2e/entities/${generator.entityFolderName}/${generator.entityFileName}-update.page-object.ts`
                 }
             ]
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
+            path: CLIENT_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'cypress/integration/e2e/entities/entity-page-object.ts',
+                    renameTo: generator => `cypress/integration/e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.page-object.ts`
+                },
+                {
+                    file: 'cypress/integration/e2e/entities/entity.spec.ts',
+                    renameTo: generator => `cypress/integration/e2e/entities/${generator.entityFolderName}/${generator.entityFileName}.spec.ts`
+                },
+                {
+                    file: 'cypress/integration/e2e/entities/entity-details-page-object.ts',
+                    renameTo: generator => `cypress/integration/e2e/entities/${generator.entityFolderName}/${generator.entityFileName}-details.page-object.ts`
+                },
+                {
+                    file: 'cypress/integration/e2e/entities/entity-update-page-object.ts',
+                    renameTo: generator => `cypress/integration/e2e/entities/${generator.entityFolderName}/${generator.entityFileName}-update.page-object.ts`
+                }
+            ]
         }
     ]
 };

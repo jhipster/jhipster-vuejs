@@ -1,0 +1,45 @@
+import BasePage from './base-component';
+
+export const usersTableBody = '[data-cy=users-table-body]';
+export const userDeleteModalPageSelector = '[data-cy=user-delete-modal]';
+export const userActivateButtonSelector = '[data-cy=activate-button]';
+export const userDeactivateButtonSelector = '[data-cy=deactivate-button]';
+export const userDeleteButtonSelector = '[data-cy=delete-button]';
+export const userDetailButtonSelector = '[data-cy=detail-button]';
+export const userEditButtonSelector = '[data-cy=edit-button]';
+export const userEmailSelector = '[data-cy=email]';
+
+// User edit page
+export const userEditPageSelector = '[data-cy=user-edit-page]';
+export const userEditEmailSelector = '[data-cy=email]';
+export const userEditSaveSelector = '[data-cy=save]';
+
+// User details page
+export const userDetailsPageSelector = '[data-cy=user-details-page]';
+export const userDetailsLoginSelector = '[data-cy=user-login]';
+
+export default class UserManagement extends BasePage {
+  static getUserDeactivateButtonByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userDeactivateButtonSelector);
+  }
+
+  static getUserActivateButtonByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userActivateButtonSelector);
+  }
+
+  static getUserDeleteButtonByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userDeleteButtonSelector);
+  }
+
+  static getUserDetailsButtonByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userDetailButtonSelector);
+  }
+
+  static getUserEditButtonByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userEditButtonSelector);
+  }
+
+  static getUserEmailByLogin(login: string) {
+    return cy.get(usersTableBody).find('#' + login).find(userEmailSelector);
+  }
+}

@@ -1,0 +1,94 @@
+export const accountMenuSelector = '[data-cy=account-menu]';
+
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
+
+<%_ if (authenticationType == 'jwt') { _%>
+Cypress.Commands.add('loginUsing', (username: string, password: string) => {
+  return cy
+    .request({
+      method: 'POST',
+      url: '/<%= baseApi %>authenticate',
+      body: {
+        username,
+        password,
+        rememberMe: null
+      }
+    })
+    .then((result: any) => {
+      const bearerToken = result.headers.authorization;
+      if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+        window.sessionStorage.setItem('jhi-authenticationToken', bearerToken.slice(7, bearerToken.length));
+      }
+    });
+});
+
+Cypress.Commands.add('logout', () => {
+  window.sessionStorage.removeItem('jhi-authenticationToken');
+  window.localStorage.removeItem('jhi-authenticationToken');
+});
+<%_ } else if (authenticationType === 'session') { _%>
+  Cypress.Commands.add('loginUsing', (username: string, password: string) => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi %>account').as('accountRequest');
+    return cy.getXsrfToken().then((cookie: any) => {
+      cy
+      .request({
+        method: 'POST',
+        url: '/<%= baseApi %>authentication',
+        body: {
+          username,
+          password
+        },
+        form: true,
+        headers: {
+          'X-XSRF-TOKEN': cookie.value
+        }
+      })
+      .then((result: any) => {
+        const bearerToken = result.headers.authorization;
+        if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+          window.sessionStorage.setItem('jhi-authenticationToken', bearerToken.slice(7, bearerToken.length));
+        }
+      });
+    });
+  });
+
+  Cypress.Commands.add('getXsrfToken', () => {
+    return cy.getCookie('XSRF-TOKEN').then(cookieApp => {
+      if (cookieApp === null) {
+        cy.visit('/');
+        cy.getCookie('XSRF-TOKEN').then(cookieApp2 => {
+          return cookieApp2;
+        });
+      } else {
+        return cookieApp;
+      }
+    })
+  });
+
+  Cypress.Commands.add('logout', () => {
+    cy.clearCookie('JSESSIONID');
+  });
+<%_ } _%>
+
+Cypress.Commands.add('loginWithAdmin', () => {
+  return cy.loginUsing('admin', 'admin');
+});
+
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      logout(): void;
+      loginUsing(username: string, password: string): Cypress.Chainable;
+      loginWithAdmin(): Cypress.Chainable;
+      <%_ if (authenticationType === 'session') { _%>
+        getXsrfToken(): Cypress.Chainable<Cookie | null>;
+      <%_ } _%>
+    }
+  }
+}
+
+// Convert this to a module instead of script (allows import/export)
+export {};

@@ -1,0 +1,61 @@
+import BasePage from './base-component';
+
+export const settingsFormSelector = '[data-cy=settings-form]';
+export const settingsTitleSelector = '[data-cy=settings-title]';
+export const firstNameSelector = '[data-cy=settings-firstName]';
+export const lastNameSelector = '[data-cy=settings-lastName]';
+export const emailSelector = '[data-cy=settings-email]';
+
+export default class SettingsPage extends BasePage {
+    static getSelf() {
+        return cy.get(settingsFormSelector);
+    }
+
+    static get() {
+        return cy.visit('/account/settings');
+    }
+
+    static getTitleElement() {
+        return cy.get(settingsTitleSelector);
+    }
+
+    static getFirstNameElement() {
+        return cy.get(firstNameSelector);
+    }
+
+    static getLastNameElement() {
+        return cy.get(lastNameSelector);
+    }
+
+    static getEmailElement() {
+        return cy.get(emailSelector);
+    }
+
+    static getSaveButton() {
+        return cy.get('button[type=submit]');
+    }
+
+    static getTitle() {
+        return this.getTitleElement().invoke('attr', 'id');
+    }
+
+    static setFirstName(firstName: string) {
+        return this.getFirstNameElement().type(firstName);
+    }
+
+    static setLastName(lastName: string) {
+        return this.getLastNameElement().type(lastName);
+    }
+
+    static setEmail(email: string) {
+        return this.getEmailElement().type(email);
+    }
+
+    static clearEmail() {
+        return this.getEmailElement().clear();
+    }
+
+    static save() {
+        return this.getSaveButton().click();
+    }
+}

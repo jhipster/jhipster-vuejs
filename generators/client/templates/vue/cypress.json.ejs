@@ -1,0 +1,30 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "testFiles": "**/*.spec.ts",
+  "supportFile": "src/test/javascript/cypress/support/index.ts",
+  "video": false,
+  "integrationFolder": "src/test/javascript/cypress/integration",
+  "fixturesFolder": "src/test/javascript/cypress/fixtures",
+  "pluginsFile": "src/test/javascript/cypress/plugins/index.ts",
+  "screenshotsFolder": "src/test/javascript/cypress/screenshots"<%_ if (authenticationType === 'oauth2') { _%>,
+  "chromeWebSecurity": false,
+  "env": {
+    "auth_base_url": "http://localhost:9080/auth",
+    "auth_realm": "jhipster",
+    "auth_client_id": "web_app",
+
+    "_comment": "Next fields are for Okta.",
+
+    "issuer": "to complete",
+    "authorization_endpoint": "to complete",
+    "token_endpoint": "to complete",
+    "username": "to complete",
+    "password": "to complete",
+    "client_id": "to complete",
+    "client_secret": "to complete",
+    "redirect_uri": "http://localhost:8080/",
+    "end_session_endpoint": "to complete",
+    "state": "to complete"
+  },
+  <%_ } _%>
+}

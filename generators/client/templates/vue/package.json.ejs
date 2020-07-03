@@ -82,6 +82,9 @@ limitations under the License.
 <%_ } _%>
     "copy-webpack-plugin": "6.0.1",
     "css-loader": "3.5.3",
+<%_ if (e2eTestsFramework.includes('cypress')) { _%>
+    "cypress": "4.9.0",
+<%_ } _%>
     "file-loader": "6.0.0",
     "fork-ts-checker-webpack-plugin": "4.1.4",
     "friendly-errors-webpack-plugin": "1.7.0",
@@ -166,8 +169,12 @@ limitations under the License.
     "serve": "<%= clientPackageManager %> run start",
     "build": "<%= clientPackageManager %> run webpack:prod",
 <%_ if (protractorTests) { _%>
-    "e2e": "protractor src/test/javascript/protractor.conf.js",
+    "e2e:protractor": "protractor src/test/javascript/protractor.conf.js",
     "postinstall": "webdriver-manager update --gecko false",
+<%_ } else if (e2eTestsFramework.includes('cypress')) { _%>
+    "cypress": "cypress open",
+    "cypress:headed": "cypress run --headed",
+    "cypress:headless": "cypress run --headless",
 <%_ } _%>
     "jest": "jest --coverage --logHeapUsage --maxWorkers=2 --no-cache --config src/test/javascript/jest.conf.js",
     "jest:update": "<%= clientPackageManager %> run jest <%= optionsForwarder %>--updateSnapshot",

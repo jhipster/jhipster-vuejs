@@ -52,6 +52,10 @@ const vueFiles = {
         {
             condition: generator => generator.protractorTests,
             templates: ['tsconfig.e2e.json']
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
+            templates: ['cypress.json']
         }
     ],
     image: [
@@ -423,6 +427,47 @@ const vueFiles = {
                 'e2e/page-objects/password-page.ts',
                 'e2e/page-objects/settings-page.ts',
                 'e2e/page-objects/register-page.ts'
+            ]
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress'),
+            path: TEST_SRC_DIR,
+            templates: [
+                'cypress/tsconfig.json',
+                'cypress/integration/e2e/modules/account/login.spec.ts',
+                'cypress/integration/e2e/modules/administration/administration.spec.ts',
+                'cypress/integration/e2e/util/utils.ts',
+                'cypress/integration/e2e/page-objects/base-component.ts',
+                'cypress/integration/e2e/page-objects/navbar-page.ts',
+                'cypress/integration/e2e/page-objects/signin-page.ts',
+                'cypress/plugins/index.ts',
+                'cypress/support/index.ts',
+                'cypress/fixtures/integration-test.png'
+            ]
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress') && generator.authenticationType === 'oauth2',
+            path: TEST_SRC_DIR,
+            templates: [
+                'cypress/fixtures/users/user.json',
+                'cypress/support/oauth-keycloak.ts',
+                'cypress/support/oauth-okta.ts'
+            ]
+        },
+        {
+            condition: generator => generator.e2eTestsFramework.includes('cypress') && generator.authenticationType !== 'oauth2',
+            path: TEST_SRC_DIR,
+            templates: [
+                'cypress/integration/e2e/modules/account/password-page.spec.ts',
+                'cypress/integration/e2e/modules/account/register-page.spec.ts',
+                'cypress/integration/e2e/modules/account/settings-page.spec.ts',
+                'cypress/integration/e2e/modules/administration/user-management.spec.ts',
+                'cypress/integration/e2e/page-objects/password-page.ts',
+                'cypress/integration/e2e/page-objects/settings-page.ts',
+                'cypress/integration/e2e/page-objects/register-page.ts',
+                'cypress/integration/e2e/page-objects/user-management-page.ts',
+                'cypress/support/authentication.ts',
+                'cypress/support/users.ts'
             ]
         }
     ]

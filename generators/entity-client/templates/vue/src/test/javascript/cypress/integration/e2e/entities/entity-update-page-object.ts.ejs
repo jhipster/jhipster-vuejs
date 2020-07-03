@@ -1,0 +1,181 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+/// <reference types="cypress" />
+
+// TODO: conditionnal adding
+import { datetimeToMinutes } from '<% if (clientRootFolder && !skipUiGrouping) { %>../<% } %>../../util/utils';
+
+<%_
+const openBlockComment = `/*`;
+let closeBlockComment = `*/`;
+ _%>
+export default class <%= entityClass %>UpdatePage {
+    static getPageTitle() {
+      return cy.get('h2');
+    }
+
+    static getFooter() {
+      return cy.get('#footer');
+    }
+
+    static getSaveButton() {
+      return cy.get('#save-entity');
+    }
+
+    static isSaveButtonPresent() {
+      cy.get('#save-entity').then($saveElement => {
+        if ($saveElement) {
+          return true;
+        }
+      });
+
+      return false;
+    }
+
+    static save() {
+      return this.getSaveButton().click();
+    }
+
+    static cancel() {
+      return cy.get('cancel-save').click();
+    }
+
+    <%_ fields.forEach((field) => {
+      const fieldName = field.fieldName;
+      const fieldNameCapitalized = field.fieldNameCapitalized;
+      const fieldNameHumanized = field.fieldNameHumanized;
+      const fieldType = field.fieldType;
+      const fieldTypeBlobContent = field.fieldTypeBlobContent;
+      const fieldIsEnum = field.fieldIsEnum;
+      let fieldInputType = 'text';
+      let ngModelOption = '';
+    _%>
+    // --------------------------------------------------
+
+    <%_ if (fieldType === 'Boolean') { _%>
+    static get<%= fieldNameCapitalized %>Input() {
+      return cy.get('input#<%= entityFileName %>-<%= fieldName %>');
+    }
+
+    static click<%= fieldNameCapitalized %>Input() {
+      return this.get<%= fieldNameCapitalized %>Input().click();
+    }
+
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+
+    static get<%= fieldNameCapitalized %>Input() {
+      return cy.get('input#<%= entityFileName %>-<%= fieldName %>');
+    }
+
+    static set<%= fieldNameCapitalized %>Input(<%= fieldName %>) {
+      return this.get<%= fieldNameCapitalized %>Input()
+      .clear()
+      .then(input => {
+        input[0].dispatchEvent(new Event('input', { bubbles: true }))
+        input.val(<%= fieldName %>)
+      })
+      .trigger('change', { force: true })
+      .click();
+    }
+
+    static clear<%= fieldNameCapitalized %>Input() {
+      return this.get<%= fieldNameCapitalized %>Input().clear();
+    }
+
+    <%_ } else if (fieldIsEnum) { _%>
+    static set<%= fieldNameCapitalized %>Select(<%= fieldName %>) {
+      return cy.get('select#<%= entityFileName %>-<%= fieldName %>').select(<%= fieldName %>);
+    }
+
+    static get<%= fieldNameCapitalized %>Select() {
+      return cy.get('select#<%= entityFileName %>-<%= fieldName %>')
+                .find('option:checked')
+                .invoke('text');
+    }
+
+    static <%=fieldName %>SelectLastOption() {
+      return cy.get('select#<%= entityFileName %>-<%= fieldName %>')
+          .find('option').last()
+          .then($els => $els.get(0).setAttribute('selected', 'selected'))
+          .parent()
+          .trigger('change');
+    }
+
+    <%_ } else if  (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent !== 'text') { _%>
+        static get<%= fieldNameCapitalized %>Input() {
+            return cy.get('input#file_<%= fieldName %>');
+        }
+
+        static set<%= fieldNameCapitalized %>Input(fileName, mimeType) {
+            return cy.fixture(fileName).then(fileContent => {
+              <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().upload(
+                { fileContent, fileName, mimeType },
+                { subjectType: 'input' },
+              );
+            });
+        }
+
+    <%_ } else { _%>
+    static get<%= fieldNameCapitalized %>Input() {
+      <%_ if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
+      return cy.get('textarea#<%= entityFileName %>-<%= fieldName %>');
+      <%_ } else { _%>
+      return cy.get('input#<%= entityFileName %>-<%= fieldName %>');
+      <%_ } _%>
+    }
+
+    static set<%= fieldNameCapitalized %>Input(<%= fieldName %>) {
+      return this.get<%= fieldNameCapitalized %>Input().type(<%= fieldName %>);
+    }
+
+    static clear<%= fieldNameCapitalized %>Input() {
+      return this.get<%= fieldNameCapitalized %>Input().clear();
+    }
+    <%_ } _%>
+    <%_ }); _%>
+    <%_ relationships.forEach((relationship) => {
+        const relationshipType = relationship.relationshipType;
+        const ownerSide = relationship.ownerSide;
+        const relationshipName = relationship.relationshipName;
+        const relationshipFieldName = relationship.relationshipFieldName;
+        const relationshipNameCapitalized = relationship.relationshipNameCapitalized; _%>
+    <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'many-to-many' && ownerSide === true) || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
+    // --------------------------------------------------
+
+    static get<%=relationshipNameCapitalized %>Select() {
+      return cy.get('select#<%= entityFileName %>-<%= relationshipName %>');
+    }
+
+    static get<%=relationshipNameCapitalized %>SelectLastOption() {
+      return cy.get('select#<%= entityFileName %>-<%= relationshipName %> option').then((options : any) => {
+        const elements = [...options].map(o => o.text);
+        const lastElement = elements.length - 1;
+        this.get<%=relationshipNameCapitalized %>Select().select(elements[lastElement])
+      });
+    }
+
+    static get<%=relationshipNameCapitalized %>SelectedOption() {
+        return this.get<%=relationshipNameCapitalized %>Select()
+                    .find('option:checked')
+                    .invoke('text');
+    }
+
+    <%_ } _%>
+    <%_ }); _%>
+}

@@ -1,0 +1,91 @@
+<%_ if (authenticationType !== 'oauth2') { _%>
+  import SignInPage, {
+  loginPageSelector,
+  registerFormSelector,
+  loginTitleSelector,
+  usernameSelector,
+  passwordSelector,
+  submitSelector,
+  loginAlertSelector }
+  from '../../page-objects/signin-page';
+<%_ } _%>
+<%_ if (authenticationType !== 'oauth2') { _%>
+  import NavBarPage, {
+    headerSelector,
+    headerTabsSelector,
+    navbarSelector,
+    adminMenuSelector,
+    accountMenuSelector,
+    loginSelector,
+    logoutSelector,
+    entityMenuSelector,
+    registerSelector
+  }
+  from '../../page-objects/navbar-page';
+<%_ } else { _%>
+  import NavBarPage from '../../page-objects/navbar-page';
+<%_ } _%>
+
+describe('Log In', () => {
+
+  beforeEach(() => {
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    cy.logout();
+    cy.visit('/');
+    NavBarPage.getSignInPage();
+    <%_ } else { _%>
+    cy.visit('/')
+
+    /** Keycloak */
+    cy.kcLogin('user');
+
+    /** Okta */
+    // cy.oktaLogin();
+
+    NavBarPage.getSignInPage()
+    <%_ } _%>
+  });
+
+  <%_ if (authenticationType == 'oauth2') { _%>
+  afterEach(() => {
+    NavBarPage.autoSignOut()
+    });
+  <%_ } _%>
+
+
+  <%_ if (authenticationType !== 'oauth2') { _%>
+  it('should display login modal', () => {
+    cy.get(loginPageSelector).find(loginTitleSelector);
+    cy.get(loginPageSelector).find(usernameSelector);
+    cy.get(loginPageSelector).find(passwordSelector);
+    cy.get(loginPageSelector).find(submitSelector);
+  });
+  <%_ } _%>
+
+  <%_ if (authenticationType !== 'oauth2') { _%>
+  it('should fail to login with bad password', () => {
+    SignInPage.autoSignInUsing('admin', 'wrong');
+    cy.get(loginPageSelector)
+      .find(loginTitleSelector)
+      .should('exist');
+    cy.get(loginPageSelector)
+      .find(loginAlertSelector)
+      .should('have.class', 'alert-danger');
+  });
+  <%_ } _%>
+
+<%_ if(authenticationType == 'oauth2') { _%>
+    it('should show user authenticated as an admin', () => {
+        cy.get('.jh-card').contains('You are logged in as user "admin".')
+    });
+<%_ } _%>
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+  it('should login with admin account', () => {
+    SignInPage.autoSignInUsing('admin', 'admin');
+    cy.get(loginPageSelector)
+      .find(loginTitleSelector)
+      .should('not.exist');
+  });
+<%_ } _%>
+});

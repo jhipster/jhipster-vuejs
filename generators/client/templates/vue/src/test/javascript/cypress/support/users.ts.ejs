@@ -1,0 +1,182 @@
+export const accountMenuSelector = '[data-cy=account-menu]';
+export const navbarSelector = '[data-cy=navbar]';
+export const registerSelector = '[data-cy=register]';
+
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+_%>
+
+<%_ if (authenticationType === 'session') { _%>
+  Cypress.Commands.add(
+  'createAndActivateUserUsing',
+  (login: string, email: string, password: string, firstName?: string, lastName?: string) => {
+    cy.registerUserUsing(login, email, password).then(() => {
+      cy.loginWithAdmin().then(result => {
+        cy.getXsrfToken().then((cookie: any) => {
+          cy.request({
+            method: 'GET',
+            url: '/<%= baseApi %>users',
+            headers: {
+              'X-XSRF-TOKEN': cookie.value
+            }
+          }).then(response => {
+            response.body.forEach(user => {
+              if (user.login === login) {
+                cy.request({
+                  method: 'PUT',
+                  url: '/<%= baseApi %>users',
+                  body: {
+                    ...user,
+                    firstName,
+                    lastName,
+                    activated: true
+                  },
+                  headers: {
+                    'X-XSRF-TOKEN': cookie.value
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+      cy.logout();
+    });
+  });
+
+  Cypress.Commands.add('cleanUsers', () => {
+    cy.loginWithAdmin().then(() => {
+      cy.getXsrfToken().then((cookie: any) => {
+        cy.request({
+          method: 'GET',
+          url: `/<%= baseApi %>users`,
+          headers: {
+            'X-XSRF-TOKEN': cookie.value
+          }
+        }).then(response => {
+          response.body.forEach(user => {
+            if (!['user', 'admin', 'system'].includes(user.login)) {
+              cy.request({
+                method: 'DELETE',
+                url: `/<%= baseApi %>users/${user.login}`,
+                headers: {
+                  'X-XSRF-TOKEN': cookie.value
+                }
+              });
+            }
+          });
+        });
+      });
+    });
+    cy.logout();
+  });
+
+  Cypress.Commands.add('registerUserUsing', (login: string, email: string, password: string) => {
+    return cy.getXsrfToken().then((cookie: any) => {
+      cy.request({
+        method: 'POST',
+        url: '/api/register',
+        body: {
+          login,
+          email,
+          password,
+        },
+        headers: {
+          'X-XSRF-TOKEN': cookie.value
+        },
+      });
+    });
+  });
+<%_ } else if (authenticationType === 'jwt') { _%>
+Cypress.Commands.add(
+  'createAndActivateUserUsing',
+  (login: string, email: string, password: string, firstName?: string, lastName?: string) => {
+    cy.registerUserUsing(login, email, password).then(() => {
+      cy.loginWithAdmin().then(result => {
+        const auth = window.sessionStorage.getItem('jhi-authenticationToken');
+        cy.request({
+          method: 'GET',
+          url: '/<%= baseApi %>users',
+          auth: {
+            bearer: auth
+          }
+        }).then(response => {
+          response.body.forEach(user => {
+            if (user.login === login) {
+              cy.request({
+                method: 'PUT',
+                url: '/<%= baseApi %>users',
+                body: {
+                  ...user,
+                  firstName,
+                  lastName,
+                  activated: true
+                },
+                auth: {
+                  bearer: auth
+                }
+              });
+            }
+          });
+        });
+      });
+      cy.logout();
+    });
+  }
+);
+
+Cypress.Commands.add('cleanUsers', () => {
+  cy.loginWithAdmin().then(() => {
+    const auth = window.sessionStorage.getItem('jhi-authenticationToken');
+    cy.request({
+      method: 'GET',
+      url: `/<%= baseApi %>users`,
+      auth: {
+        bearer: auth
+      }
+    }).then(response => {
+      response.body.forEach(user => {
+        if (!['user', 'admin', 'system'].includes(user.login)) {
+          cy.request({
+            method: 'DELETE',
+            url: `/<%= baseApi %>users/${user.login}`,
+            auth: {
+              bearer: auth
+            }
+          });
+        }
+      });
+    });
+  });
+  cy.logout();
+});
+
+Cypress.Commands.add('registerUserUsing', (login: string, email: string, password: string) => {
+  const auth = window.sessionStorage.getItem('jhi-authenticationToken');
+  return cy.request({
+    method: 'POST',
+    url: '/<%= baseApi %>register',
+    body: {
+      login,
+      email,
+      password
+    },
+    auth: {
+      bearer: auth
+    }
+  });
+});
+<%_ } _%>
+
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      registerUserUsing(login: string, email: string, password: string): Cypress.Chainable;
+      createAndActivateUserUsing(login: string, email: string, password: string, firstName?: string, lastName?: string): Cypress.Chainable;
+      cleanUsers(): void;
+    }
+  }
+}
+
+// Convert this to a module instead of script (allows import/export)
+export {};

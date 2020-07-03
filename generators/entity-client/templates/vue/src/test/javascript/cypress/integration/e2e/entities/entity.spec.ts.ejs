@@ -1,0 +1,291 @@
+/* tslint:disable no-unused-expression */
+
+import NavBarPage from './../../<%= entityParentPathAddition %>page-objects/navbar-page';
+import SignInPage from './../../<%= entityParentPathAddition %>page-objects/signin-page';
+import <%= entityClass %>ComponentsPage from './<%= entityFileName %>.page-object';
+import { <%= entityClass %>DeleteDialog } from './<%= entityFileName %>.page-object';
+import <%= entityClass %>UpdatePage from './<%= entityFileName%>-update.page-object';
+import <%= entityClass %>DetailsPage from './<%= entityFileName%>-details.page-object';
+import { getIdSortButton, getDangerToast, getInfoToast, getSuccessToast } from '../../<%= entityParentPathAddition %>util/utils';
+<%_
+const baseApi = (applicationType === 'gateway' && locals.microserviceName) ? microserviceName.toLowerCase() + '/api/' : 'api/';
+let openBlockComment = ``;
+let closeBlockComment = ``;
+if (typeof relationships !== 'undefined') {
+    openBlockComment = `/*`;
+    closeBlockComment = `*/`;
+}
+_%>
+
+describe('<%= entityClass %> e2e test', () => {
+  let startingEntitiesCount = 0;
+
+  before(() => {
+
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    /* uncomment to ease create and update entity with relationships tests
+    cy.createAndActivateUserUsing('user-entity', 'user-entity@localhost.jh', 'user-entity');
+    */
+    <%_ } _%>
+
+    cy.server();
+    cy.route('GET', '/<%= baseApi %>account').as('getAccountRequest');
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
+
+    cy.visit('/');
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    NavBarPage.getSignInPage();
+    SignInPage.autoSignInUsing('admin', 'admin');
+    <%_ } else {_%>
+    /** Keycloak */
+    cy.resetDb();
+    cy.kcLogout()
+    cy.visit('/');
+    cy.kcLogin('user');
+
+    /** Okta */
+    // cy.oktaLogout();
+    // cy.visit('/');
+    // cy.oktaLogin();
+
+    NavBarPage.getSignInPage();
+    <%_ } _%>
+
+    cy.wait('@getAccountRequest');
+
+    NavBarPage.getEntityPage('<%= entityStateName %>');
+    cy.wait('@entitiesRequest').its('responseBody').then(array => {
+      startingEntitiesCount = array.length;
+    });
+  });
+
+  it('should load <%= entityClassPlural %>', () => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>*').as('entitiesRequest');
+
+    cy.visit('/');
+    NavBarPage.getEntityPage('<%= entityStateName %>');
+    cy.wait('@entitiesRequest');
+
+    <%= entityClass %>ComponentsPage.getFooter().should('exist');
+
+    <%= entityClass %>ComponentsPage.getTitle()
+                                    .invoke('text')
+                                    .should('not.have.lengthOf', 0);
+
+    if (startingEntitiesCount === 0) {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
+    } else {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount);
+    }
+  });
+
+  <%= openBlockComment %>
+  it('should load create <%= entityClass %> page', () => {
+    <%= entityClass %>ComponentsPage.clickOnCreateButton();
+
+    <%= entityClass %>UpdatePage.getFooter().should('exist');
+    <%= entityClass %>UpdatePage.getSaveButton().should('exist');
+
+    <%_ if (enableTranslation) { _%>
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('attr', 'id').should('match', /<%= i18nKeyPrefix %>.home.createOrEditLabel/);
+    <%_ } else { _%>
+    <%= entityClass %>UpdatePage.getPageTitle().invoke('text').should('equal', 'Create or edit a <%= entityAngularName %>')
+    <%_ } _%>
+  });
+  <%= closeBlockComment %>
+
+  <%= openBlockComment %>
+  it('should create and save <%= entityClassPlural %>', () => {
+    <%_ fields.forEach((field) => {
+      const fieldName = field.fieldName;
+      const fieldNameCapitalized = field.fieldNameCapitalized;
+      const fieldType = field.fieldType;
+      const fieldTypeBlobContent = field.fieldTypeBlobContent;
+      const fieldIsEnum = field.fieldIsEnum;
+    _%>
+    <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5').should('have.value', '5');
+
+    <%_ } else if (fieldType === 'LocalDate') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01').should('have.value', '2001-01-01');
+
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2001-01-01T02:30').invoke('val').should('equal', '2001-01-01T02:30');
+
+    <%_ } else if (fieldType === 'Duration') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT12S').should('have.value', '12');
+
+    <%_ } else if (fieldType === 'Boolean') { _%>
+    <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('not.be.checked');
+    <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input().should('be.checked');
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>').invoke('val').should('match', /<%= fieldName %>/);
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType)) { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('integration-test.png', 'image/png');
+
+    <%_ } else if (fieldIsEnum) { _%>
+    <%= entityClass %>UpdatePage.<%=fieldName %>SelectLastOption();
+
+    <%_ } else if (fieldType === 'UUID'){ _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade974').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade974/);
+
+    <%_ } else if(fieldType === 'String' && fieldName.toLowerCase().includes('number')){ _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('5').should('have.value', '5');
+
+    <%_ } else { _%>
+    <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('<%= fieldName %>').invoke('val').should('match', /<%= fieldName %>/);
+
+    <%_ } _%>
+    <%_ }); _%>
+    <%_ relationships.forEach((relationship) => {
+      const relationshipType = relationship.relationshipType;
+      const ownerSide = relationship.ownerSide;
+      const relationshipName = relationship.relationshipName;
+      const relationshipNameCapitalized = relationship.relationshipNameCapitalized;_%>
+    <%_ if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectLastOption();
+    <%_ } else if ((relationshipType === 'many-to-many' && ownerSide === true)) { _%>
+     <%= entityClass %>UpdatePage.get<%=relationshipNameCapitalized %>SelectLastOption();
+    <%_ } _%>
+    <%_ }); _%>
+
+    <%= entityClass %>UpdatePage.save();
+
+    <%= entityClass %>UpdatePage.getSaveButton().should('not.exist');
+
+    // Success toast should appear
+    getSuccessToast().should('exist');
+
+    <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount + 1);
+  });
+  <%= closeBlockComment %>
+
+  it('should load details <%= entityClass %> page and fetch data', () => {
+    if (startingEntitiesCount > 0) {
+      <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+      getIdSortButton().click();
+      <%_ } _%>
+      <%= entityClass %>ComponentsPage.clickOnLastDetailsButton();
+
+      <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
+      <%= entityClass %>UpdatePage.getFooter().should('exist');
+      <%= entityClass %>DetailsPage.getBackButton().should('exist');
+
+      <%= entityClass %>DetailsPage.getFirstDetail().invoke('text').should('not.have.lengthOf', 0);
+
+      <%= entityClass %>DetailsPage.getBackButton().click();
+      cy.get('div table .btn-danger').should('have.lengthOf', startingEntitiesCount);
+    }
+  });
+
+  <%= openBlockComment %>
+  it('should load edit <%= entityClass %> page and fetch data', () => {
+    cy.server();
+    cy.route('GET', '/<%= baseApi + entityApiUrl %>/*').as('getEntityRequest');
+
+    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+    getIdSortButton().click();
+    <%_ } _%>
+    <%= entityClass %>ComponentsPage.clickOnLastEditButton();
+    cy.wait('@getEntityRequest');
+
+    <%= entityClass %>UpdatePage.getFooter().should('exist');
+    <%= entityClass %>UpdatePage.getSaveButton().should('exist');
+    <%= entityClass %>DetailsPage.getPageTitle().invoke('text').should('not.have.lengthOf', 0);
+
+    <%_ fields.forEach((field) => {
+      const fieldName = field.fieldName;
+      const fieldNameCapitalized = field.fieldNameCapitalized;
+      const fieldType = field.fieldType;
+      const fieldTypeBlobContent = field.fieldTypeBlobContent;
+      const fieldIsEnum = field.fieldIsEnum;
+    _%>
+    <%_ if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal'].includes(fieldType)) { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('6').should('have.value', '6');
+
+    <%_ } else if (fieldType === 'LocalDate') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01').should('have.value', '2019-01-01');
+
+    <%_ } else if (['Instant', 'ZonedDateTime'].includes(fieldType)) { _%>
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('2019-01-01T02:30').should('have.value', '2019-01-01T02:30');
+
+    <%_ } else if (fieldType === 'Duration') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('PT14S').should('have.value', '14');
+
+    <%_ } else if (fieldType === 'Boolean') { _%>
+      <%= entityClass %>UpdatePage.get<%= fieldNameCapitalized %>Input().should('be.checked');
+      <%= entityClass %>UpdatePage.click<%= fieldNameCapitalized %>Input().should('not.be.checked');
+
+    <%_ } else if (['byte[]', 'ByteBuffer'].includes(fieldType) && fieldTypeBlobContent === 'text') { _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('updated<%= fieldName %>').invoke('val').should('match', /updated<%= fieldName %>/);
+
+    <%_ } else if (fieldType === 'UUID'){ _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('64c99148-3908-465d-8c4a-e510e3ade978').invoke('val').should('match', /64c99148-3908-465d-8c4a-e510e3ade978/);
+
+    <%_ } else if(fieldType === 'String' && fieldName.toLowerCase().includes('number')){ _%>
+      <%= entityClass %>UpdatePage.clear<%= fieldNameCapitalized %>Input();
+      <%= entityClass %>UpdatePage.set<%= fieldNameCapitalized %>Input('8').should('have.value', '8');
+
+    <%_ } _%>
+    <%_ }); _%>
+
+    <%= entityClass %>UpdatePage.save();
+
+    // TODO: fix wait
+    <%= entityClass %>UpdatePage.getSaveButton().should('not.exist');
+
+    // Info toast should appear
+    getInfoToast().should('exist');
+  });
+  <%= closeBlockComment %>
+
+  <%= openBlockComment %>
+  it('should delete last <%= entityClass %>', () => {
+    cy.server();
+    cy.route('DELETE', '/<%= baseApi + entityApiUrl %>/*').as('deleteEntityRequest');
+
+    <%_ if (pagination !== 'no' && pagination !== 'infinite-scroll') { _%>
+    getIdSortButton().click();
+    <%_ } _%>
+    <%= entityClass %>ComponentsPage.clickOnLastDeleteButton();
+
+    cy.get('.modal').should('exist');
+
+    <%= entityClass %>DeleteDialog.getDialogTitle()
+                                  .invoke('attr', 'id')
+                                  .should('match', /<%= jhiPrefixDashed %>-delete-<%= entityInstance %>-heading/);
+
+    <%= entityClass %>DeleteDialog.clickOnConfirmButton();
+
+    cy.wait('@deleteEntityRequest');
+
+    // Delete modal should disappear
+    cy.get('.modal').should('exist');
+
+    if (startingEntitiesCount === 0) {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('not.exist');
+    } else {
+      <%= entityClass %>ComponentsPage.getDeleteButtons().should('have.lengthOf', startingEntitiesCount);
+    }
+    // Danger toast should appear
+    getDangerToast().should('exist')
+  });
+  <%= closeBlockComment %>
+
+  after(() => {
+    <%_ if (authenticationType !== 'oauth2') { _%>
+    /* uncomment to ease create and update entity with relationships tests
+    cy.cleanUsers();
+    */
+    <%_ } _%>
+    NavBarPage.autoSignOut();
+  });
+});

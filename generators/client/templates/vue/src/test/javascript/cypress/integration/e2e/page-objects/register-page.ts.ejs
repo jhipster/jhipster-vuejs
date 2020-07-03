@@ -1,0 +1,75 @@
+import BasePage from './base-component';
+
+export const registerFormSelector = '[data-cy=register-form]';
+export const registerTitleSelector = '[data-cy=register-title]';
+export const usernameFormSelector = '[data-cy=register-username]';
+export const emailFormSelector = '[data-cy=register-email]';
+export const firstPasswordFormSelector = '[data-cy=register-firstPassword]';
+export const secondPasswordFormSelector = '[data-cy=register-secondPassword]';
+export const registerSubmitSelector = '[data-cy=register-submit]';
+
+export default class RegisterPage extends BasePage {
+    static getSelf() {
+        return cy.get(registerFormSelector);
+    }
+
+    static get() {
+        return cy.visit('/register');
+    }
+
+    static getTitleElement() {
+        return cy.get(registerTitleSelector);
+    }
+
+    static getUsernameElement() {
+        return cy.get(usernameFormSelector);
+    }
+
+    static getEmailElement() {
+        return cy.get(emailFormSelector);
+    }
+
+    static getFirstPasswordElement() {
+        return cy.get(firstPasswordFormSelector);
+    }
+
+    static getSecondPasswordElement() {
+        return cy.get(secondPasswordFormSelector);
+    }
+
+    static getSaveButton() {
+        return cy.get(registerSubmitSelector);
+    }
+
+    static getTitle() {
+        return this.getTitleElement().invoke('attr', 'id');
+    }
+
+    static setUserName(username: string) {
+        return this.getUsernameElement().type(username);
+    }
+
+    static setEmail(email: string) {
+        return this.getEmailElement().type(email);
+    }
+
+    static setFirstPassword(password: string) {
+        return this.getFirstPasswordElement().type(password);
+    }
+
+    static setSecondPassword(password: string) {
+        return this.getSecondPasswordElement().type(password);
+    }
+
+    static autoSignUpUsing(username: string, email: string, password: string) {
+        this.setUserName(username);
+        this.setEmail(email);
+        this.setFirstPassword(password);
+        this.setSecondPassword(password);
+        return this.save();
+    }
+
+    static save() {
+        return this.getSaveButton().click();
+    }
+}
