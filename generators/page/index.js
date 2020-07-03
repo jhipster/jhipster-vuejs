@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 const EntityClientGenerator = require('generator-jhipster/generators/entity-client');
-const jhipsterUtils = require('generator-jhipster/generators/utils');
 const chalk = require('chalk');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
@@ -26,7 +25,7 @@ module.exports = class extends EntityClientGenerator {
     constructor(args, opts) {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important
         // Get missing configuration
-        const configuration = jhipsterUtils.getAllJhipsterConfig(null, true);
+        const configuration = this.config;
         this.skipClient = configuration.skipClient;
         this.clientPackageManager = configuration.clientPackageManager;
         this.enableTranslation = configuration.enableTranslation;
