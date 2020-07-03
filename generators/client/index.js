@@ -71,7 +71,7 @@ module.exports = class extends ClientGenerator {
     }
 
     get prompting() {
-        // The prompting phase is being overriden so that we can ask our own questions
+        // The prompting phase is being overridden so that we can ask our own questions
         return {
             askForClient: prompts.askForClient,
             askForClientTheme: mainPrompts.askForClientTheme,
@@ -99,7 +99,7 @@ module.exports = class extends ClientGenerator {
     }
 
     get writing() {
-        // The writing phase is being overriden so that we can write our own templates as well.
+        // The writing phase is being overridden so that we can write our own templates as well.
         return {
             writeAdditionalFile() {
                 writeFiles.call(this);
