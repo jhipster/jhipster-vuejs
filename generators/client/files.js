@@ -440,8 +440,8 @@ const vueFiles = {
                 'cypress/integration/e2e/page-objects/base-component.ts',
                 'cypress/integration/e2e/page-objects/navbar-page.ts',
                 'cypress/integration/e2e/page-objects/signin-page.ts',
-                'cypress/plugins/index.js',
-                'cypress/support/index.js',
+                'cypress/plugins/index.ts',
+                'cypress/support/index.ts',
                 'cypress/fixtures/integration-test.png'
             ]
         },
