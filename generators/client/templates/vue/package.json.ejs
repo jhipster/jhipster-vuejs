@@ -54,9 +54,6 @@ limitations under the License.
     "vuex": "3.4.0"
   },
   "devDependencies": {
-<%_ if (e2eTestsFramework.includes('cypress')) { _%>
-    "@cypress/webpack-preprocessor": "4.1.0",
-<%_ } _%>
     "babel-core": "7.0.0-bridge.0",
 <%_ if (protractorTests) { _%>
     "@types/chai": "4.2.11",
@@ -86,8 +83,7 @@ limitations under the License.
     "copy-webpack-plugin": "6.0.1",
     "css-loader": "3.5.3",
 <%_ if (e2eTestsFramework.includes('cypress')) { _%>
-    "cypress": "4.3.0",
-    "cypress-file-upload": "3.1.4",
+    "cypress": "4.9.0",
 <%_ } _%>
     "file-loader": "6.0.0",
     "fork-ts-checker-webpack-plugin": "4.1.4",
@@ -173,9 +169,9 @@ limitations under the License.
     "e2e:protractor": "protractor src/test/javascript/protractor.conf.js",
     "postinstall": "webdriver-manager update --gecko false",
 <%_ } else if (e2eTestsFramework.includes('cypress')) { _%>
-    "e2e:cypress": "cypress open",
-    "e2e:cypress:headed": "cypress run --headed",
-    "e2e:cypress:headless": "cypress run --headless",
+    "cypress": "cypress open",
+    "cypress:headed": "cypress run --headed",
+    "cypress:headless": "cypress run --headless",
 <%_ } _%>
     "jest": "jest --coverage --logHeapUsage --maxWorkers=2 --no-cache --config src/test/javascript/jest.conf.js",
     "jest:update": "<%= clientPackageManager %> run jest <%= optionsForwarder %>--updateSnapshot",
