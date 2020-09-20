@@ -26,7 +26,7 @@
     "eslint-config-airbnb": "17.1.0",
     "generator-jhipster": "6.10.3",
     "jhipster-core": "7.3.4",
-    "lodash": "4.17.13",
+    "lodash": "4.17.19",
     "mkdirp": "0.5.1",
     "pluralize": "7.0.0",
     "prettier": "1.13.5",
