@@ -65,7 +65,7 @@ jhipster --blueprints vuejs
 To create a new Vue.js empty page, run
 
 ```bash
-jhipster --blueprint vuejs page
+jhipster --blueprints vuejs page
 ```
 
 
