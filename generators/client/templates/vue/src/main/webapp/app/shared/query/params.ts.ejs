@@ -1,0 +1,13 @@
+export default function buildQueryParams(queryParams) {
+  if (Array.isArray(queryParams) && queryParams.length > 0) {
+    let paramString = '';
+    for (const param of queryParams) {
+      if (paramString.length > 0) {
+        paramString += '&';
+      }
+      paramString += param;
+    }
+    return `${paramString}`;
+  }
+  return '';
+}

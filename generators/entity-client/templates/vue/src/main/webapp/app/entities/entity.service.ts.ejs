@@ -1,4 +1,5 @@
 import axios from 'axios';
+import buildQueryParams from '@/shared/query/params';
 <% if (pagination !== 'no') { %>
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 <% } %>
@@ -32,6 +33,18 @@ export default class <%= entityAngularName %>Service {
     });
   }
 
+  public query(queryParams?: any<% if (pagination !== 'no') { %>, paginationQuery?: any<% } %>) : Promise<I<%= entityAngularName %>[]> {
+    return new Promise<I<%= entityAngularName %>[]>((resolve, reject) => {
+      let queryString = `${buildQueryParams(queryParams)}`<% if (pagination !== 'no') { %> + `${buildPaginationQueryOpts(paginationQuery)}` <% } %>
+      if (queryString.length > 0) {
+        queryString = `?${queryString}`
+      }
+      axios.get(`${baseApiUrl}${queryString}`).then(function (res) {
+        resolve(res.data);
+      }).catch(err => { reject(err); });
+    });
+  }
+
   public retrieve(<% if (pagination !== 'no') { %>paginationQuery?: any<% } %>) : Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios.get(baseApiUrl<% if (pagination !== 'no') { %> + `?${buildPaginationQueryOpts(paginationQuery)}` <% } %>).then(res => {
@@ -39,6 +52,7 @@ export default class <%= entityAngularName %>Service {
       }).catch(err => { reject(err); });
     });
   }
+
   <%_
   if (!readOnly) { _%>
 

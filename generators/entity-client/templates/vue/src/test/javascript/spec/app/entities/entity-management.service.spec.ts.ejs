@@ -262,6 +262,15 @@ describe('Service Tests', () => {
           });
       });
 
+      it('should return a filtered list of <%= entityAngularName %>', async () => {
+        const returnedFromService = Object.assign({}, elemDefault);
+        mockedAxios.get.mockReturnValue(Promise.resolve({ data: [returnedFromService] }));
+
+        return service.query([]<% if (pagination !== 'no') { %>, { sort: {}, page: 0, size: 10 }<% } %>).then((res) => {
+          expect(res).toContainEqual(elemDefault);
+        });
+      });
+
 <%_ if (!readOnly) { _%>
       it('should delete a <%= entityAngularName %>', async () => {
           mockedAxios.delete.mockReturnValue(Promise.resolve({ok: true}));
